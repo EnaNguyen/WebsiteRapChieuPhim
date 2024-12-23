@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="ProjectGS.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:local="clr-namespace:ProjectGS"
+    xmlns:pages="clr-namespace:ProjectGS.Pages"
+    Shell.FlyoutBehavior="Flyout"
+    Title="ProjectGS">
+
+    <Shell.Behaviors>
+        <toolkit:StatusBarBehavior StatusBarColor="#162542" StatusBarStyle="LightContent"/>
+    </Shell.Behaviors>
+
+    <Shell.ItemTemplate>
+        <DataTemplate>
+            <Grid Padding="10"
+                  ColumnDefinitions="Auto,*,Auto"
+                  RowSpacing="5"
+                  ColumnSpacing="10"
+                  RowDefinitions="Auto,15">
+                <Image 
+                    Grid.Row="0" 
+                    Grid.Column="0" 
+                    HeightRequest="24" 
+                    Source="{Binding FlyoutIcon}" 
+                    WidthRequest="24" />
+                <Label 
+                    Grid.Row="0" 
+                    Grid.Column="1" 
+                    FontSize="16" 
+                    Text="{Binding Title}" 
+                    TextColor="DeepPink" />
+                <BoxView
+                    Grid.Row="1"
+                    Grid.ColumnSpan="3"
+                    HeightRequest="2" 
+                    HorizontalOptions="Fill" 
+                    VerticalOptions="End"
+                    Color="DeepPink"/>   
+            </Grid>
+        </DataTemplate>
+    </Shell.ItemTemplate>
+
+    <Shell.FlyoutHeader>
+        <Border BackgroundColor="White" Padding="10" StrokeThickness="0">
+            <VerticalStackLayout HorizontalOptions="Center" Spacing="10">
+                <Image HeightRequest="150" 
+                       HorizontalOptions="Center" 
+                       Source="logo" 
+                       WidthRequest="300" />
+                <Label FontAttributes="Bold" 
+                       FontSize="25" 
+                       HorizontalOptions="Center" 
+                       Text="Giang Sơn" 
+                       TextColor="Black" 
+                       TextTransform="Uppercase" />
+                <BoxView HeightRequest="2" 
+                         HorizontalOptions="Fill" 
+                         VerticalOptions="End" />
+            </VerticalStackLayout>
+        </Border>
+    </Shell.FlyoutHeader>
+
+    <!--<ShellContent
+        Title="Onboarding" 
+        ContentTemplate="{DataTemplate pages:OnboardingPage}" 
+        Route="OnboardingPage" 
+        Shell.NavBarIsVisible="False" />-->
+
+    <TabBar FlyoutDisplayOptions="AsMultipleItems">
+        <ShellContent
+            Title="Trang Chủ"
+            ContentTemplate="{DataTemplate pages:HomePage}"
+            Icon="house"
+            Route="HomePage" 
+            Shell.NavBarIsVisible="False" />
+        <ShellContent
+            Title="Giỏ Hàng"
+            Icon="cart"
+            ContentTemplate="{DataTemplate pages:CartPage}"
+            Route="CartPage" />
+        <ShellContent
+            Title="Tài Khoản"
+            Icon="user"
+            ContentTemplate="{DataTemplate pages:ProfilePage}"
+            Route="ProfilePage" />
+    </TabBar>
+
+    <Shell.FlyoutFooter>
+        <VerticalStackLayout BackgroundColor="Gray" Padding="10" Spacing="5">
+            <Button Text="Sign Out" 
+                    BackgroundColor="Transparent" 
+                    TextColor="White" 
+                    Clicked="SignOut_Clicked" />
+        </VerticalStackLayout>
+    </Shell.FlyoutFooter>
+</Shell>

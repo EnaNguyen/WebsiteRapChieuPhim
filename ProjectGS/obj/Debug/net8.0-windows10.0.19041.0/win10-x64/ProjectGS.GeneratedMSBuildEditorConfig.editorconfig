@@ -1,0 +1,104 @@
+is_global = true
+build_property.TargetFramework = net8.0-windows10.0.19041.0
+build_property.TargetPlatformMinVersion = 10.0.17763.0
+build_property.UsingMicrosoftNETSdkWeb = 
+build_property.ProjectTypeGuids = 9A19103F-16F7-4668-BE54-9A1E7A4F7556
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = ProjectGS
+build_property.ProjectDir = C:\Users\nguye\source\repos\ProjectGS\ProjectGS\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.CsWinRTAotOptimizerEnabled = true
+build_property.CsWinRTAotExportsEnabled = 
+build_property.CsWinRTRcwFactoryFallbackGeneratorForceOptIn = 
+build_property.CsWinRTRcwFactoryFallbackGeneratorForceOptOut = 
+build_property.CsWinRTCcwLookupTableGeneratorEnabled = true
+build_property.CsWinRTMergeReferencedActivationFactories = 
+build_property.CsWinRTAotWarningLevel = 
+
+[C:/Users/nguye/source/repos/ProjectGS/ProjectGS/App.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = ProjectGS.App.xaml
+build_metadata.AdditionalFiles.TargetPath = App.xaml
+build_metadata.AdditionalFiles.RelativePath = App.xaml
+
+[C:/Users/nguye/source/repos/ProjectGS/ProjectGS/AppShell.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = ProjectGS.AppShell.xaml
+build_metadata.AdditionalFiles.TargetPath = AppShell.xaml
+build_metadata.AdditionalFiles.RelativePath = AppShell.xaml
+
+[C:/Users/nguye/source/repos/ProjectGS/ProjectGS/MainPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = ProjectGS.MainPage.xaml
+build_metadata.AdditionalFiles.TargetPath = MainPage.xaml
+build_metadata.AdditionalFiles.RelativePath = MainPage.xaml
+
+[C:/Users/nguye/source/repos/ProjectGS/ProjectGS/Pages/CartPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = ProjectGS.Pages.CartPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Pages\CartPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Pages\CartPage.xaml
+
+[C:/Users/nguye/source/repos/ProjectGS/ProjectGS/Pages/DetailPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = ProjectGS.Pages.DetailPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Pages\DetailPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Pages\DetailPage.xaml
+
+[C:/Users/nguye/source/repos/ProjectGS/ProjectGS/Pages/HomePage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = ProjectGS.Pages.HomePage.xaml
+build_metadata.AdditionalFiles.TargetPath = Pages\HomePage.xaml
+build_metadata.AdditionalFiles.RelativePath = Pages\HomePage.xaml
+
+[C:/Users/nguye/source/repos/ProjectGS/ProjectGS/Pages/MyOrderPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = ProjectGS.Pages.MyOrderPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Pages\MyOrderPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Pages\MyOrderPage.xaml
+
+[C:/Users/nguye/source/repos/ProjectGS/ProjectGS/Pages/OnboardingPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = ProjectGS.Pages.OnboardingPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Pages\OnboardingPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Pages\OnboardingPage.xaml
+
+[C:/Users/nguye/source/repos/ProjectGS/ProjectGS/Pages/OrderDetailPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = ProjectGS.Pages.OrderDetailPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Pages\OrderDetailPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Pages\OrderDetailPage.xaml
+
+[C:/Users/nguye/source/repos/ProjectGS/ProjectGS/Pages/ProfilePage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = ProjectGS.Pages.ProfilePage.xaml
+build_metadata.AdditionalFiles.TargetPath = Pages\ProfilePage.xaml
+build_metadata.AdditionalFiles.RelativePath = Pages\ProfilePage.xaml
+
+[C:/Users/nguye/source/repos/ProjectGS/ProjectGS/Pages/Signin.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = ProjectGS.Pages.Signin.xaml
+build_metadata.AdditionalFiles.TargetPath = Pages\Signin.xaml
+build_metadata.AdditionalFiles.RelativePath = Pages\Signin.xaml
+
+[C:/Users/nguye/source/repos/ProjectGS/ProjectGS/Pages/Signup.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = ProjectGS.Pages.Signup.xaml
+build_metadata.AdditionalFiles.TargetPath = Pages\Signup.xaml
+build_metadata.AdditionalFiles.RelativePath = Pages\Signup.xaml
+
+[C:/Users/nguye/source/repos/ProjectGS/ProjectGS/Resources/Styles/Colors.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = ProjectGS.Resources.Styles.Colors.xaml
+build_metadata.AdditionalFiles.TargetPath = Resources\Styles\Colors.xaml
+build_metadata.AdditionalFiles.RelativePath = Resources\Styles\Colors.xaml
+
+[C:/Users/nguye/source/repos/ProjectGS/ProjectGS/Resources/Styles/Styles.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = ProjectGS.Resources.Styles.Styles.xaml
+build_metadata.AdditionalFiles.TargetPath = Resources\Styles\Styles.xaml
+build_metadata.AdditionalFiles.RelativePath = Resources\Styles\Styles.xaml
