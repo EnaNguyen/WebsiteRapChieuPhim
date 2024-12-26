@@ -5117,11 +5117,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\nguye\\source\\repos\\ProjectGS\\ProjectGSMAUI.Api\\ProjectGSMAUI.Api.csproj",
+      "projectUniqueName": "E:\\Studying\\Git\\WebsiteRapChieuPhim\\ProjectGSMAUI.Api\\ProjectGSMAUI.Api.csproj",
       "projectName": "ProjectGSMAUI.Api",
-      "projectPath": "C:\\Users\\nguye\\source\\repos\\ProjectGS\\ProjectGSMAUI.Api\\ProjectGSMAUI.Api.csproj",
+      "projectPath": "E:\\Studying\\Git\\WebsiteRapChieuPhim\\ProjectGSMAUI.Api\\ProjectGSMAUI.Api.csproj",
       "packagesPath": "C:\\Users\\nguye\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\nguye\\source\\repos\\ProjectGS\\ProjectGSMAUI.Api\\obj\\",
+      "outputPath": "E:\\Studying\\Git\\WebsiteRapChieuPhim\\ProjectGSMAUI.Api\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -5143,8 +5143,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\nguye\\source\\repos\\ProjectGS\\ProjectGSMAUI.Shared\\ProjectGSMAUI.Shared.csproj": {
-              "projectPath": "C:\\Users\\nguye\\source\\repos\\ProjectGS\\ProjectGSMAUI.Shared\\ProjectGSMAUI.Shared.csproj"
+            "E:\\Studying\\Git\\WebsiteRapChieuPhim\\ProjectGSMAUI.Shared\\ProjectGSMAUI.Shared.csproj": {
+              "projectPath": "E:\\Studying\\Git\\WebsiteRapChieuPhim\\ProjectGSMAUI.Shared\\ProjectGSMAUI.Shared.csproj"
             }
           }
         }

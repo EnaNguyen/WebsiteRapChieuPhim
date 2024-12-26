@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ProjectGSMVC")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9422360edd708d155700ffc912c64c193a8d9112")]
 [assembly: System.Reflection.AssemblyProductAttribute("ProjectGSMVC")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ProjectGSMVC")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

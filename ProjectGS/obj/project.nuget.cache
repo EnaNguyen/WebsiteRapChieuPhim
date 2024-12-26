@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "yXArhBJEI2c=",
+  "dgSpecHash": "s0PPgyq/sKI=",
   "success": true,
-  "projectFilePath": "C:\\Users\\nguye\\source\\repos\\ProjectGS\\ProjectGS\\ProjectGS.csproj",
+  "projectFilePath": "E:\\Studying\\Git\\WebsiteRapChieuPhim\\ProjectGS\\ProjectGS.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\nguye\\.nuget\\packages\\communitytoolkit.maui\\9.1.1\\communitytoolkit.maui.9.1.1.nupkg.sha512",
     "C:\\Users\\nguye\\.nuget\\packages\\communitytoolkit.maui.core\\9.1.1\\communitytoolkit.maui.core.9.1.1.nupkg.sha512",
