@@ -124,6 +124,78 @@ namespace ProjectGSMAUI.Api.Migrations
                     b.HasIndex("MaGiamGia");
 
                     b.ToTable("Coupon", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            MaGiamGia = 1,
+                            MaNhap = "COUPON001",
+                            TrangThai = true
+                        },
+                        new
+                        {
+                            Id = 2,
+                            MaGiamGia = 1,
+                            MaNhap = "COUPON002",
+                            TrangThai = true
+                        },
+                        new
+                        {
+                            Id = 3,
+                            MaGiamGia = 1,
+                            MaNhap = "COUPON003",
+                            TrangThai = false
+                        },
+                        new
+                        {
+                            Id = 4,
+                            MaGiamGia = 1,
+                            MaNhap = "COUPON004",
+                            TrangThai = true
+                        },
+                        new
+                        {
+                            Id = 5,
+                            MaGiamGia = 1,
+                            MaNhap = "COUPON005",
+                            TrangThai = false
+                        },
+                        new
+                        {
+                            Id = 6,
+                            MaGiamGia = 1,
+                            MaNhap = "COUPON006",
+                            TrangThai = true
+                        },
+                        new
+                        {
+                            Id = 7,
+                            MaGiamGia = 1,
+                            MaNhap = "COUPON007",
+                            TrangThai = false
+                        },
+                        new
+                        {
+                            Id = 8,
+                            MaGiamGia = 1,
+                            MaNhap = "COUPON008",
+                            TrangThai = true
+                        },
+                        new
+                        {
+                            Id = 9,
+                            MaGiamGia = 1,
+                            MaNhap = "COUPON009",
+                            TrangThai = true
+                        },
+                        new
+                        {
+                            Id = 10,
+                            MaGiamGia = 1,
+                            MaNhap = "COUPON010",
+                            TrangThai = false
+                        });
                 });
 
             modelBuilder.Entity("ProjectGSMAUI.Api.Data.Entities.DatVe", b =>
@@ -201,6 +273,17 @@ namespace ProjectGSMAUI.Api.Migrations
                         .HasName("PK__GiamGia__EF9458E404C081C8");
 
                     b.ToTable("GiamGia");
+
+                    b.HasData(
+                        new
+                        {
+                            MaGiamGia = 1,
+                            GiaTri = 20,
+                            NgayBatDau = new DateOnly(2025, 1, 1),
+                            NgayKetThuc = new DateOnly(2024, 6, 30),
+                            SoLuong = 10,
+                            TenGiamGia = "Khuyến mãi nửa đầu 2025"
+                        });
                 });
 
             modelBuilder.Entity("ProjectGSMAUI.Api.Data.Entities.HinhAnh", b =>
@@ -386,6 +469,20 @@ namespace ProjectGSMAUI.Api.Migrations
                     b.ToTable("Phong", (string)null);
                 });
 
+            modelBuilder.Entity("ProjectGSMAUI.Api.Data.Entities.RefreshToken", b =>
+                {
+                    b.Property<string>("TokenID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("refreshtoken")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("TokenID");
+
+                    b.ToTable("RefreshTokens");
+                });
+
             modelBuilder.Entity("ProjectGSMAUI.Api.Data.Entities.SanPham", b =>
                 {
                     b.Property<int>("Id")
@@ -483,6 +580,25 @@ namespace ProjectGSMAUI.Api.Migrations
                         .HasName("PK__TaiKhoan__BC5F907CDEBE2E2D");
 
                     b.ToTable("TaiKhoan", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            IdtaiKhoan = "TK001",
+                            Cccd = "123456789012",
+                            DiaChi = "123 Đường ABC, Thành phố XYZ",
+                            DiemTichLuy = 0,
+                            Email = "nguyenquangquyX@gmail.com",
+                            GioiTinh = true,
+                            MatKhau = "8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92",
+                            NgayDangKy = new DateOnly(2024, 12, 31),
+                            NgaySinh = new DateOnly(1999, 5, 19),
+                            Sdt = "0973713274",
+                            TenNguoiDung = "Quản trị viên",
+                            TenTaiKhoan = "Admin",
+                            TrangThai = 1,
+                            VaiTro = 2
+                        });
                 });
 
             modelBuilder.Entity("ProjectGSMAUI.Api.Data.Entities.TheLoaiPhim", b =>

@@ -5,6 +5,7 @@ using ProjectGSMAUI.Api.Data.Entities;
 using ProjectGSMAUI.Api.Helper;
 using ProjectGSMAUI.Api.Modal;
 using ProjectGSMAUI.Api.Services;
+using System.Runtime.CompilerServices;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ProjectGSMAUI.Api.Container
@@ -13,27 +14,30 @@ namespace ProjectGSMAUI.Api.Container
     {
         private readonly ApplicationDbContext context;
         private readonly IMapper mapper;
-        public VoucherServices(ApplicationDbContext _context, IMapper mapper)
+        private readonly ILogger<VoucherServices> logger;
+        public VoucherServices(ApplicationDbContext _context, IMapper mapper, ILogger<VoucherServices> logger)
         {
             context = _context;
             this.mapper = mapper;
+            this.logger = logger;
         }
-
         public async Task<APIResponse> Create(ActiveVoucher data)
         {
             APIResponse response = new APIResponse();
             try
             {
-                Coupon _coupon = this.mapper.Map<ActiveVoucher,Coupon>(data);
+                this.logger.LogInformation("Create Begins");
+                Coupon _coupon = this.mapper.Map<ActiveVoucher, Coupon>(data);
                 await this.context.Coupons.AddAsync(_coupon);
                 await this.context.SaveChangesAsync();
                 response.ResponseCode = 201;
                 response.Result = data.Id.ToString();
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 response.ResponseCode = 400;
                 response.ErrorMessage = ex.Message;
+                this.logger.LogError(ex.Message, ex);
             }
             return response;
         }

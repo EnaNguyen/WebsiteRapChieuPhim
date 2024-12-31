@@ -38,10 +38,17 @@ namespace ProjectGSMAUI.Api.Data
         public DbSet<Combo> Combos { get; set; }
         public DbSet<SanPham> SanPhams { get; set; }
         public DbSet<ChiTietCombo> ChiTietCombos { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<RefreshToken>(entity =>
+            {
+                entity.HasKey(e => e.TokenID);
+                entity.Property(e => e.TokenID).IsRequired(); 
+                entity.Property(e => e.refreshtoken).IsRequired();
+            });
             modelBuilder.Entity<ChiTietHoaDon>(entity =>
             {
                 entity.HasKey(e => e.MaChiTietHoaDon).HasName("PK__ChiTietH__CFF2C426609D1D0B");
@@ -320,6 +327,109 @@ namespace ProjectGSMAUI.Api.Data
                 .HasOne(ct => ct.SanPham)
                 .WithMany(sp => sp.ChiTietCombos)
                 .HasForeignKey(ct => ct.SanPhamId);
+             modelBuilder.Entity<GiamGia>().HasData(
+                new GiamGia
+                {
+                    MaGiamGia = 1,
+                    TenGiamGia = "Khuyến mãi nửa đầu 2025",
+                    GiaTri = 20,
+                    NgayBatDau = DateOnly.FromDateTime(new DateTime(2025, 1, 1)),
+                    NgayKetThuc = DateOnly.FromDateTime(new DateTime(2024, 6, 30)),
+                    SoLuong =10,
+                }
+            );
+            modelBuilder.Entity<Coupon>().HasData(
+                new Coupon
+                {
+                    Id = 1,
+                    MaNhap = "COUPON001",
+                    MaGiamGia = 1,
+                    TrangThai = true
+                },
+                new Coupon
+                {
+                    Id = 2,
+                    MaNhap = "COUPON002",
+                    MaGiamGia = 1,
+                    TrangThai = true
+                },
+                new Coupon
+                {
+                    Id = 3,
+                    MaNhap = "COUPON003",
+                    MaGiamGia = 1,
+                    TrangThai = false
+                },
+                new Coupon
+                {
+                    Id = 4,
+                    MaNhap = "COUPON004",
+                    MaGiamGia = 1,
+                    TrangThai = true
+                },
+                new Coupon
+                {
+                    Id = 5,
+                    MaNhap = "COUPON005",
+                    MaGiamGia = 1,
+                    TrangThai = false
+                },
+                new Coupon
+                {
+                    Id = 6,
+                    MaNhap = "COUPON006",
+                    MaGiamGia = 1,
+                    TrangThai = true
+                },
+                new Coupon
+                {
+                    Id = 7,
+                    MaNhap = "COUPON007",
+                    MaGiamGia = 1,
+                    TrangThai = false
+                },
+                new Coupon
+                {
+                    Id = 8,
+                    MaNhap = "COUPON008",
+                    MaGiamGia = 1,
+                    TrangThai = true
+                },
+                new Coupon
+                {
+                    Id = 9,
+                    MaNhap = "COUPON009",
+                    MaGiamGia = 1,
+                    TrangThai = true
+                },
+                new Coupon
+                {
+                    Id = 10,
+                    MaNhap = "COUPON010",
+                    MaGiamGia = 1,
+                    TrangThai = false
+                }
+            );
+            modelBuilder.Entity<TaiKhoan>().HasData(
+                new TaiKhoan
+                {
+                    IdtaiKhoan = "TK001",
+                    TenTaiKhoan = "Admin",
+                    MatKhau = "8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92",
+                    TenNguoiDung = "Quản trị viên",
+                    Email = "nguyenquangquyX@gmail.com",
+                    Sdt = "0973713274",
+                    VaiTro = 2,
+                    NgaySinh = DateOnly.FromDateTime(new DateTime(1999, 5, 19)),
+                    NgayDangKy = DateOnly.FromDateTime(DateTime.Now),
+                    TrangThai = 1,
+                    DiemTichLuy = 0,
+                    Hinh = null,
+                    Cccd = "123456789012",
+                    GioiTinh = true,
+                    DiaChi = "123 Đường ABC, Thành phố XYZ"
+                }
+            );
         }
     }
 }

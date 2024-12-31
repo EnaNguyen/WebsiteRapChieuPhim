@@ -4,9 +4,15 @@ using ProjectGSMAUI.Api.Services;
 using Microsoft.AspNetCore.Http;
 using AutoMapper;
 using ProjectGSMAUI.Api.Modal;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ProjectGSMAUI.Api.Controllers.Quy
 {
+    //[Authorize]
+    //[DisableCors]
+    [EnableRateLimiting("fixedwindow")]
     [Route("api/[controller]")]
     [ApiController]
     public class VoucherController : ControllerBase
@@ -16,6 +22,7 @@ namespace ProjectGSMAUI.Api.Controllers.Quy
         {
             this.service = service;
         }
+        //[EnableCors("corpolicy1")]
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll()
         {
@@ -26,6 +33,7 @@ namespace ProjectGSMAUI.Api.Controllers.Quy
             }
             return Ok(data);
         }
+        [DisableRateLimiting]
         [HttpGet("GetByID")]
         public async Task<IActionResult> GetByID(int Id)
         {

@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace ProjectGSMAUI.Api.Migrations
 {
     /// <inheritdoc />
-    public partial class AddDuLieuToDb : Migration
+    public partial class AddDaTaToDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -82,6 +84,18 @@ namespace ProjectGSMAUI.Api.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK__Phong__3214EC27E14F6440", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RefreshTokens",
+                columns: table => new
+                {
+                    TokenID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    refreshtoken = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RefreshTokens", x => x.TokenID);
                 });
 
             migrationBuilder.CreateTable(
@@ -377,6 +391,33 @@ namespace ProjectGSMAUI.Api.Migrations
                         principalColumn: "MaVe");
                 });
 
+            migrationBuilder.InsertData(
+                table: "GiamGia",
+                columns: new[] { "MaGiamGia", "GiaTri", "NgayBatDau", "NgayKetThuc", "SoLuong", "TenGiamGia" },
+                values: new object[] { 1, 20, new DateOnly(2025, 1, 1), new DateOnly(2024, 6, 30), 10, "Khuyến mãi nửa đầu 2025" });
+
+            migrationBuilder.InsertData(
+                table: "TaiKhoan",
+                columns: new[] { "IDTaiKhoan", "CCCD", "DiaChi", "DiemTichLuy", "Email", "GioiTinh", "Hinh", "MatKhau", "NgayDangKy", "NgaySinh", "SDT", "TenNguoiDung", "TenTaiKhoan", "TrangThai", "VaiTro" },
+                values: new object[] { "TK001", "123456789012", "123 Đường ABC, Thành phố XYZ", 0, "nguyenquangquyX@gmail.com", true, null, "8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92", new DateOnly(2024, 12, 31), new DateOnly(1999, 5, 19), "0973713274", "Quản trị viên", "Admin", 1, 2 });
+
+            migrationBuilder.InsertData(
+                table: "Coupon",
+                columns: new[] { "ID", "MaGiamGia", "MaNhap", "TrangThai" },
+                values: new object[,]
+                {
+                    { 1, 1, "COUPON001", true },
+                    { 2, 1, "COUPON002", true },
+                    { 3, 1, "COUPON003", false },
+                    { 4, 1, "COUPON004", true },
+                    { 5, 1, "COUPON005", false },
+                    { 6, 1, "COUPON006", true },
+                    { 7, 1, "COUPON007", false },
+                    { 8, 1, "COUPON008", true },
+                    { 9, 1, "COUPON009", true },
+                    { 10, 1, "COUPON010", false }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_ChiTietCombos_ComboId",
                 table: "ChiTietCombos",
@@ -477,6 +518,9 @@ namespace ProjectGSMAUI.Api.Migrations
 
             migrationBuilder.DropTable(
                 name: "HinhAnh");
+
+            migrationBuilder.DropTable(
+                name: "RefreshTokens");
 
             migrationBuilder.DropTable(
                 name: "Video");
