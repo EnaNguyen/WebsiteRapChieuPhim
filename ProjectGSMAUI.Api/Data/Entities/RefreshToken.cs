@@ -8,6 +8,7 @@ namespace ProjectGSMAUI.Api.Data.Entities
         [Key]
         public string UserID { get; set; }
         public string TokenID { get; set; }
+
         public string refreshtoken { get; set; }
     }
 }
