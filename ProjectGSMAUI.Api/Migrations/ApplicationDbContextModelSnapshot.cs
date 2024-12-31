@@ -471,14 +471,18 @@ namespace ProjectGSMAUI.Api.Migrations
 
             modelBuilder.Entity("ProjectGSMAUI.Api.Data.Entities.RefreshToken", b =>
                 {
-                    b.Property<string>("TokenID")
+                    b.Property<string>("UserID")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("TokenID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("refreshtoken")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("TokenID");
+                    b.HasKey("UserID");
 
                     b.ToTable("RefreshTokens");
                 });

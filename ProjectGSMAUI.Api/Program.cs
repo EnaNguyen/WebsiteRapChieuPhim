@@ -25,6 +25,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IVoucherServices, VoucherServices>();
 builder.Services.AddScoped<IGiamGiaServices, GiamGiaServices>();
+builder.Services.AddTransient<IRefreshHandler, RefreshHandler>();
 //builder.Services.AddAuthentication("BasicAuthentication").AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
 var _authkey = builder.Configuration.GetValue<string>("JwtSettings:securitykey");
 builder.Services.AddAuthentication(item =>
