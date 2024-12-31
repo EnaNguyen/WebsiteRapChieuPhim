@@ -45,8 +45,10 @@ namespace ProjectGSMAUI.Api.Data
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<RefreshToken>(entity =>
             {
-                entity.HasKey(e => e.TokenID);
+                entity.HasKey(e => e.UserID);
+
                 entity.Property(e => e.TokenID).IsRequired(); 
+                entity.Property(e => e.UserID).IsRequired(); 
                 entity.Property(e => e.refreshtoken).IsRequired();
             });
             modelBuilder.Entity<ChiTietHoaDon>(entity =>
