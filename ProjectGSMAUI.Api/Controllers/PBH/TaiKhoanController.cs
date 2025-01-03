@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ProjectGSMAUI.Api.Data;
+using ProjectGSMAUI.Api.Container;
 using ProjectGSMAUI.Api.Data.Entities;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 
 namespace ProjectGSMAUI.Api.Controllers.PBH
 {
@@ -12,60 +12,66 @@ namespace ProjectGSMAUI.Api.Controllers.PBH
     [ApiController]
     public class TaiKhoanController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ITaiKhoanService _taiKhoanService;
 
-        public TaiKhoanController(ApplicationDbContext context)
+        public TaiKhoanController(ITaiKhoanService taiKhoanService)
         {
-            _context = context;
+            _taiKhoanService = taiKhoanService;
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<TaiKhoan>> GetTaiKhoans()
+        public async Task<ActionResult<IEnumerable<TaiKhoan>>> GetTaiKhoans()
         {
-            return _context.TaiKhoans.ToList();
+            var taiKhoans = await _taiKhoanService.GetTaiKhoansAsync();
+            var result = taiKhoans.Select(t => new
+            {
+                IdtaiKhoan = t.IdtaiKhoan.Trim(),
+                TenTaiKhoan = t.TenTaiKhoan.Trim(),
+                MatKhau = t.MatKhau.Trim(),
+                TenNguoiDung = t.TenNguoiDung.Trim(),
+                TrangThai = t.TrangThai,
+                Hinh = t.Hinh.Trim(),
+                Cccd = t.Cccd.Trim()
+            });
+            return Ok(result);
+            
         }
 
         [HttpGet("{id}")]
-        public ActionResult<TaiKhoan> GetTaiKhoan(string id)
+        public async Task<ActionResult<TaiKhoan>> GetTaiKhoan(string id)
         {
-            var taiKhoan = _context.TaiKhoans.Find(id);
+            var taiKhoan = await _taiKhoanService.GetTaiKhoanByIdAsync(id);
 
             if (taiKhoan == null)
             {
                 return NotFound();
             }
 
-            return taiKhoan;
+            return Ok(taiKhoan);
         }
 
         [HttpPost]
-        public ActionResult<TaiKhoan> PostTaiKhoan(TaiKhoan taiKhoan)
+        public async Task<ActionResult<TaiKhoan>> PostTaiKhoan(TaiKhoan taiKhoan)
         {
-            taiKhoan.MatKhau = PasswordHasher.HashPassword(taiKhoan.MatKhau);
-            _context.TaiKhoans.Add(taiKhoan);
-            _context.SaveChanges();
-
-            return CreatedAtAction("GetTaiKhoan", new { id = taiKhoan.IdtaiKhoan }, taiKhoan);
+            await _taiKhoanService.CreateTaiKhoanAsync(taiKhoan);
+            return CreatedAtAction(nameof(GetTaiKhoan), new { id = taiKhoan.IdtaiKhoan }, taiKhoan);
         }
 
         [HttpPut("{id}")]
-        public IActionResult PutTaiKhoan(string id, TaiKhoan taiKhoan)
+        public async Task<IActionResult> PutTaiKhoan(string id, TaiKhoan taiKhoan)
         {
             if (id != taiKhoan.IdtaiKhoan)
             {
                 return BadRequest();
             }
 
-            taiKhoan.MatKhau = PasswordHasher.HashPassword(taiKhoan.MatKhau);
-            _context.Entry(taiKhoan).State = EntityState.Modified;
-
             try
             {
-                _context.SaveChanges();
+                await _taiKhoanService.UpdateTaiKhoanAsync(taiKhoan);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!_context.TaiKhoans.Any(e => e.IdtaiKhoan == id))
+                if (!await TaiKhoanExists(id))
                 {
                     return NotFound();
                 }
@@ -78,20 +84,17 @@ namespace ProjectGSMAUI.Api.Controllers.PBH
             return NoContent();
         }
 
-
         [HttpDelete("{id}")]
-        public IActionResult DeleteTaiKhoan(string id)
+        public async Task<IActionResult> DeleteTaiKhoan(string id)
         {
-            var taiKhoan = _context.TaiKhoans.Find(id);
-            if (taiKhoan == null)
-            {
-                return NotFound();
-            }
-
-            _context.TaiKhoans.Remove(taiKhoan);
-            _context.SaveChanges();
-
+            await _taiKhoanService.DeleteTaiKhoanAsync(id);
             return NoContent();
+        }
+
+        private async Task<bool> TaiKhoanExists(string id)
+        {
+            var taiKhoan = await _taiKhoanService.GetTaiKhoanByIdAsync(id);
+            return taiKhoan != null;
         }
     }
 }

@@ -12,13 +12,8 @@ using ProjectGSMAUI.Api.Data;
 namespace ProjectGSMAUI.Api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-<<<<<<<< HEAD:ProjectGSMAUI.Api/Migrations/20241231032907_AddDuLieuToDb.Designer.cs
-    [Migration("20241231032907_AddDuLieuToDb")]
-    partial class AddDuLieuToDb
-========
-    [Migration("20241231064752_DLSS")]
+    [Migration("20241231152543_DLSS")]
     partial class DLSS
->>>>>>>> origin/Hau-TaiKhoan:ProjectGSMAUI.Api/Migrations/20241231064752_DLSS.Designer.cs
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
