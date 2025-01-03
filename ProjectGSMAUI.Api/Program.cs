@@ -23,8 +23,11 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<IPhimService, PhimService>();
 builder.Services.AddScoped<IVoucherServices, VoucherServices>();
 builder.Services.AddScoped<IGiamGiaServices, GiamGiaServices>();
+builder.Services.AddScoped<ITheLoaiPhimService, TheLoaiPhimService>();
+builder.Services.AddScoped<ILichChieuService, LichChieuService>();
 builder.Services.AddTransient<IRefreshHandler, RefreshHandler>();
 //builder.Services.AddAuthentication("BasicAuthentication").AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
 var _authkey = builder.Configuration.GetValue<string>("JwtSettings:securitykey");
