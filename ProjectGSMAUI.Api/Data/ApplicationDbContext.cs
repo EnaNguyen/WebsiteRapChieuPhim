@@ -186,7 +186,7 @@ namespace ProjectGSMAUI.Api.Data
 
                 entity.ToTable("LichChieu");
 
-                entity.Property(e => e.MaLichChieu).ValueGeneratedNever();
+                entity.Property(e => e.MaLichChieu).ValueGeneratedOnAdd();
                 entity.Property(e => e.GiaVe).HasColumnType("decimal(10, 2)");
 
                 entity.HasOne(d => d.GioChieuNavigation).WithMany(p => p.LichChieus)
@@ -201,7 +201,6 @@ namespace ProjectGSMAUI.Api.Data
                     .HasForeignKey(d => d.MaPhong)
                     .HasConstraintName("FK__LichChieu__MaPho__4222D4EF");
             });
-
             modelBuilder.Entity<Phim>(entity =>
             {
                 entity.HasKey(e => e.Id).HasName("PK__Phim__3214EC27C9B2D53C");
@@ -430,6 +429,105 @@ namespace ProjectGSMAUI.Api.Data
                     GioiTinh = true,
                     DiaChi = "123 Đường ABC, Thành phố XYZ"
                 }
+            );
+            modelBuilder.Entity<TheLoaiPhim>().HasData(
+                new TheLoaiPhim { Id = 1, TenTheLoai = "Hành Động" },
+                new TheLoaiPhim { Id = 2, TenTheLoai = "Lãng Mạn" },
+                new TheLoaiPhim { Id = 3, TenTheLoai = "Kinh Dị" },
+                new TheLoaiPhim { Id = 4, TenTheLoai = "Hoạt Hình" },
+                new TheLoaiPhim { Id = 5, TenTheLoai = "Khoa Học Viễn Tưởng" }
+            );
+            modelBuilder.Entity<Phim>().HasData(
+                new Phim
+                {
+                    Id = 1,
+                    DaoDien = "Director A",
+                    GioiHanDoTuoi = 13,
+                    MoTa = "Action-packed movie about...",
+                    NgayKetThuc = new DateOnly(2024, 2, 28),
+                    NgayKhoiChieu = new DateOnly(2024, 1, 15),
+                    SoSuatChieu = 5,
+                    TenPhim = "Action Movie 1",
+                    TheLoai = 1, // Action
+                    ThoiLuong = 120,
+                    TrangThai = 1
+                },
+                new Phim
+                {
+                    Id = 2,
+                    DaoDien = "Director B",
+                    GioiHanDoTuoi = 16,
+                    MoTa = "A romantic story about...",
+                    NgayKetThuc = new DateOnly(2024, 3, 15),
+                    NgayKhoiChieu = new DateOnly(2024, 2, 1),
+                    SoSuatChieu = 4,
+                    TenPhim = "Romantic Movie 1",
+                    TheLoai = 2, // Romantic
+                    ThoiLuong = 110,
+                    TrangThai = 1
+
+                },
+                new Phim
+                {
+                    Id = 3,
+                    DaoDien = "Director C",
+                    GioiHanDoTuoi = 18,
+                    MoTa = "A terrifying horror film...",
+                    NgayKetThuc = new DateOnly(2024, 3, 31),
+                    NgayKhoiChieu = new DateOnly(2024, 3, 1),
+                    SoSuatChieu = 3,
+                    TenPhim = "Horror Movie 1",
+                    TheLoai = 3, // Horror
+                    ThoiLuong = 95,
+                    TrangThai = 1
+                },
+                new Phim
+                {
+                    Id = 4,
+                    DaoDien = "Director D",
+                    GioiHanDoTuoi = 0, // All ages
+                    MoTa = "An animated adventure for...",
+                    NgayKetThuc = new DateOnly(2024, 4, 15),
+                    NgayKhoiChieu = new DateOnly(2024, 3, 20),
+                    SoSuatChieu = 6,
+                    TenPhim = "Animated Movie 1",
+                    TheLoai = 4, // Animated
+                    ThoiLuong = 90,
+                    TrangThai = 1
+                },
+                new Phim
+                {
+                    Id = 5,
+                    DaoDien = "Director E",
+                    GioiHanDoTuoi = 13,
+                    MoTa = "A sci-fi epic about...",
+                    NgayKetThuc = new DateOnly(2024, 4, 30),
+                    NgayKhoiChieu = new DateOnly(2024, 4, 10),
+                    SoSuatChieu = 5,
+                    TenPhim = "Sci-Fi Movie 1",
+                    TheLoai = 5, // Sci-fi
+                    ThoiLuong = 135,
+                    TrangThai = 1
+                }
+
+            );
+
+            modelBuilder.Entity<Phong>().HasData(
+                new Phong { Id = 1, TenPhong = "Phòng 1", SoLuongGhe = 112, TinhTrang = 1 }, 
+                new Phong { Id = 2, TenPhong = "Phòng 2", SoLuongGhe = 112, TinhTrang = 1 },
+                new Phong { Id = 3, TenPhong = "Phòng 3", SoLuongGhe = 112, TinhTrang = 1 }, 
+                new Phong { Id = 4, TenPhong = "Phòng 4", SoLuongGhe = 112, TinhTrang = 1 }, 
+                new Phong { Id = 5, TenPhong = "Phòng 5", SoLuongGhe = 112, TinhTrang = 1 }, 
+                new Phong { Id = 6, TenPhong = "Phòng 6", SoLuongGhe = 112, TinhTrang = 1 }
+
+            );
+            modelBuilder.Entity<KhungGio>().HasData(
+                new KhungGio { Id = 1, GioBatDau = new TimeOnly(9, 0), GioKetThuc = new TimeOnly(11, 0) },
+                new KhungGio { Id = 2, GioBatDau = new TimeOnly(12, 0), GioKetThuc = new TimeOnly(14, 0) },
+                new KhungGio { Id = 3, GioBatDau = new TimeOnly(15, 0), GioKetThuc = new TimeOnly(17, 0) },
+                new KhungGio { Id = 4, GioBatDau = new TimeOnly(18, 0), GioKetThuc = new TimeOnly(20, 0) },
+                new KhungGio { Id = 5, GioBatDau = new TimeOnly(21, 0), GioKetThuc = new TimeOnly(23, 0) },
+                new KhungGio { Id = 6, GioBatDau = new TimeOnly(0, 0), GioKetThuc = new TimeOnly(2, 0) }
             );
         }
     }
