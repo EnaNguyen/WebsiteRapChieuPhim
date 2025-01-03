@@ -10,7 +10,24 @@ namespace ProjectGSMAUI.Api.Helper
         public AutoMapperHandler() 
         {
             CreateMap<Coupon, ActiveVoucher>().ForMember(item => item.TenTrangThai, opt => opt.MapFrom(item =>
-            (item.TrangThai!=null && item.TrangThai.Value)?"Còn lại":"Đã sử dụng")).ReverseMap();
-        }
+            (item.TrangThai!=null && item.TrangThai.Value)?"Chưa Sử dụng":"Đã sử dụng")).ReverseMap();
+			CreateMap<GiamGia, ActiveGiamGia>()
+			   .ForMember(
+				   dest => dest.SoLuongConLai,
+				   opt => opt.MapFrom(src =>
+					   src.SoLuong.HasValue
+					   ? src.SoLuong.Value - src.Coupons.Count(c => c.TrangThai == false)
+					   : 0
+				   )
+			   )
+			   .ForMember(
+				   dest => dest.SoLuongDaDung,
+				   opt => opt.MapFrom(src =>
+					   src.Coupons.Count(c => c.TrangThai == false)
+				   )
+			   )
+			   .ReverseMap();
+			 int i = 1;
+		}
     }
 }

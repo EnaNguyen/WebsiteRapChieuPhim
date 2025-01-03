@@ -64,34 +64,46 @@ namespace ProjectGSMAUI.Api.Container
             return _response;
         }
 
-        public async Task<APIResponse> Remove(int id)
-        {
-            APIResponse response = new APIResponse();
-            try
-            {
-                var _customer = await this.context.Coupons.FindAsync(id);
-                if (_customer != null)
-                {
-                    this.context.Coupons.Remove(_customer);
-                    await this.context.SaveChangesAsync(); 
-                }
-                else
-                {
-                    response.ResponseCode = 404;
-                    response.ErrorMessage = "Không tìm thấy Voucher tương ứng!";
-                }    
-                response.ResponseCode = 201;
-                response.Result = id.ToString();
-            }
-            catch (Exception ex)
-            {
-                response.ResponseCode = 400;
-                response.ErrorMessage = ex.Message;
-            }
-            return response;
-        }
+		public async Task<APIResponse> Remove(int id)
+		{
+			APIResponse response = new APIResponse();
+			using var transaction = await this.context.Database.BeginTransactionAsync();
+			try
+			{
+				var coupon = await this.context.Coupons
+					.Include(c => c.MaGiamGiaNavigation) 
+					.FirstOrDefaultAsync(c => c.Id == id);
 
-        public async Task<APIResponse> Update(ActiveVoucher data, int id)
+				if (coupon != null)
+				{
+					var giamGia = coupon.MaGiamGiaNavigation;
+					if (giamGia != null)
+					{
+						giamGia.SoLuong -= 1;
+						this.context.GiamGia.Update(giamGia); 
+					}
+					this.context.Coupons.Remove(coupon);
+					await this.context.SaveChangesAsync();
+					await transaction.CommitAsync();
+					response.ResponseCode = 201;
+					response.Result = id.ToString();
+				}
+				else
+				{
+					response.ResponseCode = 404;
+					response.ErrorMessage = "Không tìm thấy Voucher tương ứng!";
+				}
+			}
+			catch (Exception ex)
+			{
+				await transaction.RollbackAsync();
+				response.ResponseCode = 400;
+				response.ErrorMessage = ex.Message;
+			}
+			return response;
+		}
+
+		public async Task<APIResponse> Update(ActiveVoucher data, int id)
         {
             APIResponse response = new APIResponse();
             try

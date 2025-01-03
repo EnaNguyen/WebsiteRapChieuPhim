@@ -18,9 +18,11 @@ namespace ProjectGSMAUI.Api.Controllers.Quy
     public class VoucherController : ControllerBase
     {
         private readonly IVoucherServices service;
+        private readonly IMapper _mapper;
         public VoucherController(IVoucherServices service, IMapper mapper)
         {
             this.service = service;
+            this._mapper = mapper;
         }
         //[EnableCors("corpolicy1")]
         [HttpGet("GetAll")]
