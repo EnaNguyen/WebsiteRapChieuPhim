@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace ProjectGSMAUI.Api.Controllers.PBH
+namespace ProjectGSMAUI.Api.Utilities
 {
     public class PasswordHasher
     {

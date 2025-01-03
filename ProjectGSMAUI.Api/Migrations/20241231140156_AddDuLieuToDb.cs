@@ -8,7 +8,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ProjectGSMAUI.Api.Migrations
 {
     /// <inheritdoc />
+<<<<<<<< HEAD:ProjectGSMAUI.Api/Migrations/20241231140156_AddDuLieuToDb.cs
     public partial class AddDuLieuToDb : Migration
+========
+    public partial class DLSS : Migration
+>>>>>>>> origin/Hau-TaiKhoan2:ProjectGSMAUI.Api/Migrations/20241231152543_DLSS.cs
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
