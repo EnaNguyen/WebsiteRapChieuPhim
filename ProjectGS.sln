@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectGS", "ProjectGS\ProjectGS.csproj", "{25D34616-A0F7-4E63-B9A4-09380168807A}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectGSMAUI.Api", "ProjectGSMAUI.Api\ProjectGSMAUI.Api.csproj", "{0106CB1E-7AE6-4B21-A032-693C58DDB861}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectGSMAUI.Shared", "ProjectGSMAUI.Shared\ProjectGSMAUI.Shared.csproj", "{6C5025E6-057B-425F-A038-6A650CADBD59}"
@@ -17,12 +15,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{25D34616-A0F7-4E63-B9A4-09380168807A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{25D34616-A0F7-4E63-B9A4-09380168807A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{25D34616-A0F7-4E63-B9A4-09380168807A}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{25D34616-A0F7-4E63-B9A4-09380168807A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{25D34616-A0F7-4E63-B9A4-09380168807A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{25D34616-A0F7-4E63-B9A4-09380168807A}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{0106CB1E-7AE6-4B21-A032-693C58DDB861}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0106CB1E-7AE6-4B21-A032-693C58DDB861}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0106CB1E-7AE6-4B21-A032-693C58DDB861}.Release|Any CPU.ActiveCfg = Release|Any CPU

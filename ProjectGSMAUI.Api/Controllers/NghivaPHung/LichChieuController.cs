@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProjectGSMAUI.Api.Services;
+using ProjectGSMAUI.Api.Data.Entities;
 using System.Threading.Tasks;
 
 namespace ProjectGSMAUI.Api.Controllers
@@ -41,6 +42,39 @@ namespace ProjectGSMAUI.Api.Controllers
         public async Task<IActionResult> GenerateSchedule()
         {
             var response = await this.service.GenerateSchedule();
+            if (response.ResponseCode != 200)
+            {
+                return StatusCode(response.ResponseCode, new { Message = response.ErrorMessage });
+            }
+            return Ok(response.Data);
+        }
+
+        [HttpPost("Add")]
+        public async Task<IActionResult> AddSchedule([FromBody] LichChieu schedule)
+        {
+            var response = await this.service.AddSchedule(schedule);
+            if (response.ResponseCode != 200)
+            {
+                return StatusCode(response.ResponseCode, new { Message = response.ErrorMessage });
+            }
+            return Ok(response.Data);
+        }
+
+        [HttpDelete("Delete/{id}")]
+        public async Task<IActionResult> DeleteSchedule(int id)
+        {
+            var response = await this.service.DeleteSchedule(id);
+            if (response.ResponseCode != 200)
+            {
+                return StatusCode(response.ResponseCode, new { Message = response.ErrorMessage });
+            }
+            return Ok(response.Result);
+        }
+
+        [HttpPost("GenerateWithAdjustments")]
+        public async Task<IActionResult> GenerateScheduleWithAdjustments([FromQuery] int phimCanTangId, [FromQuery] int soSuatCanTang)
+        {
+            var response = await this.service.GenerateScheduleWithAdjustments(phimCanTangId, soSuatCanTang);
             if (response.ResponseCode != 200)
             {
                 return StatusCode(response.ResponseCode, new { Message = response.ErrorMessage });

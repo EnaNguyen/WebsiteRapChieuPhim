@@ -6,7 +6,7 @@ using ProjectGSMAUI.Api.Services;
 
 namespace ProjectGSMAUI.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class TheLoaiPhimController : ControllerBase
     {
@@ -16,7 +16,7 @@ namespace ProjectGSMAUI.Api.Controllers
             this.service = service;
         }
 
-        [HttpGet("GetAll")]
+        [HttpGet]
         public async Task<IActionResult> Get()
         {
             var response = await this.service.GetAll();
@@ -26,7 +26,7 @@ namespace ProjectGSMAUI.Api.Controllers
             }
             return Ok(response.Data);
         }
-        [HttpGet("GetByID")]
+        [HttpGet]
         public async Task<IActionResult> GetByID(int id)
         {
             var data = await this.service.GetByID(id);
@@ -37,7 +37,7 @@ namespace ProjectGSMAUI.Api.Controllers
             return Ok(data);
         }
 
-        [HttpPost("Create")]
+        [HttpPost]
         public async Task<IActionResult> Create([FromBody] TheLoaiPhim data)
         {
             if (data == null)
@@ -53,7 +53,7 @@ namespace ProjectGSMAUI.Api.Controllers
             return CreatedAtAction(nameof(GetByID), new { id = data.Id }, data);
         }
 
-        [HttpPut("Update")]
+        [HttpPut]
         public async Task<IActionResult> Update(int id, [FromBody] TheLoaiPhim data)
         {
             if (data == null || id != data.Id)
@@ -69,7 +69,7 @@ namespace ProjectGSMAUI.Api.Controllers
             return Ok(new { Message = response.Result });
         }
 
-        [HttpDelete("Remove")]
+        [HttpDelete]
         public async Task<IActionResult> Remove(int id)
         {
             var response = await this.service.Remove(id);

@@ -1,0 +1,75 @@
+﻿@model IEnumerable<ProjectGSMVC.Areas.Admin.Models.TheLoaiPhimViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="pd-ltr-20 xs-pd-20-10">
+    <div class="min-height-200px">
+        <div class="page-header">
+            <div class="row">
+                <div class="col-md-12 col-sm-12">
+                    <div class="title">
+                        <h4>Thể loại phim</h4>
+                    </div>
+                    <nav aria-label="breadcrumb" role="navigation">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="index.html">Trang chủ</a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">
+                                Thể loại phim
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <div class="product-wrap">
+            <div class="product-list">
+                <a href="@Url.Action("Create", "TheLoaiPhim")">Thêm thể loại phim mới</a>>
+                <br />
+                <ul class="row">
+                    @foreach (var item in Model)
+                    {
+                        <li class="col-lg-4 col-md-6 col-sm-12">
+                            <div class="product-box">
+                                <div class="product-caption">
+                                    <h4>
+                                        <a href="#">@item.TenTheLoai</a>
+                                    </h4>
+                                    <div class="price">
+                                        <ins>@item.Id</ins>
+                                    </div>
+                                    <a href="@Url.Action("Details", "TheLoaiPhim", new { id = item.Id })" class="btn btn-outline-primary">Sửa</a>
+                                    <a href="@Url.Action("Details", "TheLoaiPhim", new { id = item.Id })" class="btn btn-outline-primary">Xóa</a>
+                                </div>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+            <div class="blog-pagination mb-30">
+                <div class="btn-toolbar justify-content-center mb-15">
+                    <div class="btn-group">
+                        <a href="#" class="btn btn-outline-primary prev">
+                            <i class="fa fa-angle-double-left"></i>
+                        </a>
+                        <a href="#" class="btn btn-outline-primary">1</a>
+                        <a href="#" class="btn btn-outline-primary">2</a>
+                        <span class="btn btn-primary current">3</span>
+                        <a href="#" class="btn btn-outline-primary">4</a>
+                        <a href="#" class="btn btn-outline-primary">5</a>
+                        <a href="#" class="btn btn-outline-primary next">
+                            <i class="fa fa-angle-double-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
