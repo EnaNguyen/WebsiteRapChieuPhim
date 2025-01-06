@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using ProjectGSMAUI.Api.Helper;
 using Microsoft.EntityFrameworkCore;
 using ProjectGSMAUI.Api.Container;
@@ -52,14 +52,16 @@ builder.Services.AddAuthentication(item =>
 });
 var automapper = new MapperConfiguration(item => item.AddProfile(new AutoMapperHandler()));
 IMapper mapper = automapper.CreateMapper();
-builder.Services.AddCors(p => p.AddPolicy("corspolicy", build =>
-{
-    build.WithOrigins("https://domain1.com", "https://domain2.com").AllowAnyMethod().AllowAnyHeader();
-}));
-builder.Services.AddCors(p => p.AddPolicy("corspolicy1", build =>
-{
-    build.WithOrigins("https://domain3.com").AllowAnyMethod().AllowAnyHeader();
-}));
+//builder.Services.AddCors(p => p.AddPolicy("corspolicy", build =>
+//{
+//    build.WithOrigins("https://domain1.com", "https://domain2.com").AllowAnyMethod().AllowAnyHeader();
+//}));
+//builder.Services.AddCors(p => p.AddPolicy("corspolicy1", build =>
+//{
+//    build.WithOrigins("https://domain3.com").AllowAnyMethod().AllowAnyHeader();
+//}));
+builder.Services.AddCors();
+
 builder.Services.AddRateLimiter(_ => _.AddFixedWindowLimiter(policyName: "fixedwindow", option =>
 {
     option.Window = TimeSpan.FromSeconds(10);
@@ -89,11 +91,17 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseCors("corspolicy");
+
+//app.UseCors("corspolicy");
+app.UseCors(x => x
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .SetIsOriginAllowed(origin => true) 
+                .AllowCredentials());
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseStaticFiles();
 app.MapControllers();
 
 app.Run();

@@ -8,11 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ProjectGSMAUI.Api.Migrations
 {
     /// <inheritdoc />
-<<<<<<<< HEAD:ProjectGSMAUI.Api/Migrations/20241231140156_AddDuLieuToDb.cs
-    public partial class AddDuLieuToDb : Migration
-========
     public partial class DLSS : Migration
->>>>>>>> origin/Hau-TaiKhoan2:ProjectGSMAUI.Api/Migrations/20241231152543_DLSS.cs
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -276,7 +272,8 @@ namespace ProjectGSMAUI.Api.Migrations
                 name: "LichChieu",
                 columns: table => new
                 {
-                    MaLichChieu = table.Column<int>(type: "int", nullable: false),
+                    MaLichChieu = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     NgayChieu = table.Column<DateOnly>(type: "date", nullable: true),
                     GioChieu = table.Column<int>(type: "int", nullable: true),
                     MaPhim = table.Column<int>(type: "int", nullable: true),
@@ -402,9 +399,47 @@ namespace ProjectGSMAUI.Api.Migrations
                 values: new object[] { 1, 20, new DateOnly(2025, 1, 1), new DateOnly(2024, 6, 30), 10, "Khuyến mãi nửa đầu 2025" });
 
             migrationBuilder.InsertData(
+                table: "KhungGio",
+                columns: new[] { "ID", "GioBatDau", "GioKetThuc" },
+                values: new object[,]
+                {
+                    { 1, new TimeOnly(9, 0, 0), new TimeOnly(11, 0, 0) },
+                    { 2, new TimeOnly(12, 0, 0), new TimeOnly(14, 0, 0) },
+                    { 3, new TimeOnly(15, 0, 0), new TimeOnly(17, 0, 0) },
+                    { 4, new TimeOnly(18, 0, 0), new TimeOnly(20, 0, 0) },
+                    { 5, new TimeOnly(21, 0, 0), new TimeOnly(23, 0, 0) },
+                    { 6, new TimeOnly(0, 0, 0), new TimeOnly(2, 0, 0) }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Phong",
+                columns: new[] { "ID", "LoaiPhong", "SoLuongGhe", "TenPhong", "TinhTrang" },
+                values: new object[,]
+                {
+                    { 1, null, 112, "Phòng 1", 1 },
+                    { 2, null, 112, "Phòng 2", 1 },
+                    { 3, null, 112, "Phòng 3", 1 },
+                    { 4, null, 112, "Phòng 4", 1 },
+                    { 5, null, 112, "Phòng 5", 1 },
+                    { 6, null, 112, "Phòng 6", 1 }
+                });
+
+            migrationBuilder.InsertData(
                 table: "TaiKhoan",
                 columns: new[] { "IDTaiKhoan", "CCCD", "DiaChi", "DiemTichLuy", "Email", "GioiTinh", "Hinh", "MatKhau", "NgayDangKy", "NgaySinh", "SDT", "TenNguoiDung", "TenTaiKhoan", "TrangThai", "VaiTro" },
-                values: new object[] { "TK001", "123456789012", "123 Đường ABC, Thành phố XYZ", 0, "nguyenquangquyX@gmail.com", true, null, "8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92", new DateOnly(2024, 12, 31), new DateOnly(1999, 5, 19), "0973713274", "Quản trị viên", "Admin", 1, 2 });
+                values: new object[] { "TK001", "123456789012", "123 Đường ABC, Thành phố XYZ", 0, "nguyenquangquyX@gmail.com", true, null, "8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92", new DateOnly(2025, 1, 4), new DateOnly(1999, 5, 19), "0973713274", "Quản trị viên", "Admin", 1, 2 });
+
+            migrationBuilder.InsertData(
+                table: "TheLoaiPhim",
+                columns: new[] { "ID", "TenTheLoai" },
+                values: new object[,]
+                {
+                    { 1, "Hành Động" },
+                    { 2, "Lãng Mạn" },
+                    { 3, "Kinh Dị" },
+                    { 4, "Hoạt Hình" },
+                    { 5, "Khoa Học Viễn Tưởng" }
+                });
 
             migrationBuilder.InsertData(
                 table: "Coupon",
@@ -421,6 +456,18 @@ namespace ProjectGSMAUI.Api.Migrations
                     { 8, 1, "COUPON008", true },
                     { 9, 1, "COUPON009", true },
                     { 10, 1, "COUPON010", false }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Phim",
+                columns: new[] { "ID", "DaoDien", "GioiHanDoTuoi", "MoTa", "NgayKetThuc", "NgayKhoiChieu", "SoSuatChieu", "TenPhim", "TheLoai", "ThoiLuong", "TrangThai" },
+                values: new object[,]
+                {
+                    { 1, "Director A", 13, "Action-packed movie about...", new DateOnly(2024, 2, 28), new DateOnly(2024, 1, 15), 5, "Action Movie 1", 1, 120, 1 },
+                    { 2, "Director B", 16, "A romantic story about...", new DateOnly(2024, 3, 15), new DateOnly(2024, 2, 1), 4, "Romantic Movie 1", 2, 110, 1 },
+                    { 3, "Director C", 18, "A terrifying horror film...", new DateOnly(2024, 3, 31), new DateOnly(2024, 3, 1), 3, "Horror Movie 1", 3, 95, 1 },
+                    { 4, "Director D", 0, "An animated adventure for...", new DateOnly(2024, 4, 15), new DateOnly(2024, 3, 20), 6, "Animated Movie 1", 4, 90, 1 },
+                    { 5, "Director E", 13, "A sci-fi epic about...", new DateOnly(2024, 4, 30), new DateOnly(2024, 4, 10), 5, "Sci-Fi Movie 1", 5, 135, 1 }
                 });
 
             migrationBuilder.CreateIndex(

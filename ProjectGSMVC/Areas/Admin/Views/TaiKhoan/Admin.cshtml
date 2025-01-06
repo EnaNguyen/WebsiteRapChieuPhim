@@ -1,0 +1,53 @@
+﻿@* @model IEnumerable<ProjectGSMVC.Areas.Admin.Models.TaiKhoanModel>
+
+<h2>Quản lý Admin</h2>
+<button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#createModal">Thêm Admin</button>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Mã Tài Khoản</th>
+            <th>Tên Tài Khoản</th>
+            <th>Email</th>
+            <th>Số Điện Thoại</th>
+            <th>Trạng Thái</th>
+            <th>Hành Động</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var taiKhoan in Model)
+        {
+            <tr>
+                <td>@taiKhoan.IdtaiKhoan</td>
+                <td>@taiKhoan.TenTaiKhoan</td>
+                <td>@taiKhoan.Email</td>
+                <td>@taiKhoan.Sdt</td>
+                <td>@(taiKhoan.TrangThai == 1 ? "Hoạt động" : "Không hoạt động")</td>
+                <td>
+                    <button class="btn btn-warning" data-toggle="modal" data-target="#editModal" data-id="@taiKhoan.IdtaiKhoan">Sửa</button>
+                    <form method="post" asp-action="Delete" asp-route-id="@taiKhoan.IdtaiKhoan" asp-route-role="2" class="d-inline">
+                        <button type="submit" class="btn btn-danger">Xóa</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script>
+    (function () {
+        'use strict';
+
+        var forms = document.querySelectorAll('.needs-validation');
+
+        Array.prototype.slice.call(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+
+</script> *@

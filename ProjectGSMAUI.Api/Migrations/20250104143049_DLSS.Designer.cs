@@ -12,13 +12,8 @@ using ProjectGSMAUI.Api.Data;
 namespace ProjectGSMAUI.Api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-<<<<<<<< HEAD:ProjectGSMAUI.Api/Migrations/20241231140156_AddDuLieuToDb.Designer.cs
-    [Migration("20241231140156_AddDuLieuToDb")]
-    partial class AddDuLieuToDb
-========
-    [Migration("20241231152543_DLSS")]
+    [Migration("20250104143049_DLSS")]
     partial class DLSS
->>>>>>>> origin/Hau-TaiKhoan2:ProjectGSMAUI.Api/Migrations/20241231152543_DLSS.Designer.cs
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -369,12 +364,53 @@ namespace ProjectGSMAUI.Api.Migrations
                         .HasName("PK__KhungGio__3214EC2782A9AD02");
 
                     b.ToTable("KhungGio", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            GioBatDau = new TimeOnly(9, 0, 0),
+                            GioKetThuc = new TimeOnly(11, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            GioBatDau = new TimeOnly(12, 0, 0),
+                            GioKetThuc = new TimeOnly(14, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 3,
+                            GioBatDau = new TimeOnly(15, 0, 0),
+                            GioKetThuc = new TimeOnly(17, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 4,
+                            GioBatDau = new TimeOnly(18, 0, 0),
+                            GioKetThuc = new TimeOnly(20, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 5,
+                            GioBatDau = new TimeOnly(21, 0, 0),
+                            GioKetThuc = new TimeOnly(23, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 6,
+                            GioBatDau = new TimeOnly(0, 0, 0),
+                            GioKetThuc = new TimeOnly(2, 0, 0)
+                        });
                 });
 
             modelBuilder.Entity("ProjectGSMAUI.Api.Data.Entities.LichChieu", b =>
                 {
                     b.Property<int>("MaLichChieu")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MaLichChieu"));
 
                     b.Property<decimal?>("GiaVe")
                         .HasColumnType("decimal(10, 2)");
@@ -450,6 +486,78 @@ namespace ProjectGSMAUI.Api.Migrations
                     b.HasIndex("TheLoai");
 
                     b.ToTable("Phim", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            DaoDien = "Director A",
+                            GioiHanDoTuoi = 13,
+                            MoTa = "Action-packed movie about...",
+                            NgayKetThuc = new DateOnly(2024, 2, 28),
+                            NgayKhoiChieu = new DateOnly(2024, 1, 15),
+                            SoSuatChieu = 5,
+                            TenPhim = "Action Movie 1",
+                            TheLoai = 1,
+                            ThoiLuong = 120,
+                            TrangThai = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            DaoDien = "Director B",
+                            GioiHanDoTuoi = 16,
+                            MoTa = "A romantic story about...",
+                            NgayKetThuc = new DateOnly(2024, 3, 15),
+                            NgayKhoiChieu = new DateOnly(2024, 2, 1),
+                            SoSuatChieu = 4,
+                            TenPhim = "Romantic Movie 1",
+                            TheLoai = 2,
+                            ThoiLuong = 110,
+                            TrangThai = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            DaoDien = "Director C",
+                            GioiHanDoTuoi = 18,
+                            MoTa = "A terrifying horror film...",
+                            NgayKetThuc = new DateOnly(2024, 3, 31),
+                            NgayKhoiChieu = new DateOnly(2024, 3, 1),
+                            SoSuatChieu = 3,
+                            TenPhim = "Horror Movie 1",
+                            TheLoai = 3,
+                            ThoiLuong = 95,
+                            TrangThai = 1
+                        },
+                        new
+                        {
+                            Id = 4,
+                            DaoDien = "Director D",
+                            GioiHanDoTuoi = 0,
+                            MoTa = "An animated adventure for...",
+                            NgayKetThuc = new DateOnly(2024, 4, 15),
+                            NgayKhoiChieu = new DateOnly(2024, 3, 20),
+                            SoSuatChieu = 6,
+                            TenPhim = "Animated Movie 1",
+                            TheLoai = 4,
+                            ThoiLuong = 90,
+                            TrangThai = 1
+                        },
+                        new
+                        {
+                            Id = 5,
+                            DaoDien = "Director E",
+                            GioiHanDoTuoi = 13,
+                            MoTa = "A sci-fi epic about...",
+                            NgayKetThuc = new DateOnly(2024, 4, 30),
+                            NgayKhoiChieu = new DateOnly(2024, 4, 10),
+                            SoSuatChieu = 5,
+                            TenPhim = "Sci-Fi Movie 1",
+                            TheLoai = 5,
+                            ThoiLuong = 135,
+                            TrangThai = 1
+                        });
                 });
 
             modelBuilder.Entity("ProjectGSMAUI.Api.Data.Entities.Phong", b =>
@@ -475,6 +583,50 @@ namespace ProjectGSMAUI.Api.Migrations
                         .HasName("PK__Phong__3214EC27E14F6440");
 
                     b.ToTable("Phong", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            SoLuongGhe = 112,
+                            TenPhong = "Phòng 1",
+                            TinhTrang = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            SoLuongGhe = 112,
+                            TenPhong = "Phòng 2",
+                            TinhTrang = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            SoLuongGhe = 112,
+                            TenPhong = "Phòng 3",
+                            TinhTrang = 1
+                        },
+                        new
+                        {
+                            Id = 4,
+                            SoLuongGhe = 112,
+                            TenPhong = "Phòng 4",
+                            TinhTrang = 1
+                        },
+                        new
+                        {
+                            Id = 5,
+                            SoLuongGhe = 112,
+                            TenPhong = "Phòng 5",
+                            TinhTrang = 1
+                        },
+                        new
+                        {
+                            Id = 6,
+                            SoLuongGhe = 112,
+                            TenPhong = "Phòng 6",
+                            TinhTrang = 1
+                        });
                 });
 
             modelBuilder.Entity("ProjectGSMAUI.Api.Data.Entities.RefreshToken", b =>
@@ -603,7 +755,7 @@ namespace ProjectGSMAUI.Api.Migrations
                             Email = "nguyenquangquyX@gmail.com",
                             GioiTinh = true,
                             MatKhau = "8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92",
-                            NgayDangKy = new DateOnly(2024, 12, 31),
+                            NgayDangKy = new DateOnly(2025, 1, 4),
                             NgaySinh = new DateOnly(1999, 5, 19),
                             Sdt = "0973713274",
                             TenNguoiDung = "Quản trị viên",
@@ -627,6 +779,33 @@ namespace ProjectGSMAUI.Api.Migrations
                         .HasName("PK__TheLoaiP__3214EC2721C910CA");
 
                     b.ToTable("TheLoaiPhim", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            TenTheLoai = "Hành Động"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            TenTheLoai = "Lãng Mạn"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            TenTheLoai = "Kinh Dị"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            TenTheLoai = "Hoạt Hình"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            TenTheLoai = "Khoa Học Viễn Tưởng"
+                        });
                 });
 
             modelBuilder.Entity("ProjectGSMAUI.Api.Data.Entities.Ve", b =>
