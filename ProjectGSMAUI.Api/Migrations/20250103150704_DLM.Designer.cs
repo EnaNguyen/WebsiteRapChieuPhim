@@ -12,8 +12,13 @@ using ProjectGSMAUI.Api.Data;
 namespace ProjectGSMAUI.Api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
+<<<<<<<< HEAD:ProjectGSMAUI.Api/Migrations/20250103150704_DLM.Designer.cs
     [Migration("20250103150704_DLM")]
     partial class DLM
+========
+    [Migration("20250104143049_DLSS")]
+    partial class DLSS
+>>>>>>>> origin/PBH-TaiKhoan3:ProjectGSMAUI.Api/Migrations/20250104143049_DLSS.Designer.cs
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -755,7 +760,11 @@ namespace ProjectGSMAUI.Api.Migrations
                             Email = "nguyenquangquyX@gmail.com",
                             GioiTinh = true,
                             MatKhau = "8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92",
+<<<<<<<< HEAD:ProjectGSMAUI.Api/Migrations/20250103150704_DLM.Designer.cs
                             NgayDangKy = new DateOnly(2025, 1, 3),
+========
+                            NgayDangKy = new DateOnly(2025, 1, 4),
+>>>>>>>> origin/PBH-TaiKhoan3:ProjectGSMAUI.Api/Migrations/20250104143049_DLSS.Designer.cs
                             NgaySinh = new DateOnly(1999, 5, 19),
                             Sdt = "0973713274",
                             TenNguoiDung = "Quản trị viên",

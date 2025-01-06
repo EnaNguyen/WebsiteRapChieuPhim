@@ -2,7 +2,6 @@
 using ProjectGSMAUI.Api.Data;
 using ProjectGSMAUI.Api.Data.Entities;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using ProjectGSMAUI.Api.Utilities;
 
@@ -28,7 +27,10 @@ namespace ProjectGSMAUI.Api.Container
                     TenNguoiDung = t.TenNguoiDung,
                     TrangThai = t.TrangThai,
                     Hinh = t.Hinh,
-                    Cccd = t.Cccd
+                    Cccd = t.Cccd,
+                    VaiTro = t.VaiTro,
+                    Email = t.Email,
+                    Sdt = t.Sdt,
                 }).ToListAsync();
         }
 
@@ -44,7 +46,10 @@ namespace ProjectGSMAUI.Api.Container
                     TenNguoiDung = t.TenNguoiDung,
                     TrangThai = t.TrangThai,
                     Hinh = t.Hinh,
-                    Cccd = t.Cccd
+                    Cccd = t.Cccd,
+                    VaiTro = t.VaiTro,
+                    Email = t.Email,
+                    Sdt = t.Sdt,
                 }).FirstOrDefaultAsync();
         }
 
@@ -57,10 +62,23 @@ namespace ProjectGSMAUI.Api.Container
 
         public async Task UpdateTaiKhoanAsync(TaiKhoan taiKhoan)
         {
-            taiKhoan.MatKhau = PasswordHasher.HashPassword(taiKhoan.MatKhau);
-            _context.Entry(taiKhoan).State = EntityState.Modified;
+            var existingAccount = await _context.TaiKhoans.FindAsync(taiKhoan.IdtaiKhoan);
+            if (existingAccount == null)
+            {
+                throw new Exception("Tài khoản không tồn tại.");
+            }
+
+            existingAccount.TenTaiKhoan = taiKhoan.TenTaiKhoan;
+            existingAccount.MatKhau = taiKhoan.MatKhau;
+            existingAccount.Email = taiKhoan.Email;
+            existingAccount.TenNguoiDung = taiKhoan.TenNguoiDung;
+            existingAccount.Sdt = taiKhoan.Sdt;
+            existingAccount.DiaChi = taiKhoan.DiaChi;
+            existingAccount.NgaySinh = taiKhoan.NgaySinh;
+
             await _context.SaveChangesAsync();
         }
+
 
         public async Task DeleteTaiKhoanAsync(string id)
         {
