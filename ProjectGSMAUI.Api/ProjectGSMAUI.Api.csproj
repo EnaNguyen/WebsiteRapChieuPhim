@@ -28,4 +28,8 @@
     <ProjectReference Include="..\ProjectGSMAUI.Shared\ProjectGSMAUI.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\HoangAnh\" />
+  </ItemGroup>
+
 </Project>

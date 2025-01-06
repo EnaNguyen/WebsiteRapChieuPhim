@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.RateLimiting;
 using AutoMapper;
 using ProjectGSMAUI.Api.Modal;
 using ProjectGSMAUI.Api.Data.Entities;
+using Azure.Core;
 
 namespace ProjectGSMAUI.Api.Controllers.Quy
 {
@@ -21,18 +22,18 @@ namespace ProjectGSMAUI.Api.Controllers.Quy
             this.service = service;
 			this.mapper = mapper;
         }
-		[HttpGet("GetAll")]
-		public async Task<IActionResult> GetAll()
-		{
-			var data = await this.service.GetAll();
-			if (data == null)
-			{
-				return NotFound();
-			}
-			return Ok(data);
-		}
-		[HttpPost("Create")]
-		public async Task<IActionResult> Create(GiamGia _data)
+        [HttpGet("GetAll")]
+        public async Task<IActionResult> GetAll([FromQuery] string Name = null)
+        {
+            var data = await this.service.GetAll(Name);
+            if (data == null || !data.Any())
+            {
+                return NotFound("Không tìm thấy chương trình giảm giá nào.");
+            }
+            return Ok(data);
+        }
+        [HttpPost("Create")]
+		public async Task<IActionResult> Create(GiamGiaRequest _data)
 		{
 			var data = await this.service.Create(_data);
 			return Ok(data);
@@ -44,11 +45,24 @@ namespace ProjectGSMAUI.Api.Controllers.Quy
 			return Ok(data);
 		}
 		[HttpPut("Update")]
-		public async Task<IActionResult> Update(GiamGia _data, int id)
+		public async Task<IActionResult> Update([FromBody] GiamGiaEdit request)
 		{
-			var data = await this.service.Update(_data, id);
-			return Ok(data);
-		}
+            int id = request.Id;
+            GiamGiaRequest data = request.GiamGiaRequest;
+
+            // Gọi phương thức Update hiện tại
+            var response = await this.service.Update(data, id);
+
+            if (response.ResponseCode == 200)
+            {
+                return Ok(response.Result);
+            }
+            else
+            {
+                return BadRequest(response.ErrorMessage);
+            }
+        }
+
 		[DisableRateLimiting]
 		[HttpGet("GetByID")]
 		public async Task<IActionResult> GetByID(int Id)

@@ -1,5 +1,14 @@
-var builder = WebApplication.CreateBuilder(args);
+using ProjectGSMVC.Areas.Admin.Controllers;
+using System.Text.Json.Serialization;
 
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddSingleton(new Uri("https://localhost:7141/api"));
+builder.Services.AddHttpClient<GiamGiaController>();
+
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+	options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+});
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 

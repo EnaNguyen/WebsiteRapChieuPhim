@@ -53,6 +53,11 @@ namespace ProjectGSMAUI.Api.Container
             return await Task.FromResult(_response);
         }
 
+        public async Task<List<Coupon>> GetByGiamGia(int Id)
+        {
+            var data = await this.context.Coupons.Where(a => a.MaGiamGia == Id).ToListAsync();
+            return data;
+        }
         public async Task<ActiveVoucher> GetByID(int id)
         {
             ActiveVoucher _response = new ActiveVoucher();

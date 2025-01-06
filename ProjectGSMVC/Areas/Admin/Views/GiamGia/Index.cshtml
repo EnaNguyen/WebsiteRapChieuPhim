@@ -1,591 +1,540 @@
-﻿
+﻿@using ProjectGSMAUI.Api.Data.Entities
+@using ProjectGSMVC.Areas.Admin.ViewModel
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    var GiamGiaList = ViewData["ListGiamGia"] as List<GiamGiaViewModel>;
+    var Searching = ViewData["Searching"] as string;
+    var CouponList = ViewData["CouponList"] as List<Coupon>;
 }
 
 <div class="pd-ltr-20 xs-pd-20-10">
-	<div class="min-height-200px">
-		<div class="page-header">
-			<div class="row">
-				<div class="col-md-12 col-sm-12">
-					<div class="title">
-						<h4>Cards Hover</h4>
-					</div>
-					<nav aria-label="breadcrumb" role="navigation">
-						<ol class="breadcrumb">
-							<li class="breadcrumb-item">
-								<a href="index.html">Home</a>
-							</li>
-							<li class="breadcrumb-item active" aria-current="page">
-								UI Cards Hover
-							</li>
-						</ol>
-					</nav>
-				</div>
-			</div>
-		</div>
-		<!-- Fade-in effect -->
-		<h5 class="h4 text-blue mb-10">Fade-in effect</h5>
-		<p class="mb-30">You can use by default <code>.da-overlay</code></p>
-		<div class="row clearfix">
-			<div class="col-lg-3 col-md-6 col-sm-12 mb-30">
-				<div class="da-card">
-					<div class="da-card-photo">
-						<img src="vendors/images/photo1.jpg" alt="" />
-						<div class="da-overlay">
-							<div class="da-social">
-								<ul class="clearfix">
-									<li>
-										<a href="#"><i class="fa fa-facebook"></i></a>
-									</li>
-									<li>
-										<a href="#"><i class="fa fa-twitter"></i></a>
-									</li>
-									<li>
-										<a href="#"><i class="fa fa-envelope-o"></i></a>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-					<div class="da-card-content">
-						<h5 class="h5 mb-10">Don H. Rabon</h5>
-						<p class="mb-0">Lorem ipsum dolor sit amet</p>
-					</div>
-				</div>
-			</div>
-			<div class="col-lg-3 col-md-6 col-sm-12 mb-30">
-				<div class="da-card">
-					<div class="da-card-photo">
-						<img src="vendors/images/photo2.jpg" alt="" />
-						<div class="da-overlay">
-							<div class="da-social">
-								<ul class="clearfix">
-									<li>
-										<a href="#"><i class="fa fa-facebook"></i></a>
-									</li>
-									<li>
-										<a href="#"><i class="fa fa-twitter"></i></a>
-									</li>
-									<li>
-										<a href="#"><i class="fa fa-envelope-o"></i></a>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-					<div class="da-card-content">
-						<h5 class="h5 mb-10">Don H. Rabon</h5>
-						<p class="mb-0">Lorem ipsum dolor sit amet</p>
-					</div>
-				</div>
-			</div>
-			<div class="col-lg-3 col-md-6 col-sm-12 mb-30">
-				<div class="da-card">
-					<div class="da-card-photo">
-						<img src="vendors/images/photo3.jpg" alt="" />
-						<div class="da-overlay">
-							<div class="da-social">
-								<ul class="clearfix">
-									<li>
-										<a href="#"><i class="fa fa-facebook"></i></a>
-									</li>
-									<li>
-										<a href="#"><i class="fa fa-twitter"></i></a>
-									</li>
-									<li>
-										<a href="#"><i class="fa fa-envelope-o"></i></a>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-					<div class="da-card-content">
-						<h5 class="h5 mb-10">Don H. Rabon</h5>
-						<p class="mb-0">Lorem ipsum dolor sit amet</p>
-					</div>
-				</div>
-			</div>
-			<div class="col-lg-3 col-md-6 col-sm-12 mb-30">
-				<div class="da-card">
-					<div class="da-card-photo">
-						<img src="vendors/images/photo4.jpg" alt="" />
-						<div class="da-overlay">
-							<div class="da-social">
-								<ul class="clearfix">
-									<li>
-										<a href="#"><i class="fa fa-facebook"></i></a>
-									</li>
-									<li>
-										<a href="#"><i class="fa fa-twitter"></i></a>
-									</li>
-									<li>
-										<a href="#"><i class="fa fa-envelope-o"></i></a>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-					<div class="da-card-content">
-						<h5 class="h5 mb-10">Don H. Rabon</h5>
-						<p class="mb-0">Lorem ipsum dolor sit amet</p>
-					</div>
-				</div>
-			</div>
-		</div>
+    <div class="min-height-200px">
+        <div class="page-header">
+            <div class="row">
+                <div class="col-md-12 col-sm-12">
+                    <div class="title">
+                        <h4>Quản lý Phiếu Giảm Giá</h4>
+                    </div>
+                    <nav aria-label="breadcrumb" role="navigation">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="index.html">Trang Chủ</a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">
+                                Quản lý Phiếu Giảm Giá
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <!-- Slide Top effect -->
+        <div class="container mt-3" style="margin-top: 40px; margin-bottom: 40px">
+            <div class="container">
+                <div class="row">
+                    <div class="col-6">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal" id="ThemGiamGiaModal">
+                            Thêm Chương Trình Giảm Giá
+                        </button>
+                    </div>
+                    <div class="col-6" style="text-align: right">
+                        <form method="get" action="/Admin/GiamGia/Index" style="display: inline;">
+                            <input type="text" name="searching" id="Searching" value="@Searching" placeholder="Gõ Tên Giảm Giá" style="height: 40px; width: 200px; border-radius: 5px; padding-left:20px; padding-right: 20px" />
+                            <button type="submit" class="btn btn-secondary">Tìm kiếm</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-		<!-- Slide Left effect -->
-		<h5 class="h4 text-blue mb-10">Slide Left effect</h5>
-		<p class="mb-30">
-			You can use by default <code>.da-overlay .da-slide-left</code>
-		</p>
-		<div class="row clearfix">
-			<div class="col-lg-3 col-md-6 col-sm-12 mb-30">
-				<div class="da-card">
-					<div class="da-card-photo">
-						<img src="vendors/images/photo1.jpg" alt="" />
-						<div class="da-overlay da-slide-left">
-							<div class="da-social">
-								<ul class="clearfix">
-									<li>
-										<a href="#"><i class="fa fa-facebook"></i></a>
-									</li>
-									<li>
-										<a href="#"><i class="fa fa-twitter"></i></a>
-									</li>
-									<li>
-										<a href="#"><i class="fa fa-envelope-o"></i></a>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-					<div class="da-card-content">
-						<h5 class="h5 mb-10">Don H. Rabon</h5>
-						<p class="mb-0">Lorem ipsum dolor sit amet</p>
-					</div>
-				</div>
-			</div>
-			<div class="col-lg-3 col-md-6 col-sm-12 mb-30">
-				<div class="da-card">
-					<div class="da-card-photo">
-						<img src="vendors/images/photo2.jpg" alt="" />
-						<div class="da-overlay da-slide-left">
-							<div class="da-social">
-								<ul class="clearfix">
-									<li>
-										<a href="#"><i class="fa fa-facebook"></i></a>
-									</li>
-									<li>
-										<a href="#"><i class="fa fa-twitter"></i></a>
-									</li>
-									<li>
-										<a href="#"><i class="fa fa-envelope-o"></i></a>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-					<div class="da-card-content">
-						<h5 class="h5 mb-10">Don H. Rabon</h5>
-						<p class="mb-0">Lorem ipsum dolor sit amet</p>
-					</div>
-				</div>
-			</div>
-			<div class="col-lg-3 col-md-6 col-sm-12 mb-30">
-				<div class="da-card">
-					<div class="da-card-photo">
-						<img src="vendors/images/photo3.jpg" alt="" />
-						<div class="da-overlay da-slide-left">
-							<div class="da-social">
-								<ul class="clearfix">
-									<li>
-										<a href="#"><i class="fa fa-facebook"></i></a>
-									</li>
-									<li>
-										<a href="#"><i class="fa fa-twitter"></i></a>
-									</li>
-									<li>
-										<a href="#"><i class="fa fa-envelope-o"></i></a>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-					<div class="da-card-content">
-						<h5 class="h5 mb-10">Don H. Rabon</h5>
-						<p class="mb-0">Lorem ipsum dolor sit amet</p>
-					</div>
-				</div>
-			</div>
-			<div class="col-lg-3 col-md-6 col-sm-12 mb-30">
-				<div class="da-card">
-					<div class="da-card-photo">
-						<img src="vendors/images/photo4.jpg" alt="" />
-						<div class="da-overlay da-slide-left">
-							<div class="da-social">
-								<ul class="clearfix">
-									<li>
-										<a href="#"><i class="fa fa-facebook"></i></a>
-									</li>
-									<li>
-										<a href="#"><i class="fa fa-twitter"></i></a>
-									</li>
-									<li>
-										<a href="#"><i class="fa fa-envelope-o"></i></a>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-					<div class="da-card-content">
-						<h5 class="h5 mb-10">Don H. Rabon</h5>
-						<p class="mb-0">Lorem ipsum dolor sit amet</p>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<!-- Slide Right effect -->
-		<h5 class="h4 text-blue mb-10">Slide Right effect</h5>
-		<p class="mb-30">
-			You can use by default <code>.da-overlay .da-slide-right</code>
-		</p>
-		<div class="row clearfix">
-			<div class="col-lg-3 col-md-6 col-sm-12 mb-30">
-				<div class="da-card">
-					<div class="da-card-photo">
-						<img src="vendors/images/photo1.jpg" alt="" />
-						<div class="da-overlay da-slide-right">
-							<div class="da-social">
-								<ul class="clearfix">
-									<li>
-										<a href="#"><i class="fa fa-facebook"></i></a>
-									</li>
-									<li>
-										<a href="#"><i class="fa fa-twitter"></i></a>
-									</li>
-									<li>
-										<a href="#"><i class="fa fa-envelope-o"></i></a>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-					<div class="da-card-content">
-						<h5 class="h5 mb-10">Don H. Rabon</h5>
-						<p class="mb-0">Lorem ipsum dolor sit amet</p>
-					</div>
-				</div>
-			</div>
-			<div class="col-lg-3 col-md-6 col-sm-12 mb-30">
-				<div class="da-card">
-					<div class="da-card-photo">
-						<img src="vendors/images/photo2.jpg" alt="" />
-						<div class="da-overlay da-slide-right">
-							<div class="da-social">
-								<ul class="clearfix">
-									<li>
-										<a href="#"><i class="fa fa-facebook"></i></a>
-									</li>
-									<li>
-										<a href="#"><i class="fa fa-twitter"></i></a>
-									</li>
-									<li>
-										<a href="#"><i class="fa fa-envelope-o"></i></a>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-					<div class="da-card-content">
-						<h5 class="h5 mb-10">Don H. Rabon</h5>
-						<p class="mb-0">Lorem ipsum dolor sit amet</p>
-					</div>
-				</div>
-			</div>
-			<div class="col-lg-3 col-md-6 col-sm-12 mb-30">
-				<div class="da-card">
-					<div class="da-card-photo">
-						<img src="vendors/images/photo3.jpg" alt="" />
-						<div class="da-overlay da-slide-right">
-							<div class="da-social">
-								<ul class="clearfix">
-									<li>
-										<a href="#"><i class="fa fa-facebook"></i></a>
-									</li>
-									<li>
-										<a href="#"><i class="fa fa-twitter"></i></a>
-									</li>
-									<li>
-										<a href="#"><i class="fa fa-envelope-o"></i></a>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-					<div class="da-card-content">
-						<h5 class="h5 mb-10">Don H. Rabon</h5>
-						<p class="mb-0">Lorem ipsum dolor sit amet</p>
-					</div>
-				</div>
-			</div>
-			<div class="col-lg-3 col-md-6 col-sm-12 mb-30">
-				<div class="da-card">
-					<div class="da-card-photo">
-						<img src="vendors/images/photo4.jpg" alt="" />
-						<div class="da-overlay da-slide-right">
-							<div class="da-social">
-								<ul class="clearfix">
-									<li>
-										<a href="#"><i class="fa fa-facebook"></i></a>
-									</li>
-									<li>
-										<a href="#"><i class="fa fa-twitter"></i></a>
-									</li>
-									<li>
-										<a href="#"><i class="fa fa-envelope-o"></i></a>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-					<div class="da-card-content">
-						<h5 class="h5 mb-10">Don H. Rabon</h5>
-						<p class="mb-0">Lorem ipsum dolor sit amet</p>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<!-- Slide Top effect -->
-		<h5 class="h4 text-blue mb-10">Slide Top effect</h5>
-		<p class="mb-30">
-			You can use by default <code>.da-overlay .da-slide-top</code>
-		</p>
-		<div class="row clearfix">
-			<div class="col-lg-3 col-md-6 col-sm-12 mb-30">
-				<div class="da-card">
-					<div class="da-card-photo">
-						<img src="vendors/images/photo1.jpg" alt="" />
-						<div class="da-overlay da-slide-top">
-							<div class="da-social">
-								<ul class="clearfix">
-									<li>
-										<a href="#"><i class="fa fa-facebook"></i></a>
-									</li>
-									<li>
-										<a href="#"><i class="fa fa-twitter"></i></a>
-									</li>
-									<li>
-										<a href="#"><i class="fa fa-envelope-o"></i></a>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-					<div class="da-card-content">
-						<h5 class="h5 mb-10">Don H. Rabon</h5>
-						<p class="mb-0">Lorem ipsum dolor sit amet</p>
-					</div>
-				</div>
-			</div>
-			<div class="col-lg-3 col-md-6 col-sm-12 mb-30">
-				<div class="da-card">
-					<div class="da-card-photo">
-						<img src="vendors/images/photo2.jpg" alt="" />
-						<div class="da-overlay da-slide-top">
-							<div class="da-social">
-								<ul class="clearfix">
-									<li>
-										<a href="#"><i class="fa fa-facebook"></i></a>
-									</li>
-									<li>
-										<a href="#"><i class="fa fa-twitter"></i></a>
-									</li>
-									<li>
-										<a href="#"><i class="fa fa-envelope-o"></i></a>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-					<div class="da-card-content">
-						<h5 class="h5 mb-10">Don H. Rabon</h5>
-						<p class="mb-0">Lorem ipsum dolor sit amet</p>
-					</div>
-				</div>
-			</div>
-			<div class="col-lg-3 col-md-6 col-sm-12 mb-30">
-				<div class="da-card">
-					<div class="da-card-photo">
-						<img src="vendors/images/photo3.jpg" alt="" />
-						<div class="da-overlay da-slide-top">
-							<div class="da-social">
-								<ul class="clearfix">
-									<li>
-										<a href="#"><i class="fa fa-facebook"></i></a>
-									</li>
-									<li>
-										<a href="#"><i class="fa fa-twitter"></i></a>
-									</li>
-									<li>
-										<a href="#"><i class="fa fa-envelope-o"></i></a>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-					<div class="da-card-content">
-						<h5 class="h5 mb-10">Don H. Rabon</h5>
-						<p class="mb-0">Lorem ipsum dolor sit amet</p>
-					</div>
-				</div>
-			</div>
-			<div class="col-lg-3 col-md-6 col-sm-12 mb-30">
-				<div class="da-card">
-					<div class="da-card-photo">
-						<img src="vendors/images/photo4.jpg" alt="" />
-						<div class="da-overlay da-slide-top">
-							<div class="da-social">
-								<ul class="clearfix">
-									<li>
-										<a href="#"><i class="fa fa-facebook"></i></a>
-									</li>
-									<li>
-										<a href="#"><i class="fa fa-twitter"></i></a>
-									</li>
-									<li>
-										<a href="#"><i class="fa fa-envelope-o"></i></a>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-					<div class="da-card-content">
-						<h5 class="h5 mb-10">Don H. Rabon</h5>
-						<p class="mb-0">Lorem ipsum dolor sit amet</p>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<!-- Slide Bottom effect -->
-		<h5 class="h4 text-blue mb-10">Slide Bottom effect</h5>
-		<p class="mb-30">
-			You can use by default <code>.da-overlay .da-slide-bottom</code>
-		</p>
-		<div class="row clearfix">
-			<div class="col-lg-3 col-md-6 col-sm-12 mb-30">
-				<div class="da-card">
-					<div class="da-card-photo">
-						<img src="vendors/images/photo1.jpg" alt="" />
-						<div class="da-overlay da-slide-bottom">
-							<div class="da-social">
-								<ul class="clearfix">
-									<li>
-										<a href="#"><i class="fa fa-facebook"></i></a>
-									</li>
-									<li>
-										<a href="#"><i class="fa fa-twitter"></i></a>
-									</li>
-									<li>
-										<a href="#"><i class="fa fa-envelope-o"></i></a>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-					<div class="da-card-content">
-						<h5 class="h5 mb-10">Don H. Rabon</h5>
-						<p class="mb-0">Lorem ipsum dolor sit amet</p>
-					</div>
-				</div>
-			</div>
-			<div class="col-lg-3 col-md-6 col-sm-12 mb-30">
-				<div class="da-card">
-					<div class="da-card-photo">
-						<img src="vendors/images/photo2.jpg" alt="" />
-						<div class="da-overlay da-slide-bottom">
-							<div class="da-social">
-								<ul class="clearfix">
-									<li>
-										<a href="#"><i class="fa fa-facebook"></i></a>
-									</li>
-									<li>
-										<a href="#"><i class="fa fa-twitter"></i></a>
-									</li>
-									<li>
-										<a href="#"><i class="fa fa-envelope-o"></i></a>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-					<div class="da-card-content">
-						<h5 class="h5 mb-10">Don H. Rabon</h5>
-						<p class="mb-0">Lorem ipsum dolor sit amet</p>
-					</div>
-				</div>
-			</div>
-			<div class="col-lg-3 col-md-6 col-sm-12 mb-30">
-				<div class="da-card">
-					<div class="da-card-photo">
-						<img src="vendors/images/photo3.jpg" alt="" />
-						<div class="da-overlay da-slide-bottom">
-							<div class="da-social">
-								<ul class="clearfix">
-									<li>
-										<a href="#"><i class="fa fa-facebook"></i></a>
-									</li>
-									<li>
-										<a href="#"><i class="fa fa-twitter"></i></a>
-									</li>
-									<li>
-										<a href="#"><i class="fa fa-envelope-o"></i></a>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-					<div class="da-card-content">
-						<h5 class="h5 mb-10">Don H. Rabon</h5>
-						<p class="mb-0">Lorem ipsum dolor sit amet</p>
-					</div>
-				</div>
-			</div>
-			<div class="col-lg-3 col-md-6 col-sm-12 mb-30">
-				<div class="da-card">
-					<div class="da-card-photo">
-						<img src="vendors/images/photo4.jpg" alt="" />
-						<div class="da-overlay da-slide-bottom">
-							<div class="da-social">
-								<ul class="clearfix">
-									<li>
-										<a href="#"><i class="fa fa-facebook"></i></a>
-									</li>
-									<li>
-										<a href="#"><i class="fa fa-twitter"></i></a>
-									</li>
-									<li>
-										<a href="#"><i class="fa fa-envelope-o"></i></a>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-					<div class="da-card-content">
-						<h5 class="h5 mb-10">Don H. Rabon</h5>
-						<p class="mb-0">Lorem ipsum dolor sit amet</p>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="footer-wrap pd-20 mb-20 card-box">
-		DeskApp - Bootstrap 4 Admin Template By
-		<a href="https://github.com/dropways" target="_blank">Ankit Hingarajiya</a>
-	</div>
+        <div class="row clearfix">
+            @if (GiamGiaList != null && GiamGiaList.Any())
+            {
+                @foreach (var item in GiamGiaList)
+                {
+                    <div class="col-lg-3 col-md-6 col-sm-12 mb-30">
+                        <div class="da-card">
+                            <div class="da-card-photo">
+                                <div style="height:200px; border-bottom: 1px solid grey">
+                                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(item.HinhAnh)" alt="" style="max-width:400px; height:100%" />
+                                </div>
+                                <div class="da-overlay da-slide-top">
+                                    <div class="da-social">
+                                        <ul class="clearfix">
+                                            <li>
+                                                <a href="#" class="detail-discount" data-id="@item.MaGiamGia" data-bs-toggle="modal" data-bs-target="#myModal2">
+                                                    <i class="bi bi-info-circle"></i>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#" class="edit-discount" data-id="@item.MaGiamGia" data-bs-toggle="modal" data-bs-target="#myModal1">
+                                                    <i class="bi bi-pencil"></i>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#" class="delete-discount" data-id="@item.MaGiamGia"><i class="bi bi-x"></i></a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="da-card-content">
+                                <h5 class="h5 mb-10">@item.TenGiamGia</h5>
+                                <p class="mb-0"><strong>Từ &nbsp</strong>@item.NgayBatDau &nbsp<strong>Đến </strong>@item.NgayKetThuc</p>
+                                <h5 class="h5 mb-10"><strong>Giá Trị: &nbsp</strong><strong style="color:red">@item.GiaTri &nbsp; %</strong></h5>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="col-12">
+                    <p class="text-center">Không tìm thấy chương trình giảm giá nào.</p>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="footer-wrap pd-20 mb-20 card-box">
+        DeskApp - Bootstrap 4 Admin Template By
+        <a href="https://github.com/dropways" target="_blank">Ankit Hingarajiya</a>
+    </div>
 </div>
+
+
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Thêm Giảm Giá Mới</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="TenGiamGia">Tên Giảm Giá</label>
+                            <input type="text" class="form-control" id="TenGiamGia" name="TenGiamGia" placeholder="Nhập tên giảm giá" required />
+                            <h6 id="TenGiamGiaError"></h6>
+                        </div>
+                        <div class="form-group">
+                            <label for="NgayBatDau">Ngày Bắt Đầu</label>
+                            <input type="date" class="form-control" id="NgayBatDau" name="NgayBatDau" required />
+                            <h6 id="NgayBatDauError"></h6>
+                        </div>
+                        <div class="form-group">
+                            <label for="NgayKetThuc">Ngày Kết Thúc</label>
+                            <input type="date" class="form-control" id="NgayKetThuc" name="NgayKetThuc" required />
+                            <h6 id="NgayKetThucError"></h6>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="MoTa">Mô Tả</label>
+                            <textarea class="form-control" id="MoTa" name="MoTa" rows="3" placeholder="Nhập mô tả (không bắt buộc)"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="GiaTri">Giá Trị (%)</label>
+                            <input type="number" class="form-control" id="GiaTri" name="GiaTri" min="1" max="100" placeholder="Nhập giá trị giảm giá (%)" required />
+                            <h6 id="GiaTriError"></h6>
+                        </div>
+                        <div class="form-group">
+                            <label for="SoLuong">Số Lượng</label>
+                            <input type="number" class="form-control" id="SoLuong" name="SoLuong" min="1" placeholder="Nhập số lượng giảm giá" required />
+                            <h6 id="SoLuongError"></h6>
+                        </div>
+                        <div class="form-group">
+                            <label for="ImageFile">Hình Ảnh</label>
+                            <input type="file" class="form-control-file" id="ImageFile" name="ImageFile" accept="image/*" required />
+                            <div>
+                                <img src="" id="ShowHinhAnh" style="max-height: 200px" />
+                            </div>
+                            <h6 id="ImageFileError"></h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnAddDiscount">Thêm Mới</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="myModal1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Chương Trình Giảm Giá</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="TenGiamGia1">Tên Giảm Giá</label>
+                            <input type="text" class="form-control" id="TenGiamGia1" placeholder="Nhập tên giảm giá" />
+                            <h6 id="TenGiamGia1Error"></h6>
+                        </div>
+                        <div class="form-group">
+                            <label for="NgayBatDau1">Ngày Bắt Đầu</label>
+                            <input type="date" class="form-control" id="NgayBatDau1" />
+                            <h6 id="NgayBatDau1Error"></h6>
+                        </div>
+                        <div class="form-group">
+                            <label for="NgayKetThuc1">Ngày Kết Thúc</label>
+                            <input type="date" class="form-control" id="NgayKetThuc1" />
+                            <h6 id="NgayKetThuc1Error"></h6>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="MoTa1">Mô Tả</label>
+                            <textarea class="form-control" id="MoTa1" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="GiaTri1">Giá Trị (%)</label>
+                            <input type="number" class="form-control" id="GiaTri1" min="1" max="100" />
+                            <h6 id="GiaTriError1"></h6>
+                        </div>
+                        <div class="form-group" hidden>
+                            <label for="SoLuong1">Số Lượng</label>
+                            <input type="number" class="form-control" id="SoLuong1" min="1" />
+                            <h6 id="SoLuong1Error"></h6>
+                        </div>
+                        <div class="form-group">
+                            <label for="ImageFile1">Hình Ảnh</label>
+                            <input type="file" class="form-control-file" id="ImageFile1" accept="image/*" />
+                            <h6 id="ImageFile1Error"></h6>
+                            <div>
+                                <img src="" id="ShowHinhAnh1" style="max-height: 200px" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnChangeDiscount">Thay Đổi</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="myModal2">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Chi Tiết Giảm Giá</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label id="TenGiamGia2" style="font-weight: bold; color: red; font-size: 2rem">Tên Giảm Giá</label>
+                        </div>
+                        <div class="form-group">
+                            <label id="NgayBatDau2">Ngày Bắt Đầu</label>
+                        </div>
+                        <div class="form-group">
+                            <label id="NgayKetThuc2">Ngày Kết Thúc</label>
+                        </div>
+                        <div>
+                            <label>Danh Sách Mã Voucher của Giảm Giá này</label>
+                            <div id="coupon-list-container" style="margin: 10px; height: 200px; border: 1px solid grey; padding: 10px; overflow-y: auto;">
+                                @if(CouponList!=null)
+                                {
+                                    @foreach (var item in CouponList)
+                                    {
+                                        <div class="row">
+                                            <div class="col-6" style="text-align: left">
+                                                @if (item.TrangThai == true)
+                                                {
+                                                    <label><strong>@item.MaNhap</strong></label>
+                                                }
+                                                else
+                                                {
+                                                    <label style="text-decoration-line: line-through">@item.MaNhap</label>
+                                                }
+                                            </div>
+                                            <div class="col-6" style="text-align: right">
+                                                <i class="bi bi-x">
+                                            </div>
+                                        </div>
+                                    }
+                                }                             
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <div>
+                                <img src="" id="ShowHinhAnh2" style="max-height: 200px" />
+                            </div>
+                        </div>                      
+                        <div class="form-group">
+                            <label id="GiaTri2">Giá Trị (%)</label>
+                        </div>
+                        <div class="form-group">
+                            <label id="SoLuong2">Số Lượng Tổng cộng:</label><br /><br />
+                            <label id="SoLuong21">Số Lượng Đã Dùng:</label><br />
+                            <label id="SoLuong22">Số Lượng Còn Lại:</label>
+                        </div>
+                        <div class="form-group">
+                            <label id="MoTa2">Mô Tả</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+
+
+<script>
+    $(document).ready(function () {
+        $("#btnAddDiscount").click(function () {
+            var formData = new FormData();
+            formData.append("TenGiamGia", $("#TenGiamGia").val());
+            formData.append("NgayBatDau", $("#NgayBatDau").val());
+            formData.append("NgayKetThuc", $("#NgayKetThuc").val());
+            formData.append("MoTa", $("#MoTa").val());
+            formData.append("GiaTri", $("#GiaTri").val());
+            formData.append("SoLuong", $("#SoLuong").val());
+
+            var imageFile = $("#ImageFile")[0].files[0];
+            if (imageFile) {
+                formData.append("ImageFile", imageFile);
+            } else {
+                alert("Vui lòng chọn tệp hình ảnh.");
+                return;
+            }
+            $.ajax({
+                url: "/Admin/GiamGia/Create",
+                type: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    if (response.success) {
+                        alert("Thêm mới thành công!");
+                        location.reload();
+                    }
+                },
+                error: function (xhr) {
+                    var errors = xhr.responseJSON;
+                    $("h6").text("");
+                    if (errors.TenGiamGia) $("#TenGiamGiaError").text(errors.TenGiamGia).css("color", "red");
+                    if (errors.ImageFile) $("#ImageFileError").text(errors.ImageFile).css("color", "red");
+                    if (errors.NgayBatDau) $("#NgayBatDauError").text(errors.NgayBatDau).css("color", "red");
+                    if (errors.NgayKetThuc) $("#NgayKetThucError").text(errors.NgayKetThuc).css("color", "red");
+                    if (errors.GiaTri) $("#GiaTriError").text(errors.GiaTri).css("color", "red");
+                    if (errors.SoLuong) $("#SoLuongError").text(errors.SoLuong).css("color", "red");
+                }
+            });
+        });
+    });
+    $('#ImageFile').on('change', function (e) {
+        var file = e.target.files[0]; 
+        var reader = new FileReader(); 
+
+        reader.onload = function (event) {
+            $('#ShowHinhAnh').attr('src', event.target.result);
+        };
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
+<script>
+    $(document).on('click', '.edit-discount', function () {
+        var id = $(this).data('id'); 
+        console.log(id);
+        $.ajax({
+            url: '/Admin/GiamGia/GetGiamGia', 
+            type: 'GET',
+            data: { id: id }, 
+            success: function (response) {
+    
+                if (response.success) {
+                    console.log(response.data);
+                    $('#TenGiamGia1').val(response.data.tenGiamGia);
+                    $('#NgayBatDau1').val(response.data.ngayBatDau.split('T')[0]); 
+                    $('#NgayKetThuc1').val(response.data.ngayKetThuc.split('T')[0]);
+                    $('#MoTa1').val(response.data.moTa);
+                    $('#GiaTri1').val(response.data.giaTri);
+                    $('#SoLuong1').val(
+                        (parseInt(response.data.soLuongDaDung) + parseInt(response.data.soLuongConLai)).toString()
+                    );
+
+                    var imageUrl = "data:image/jpeg;base64," + response.data.hinhAnh;
+                    $('#ShowHinhAnh1').attr('src', imageUrl);
+
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function () {
+                alert('Có lỗi xảy ra khi lấy dữ liệu!');
+            }
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $(".edit-discount").click(function () {
+            var id = $(this).data("id"); // Lấy id từ data-id của liên kết
+            $("#btnChangeDiscount").data("id", id); // Lưu id vào nút thay đổi
+        });
+
+        $("#btnChangeDiscount").click(function () {
+            var formData = new FormData();
+            formData.append("id", $(this).data("id")); 
+            formData.append("TenGiamGia", $("#TenGiamGia1").val());
+            formData.append("NgayBatDau", $("#NgayBatDau1").val());
+            formData.append("NgayKetThuc", $("#NgayKetThuc1").val());
+            formData.append("MoTa", $("#MoTa1").val());
+            formData.append("GiaTri", $("#GiaTri1").val());
+            formData.append("SoLuong", $("#SoLuong1").val());
+
+            var imageFile = $("#ImageFile1")[0].files[0];
+            if (imageFile) {
+                formData.append("ImageFile", imageFile);
+            }
+
+            $.ajax({
+                url: "/Admin/GiamGia/Update",
+                type: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    if (response.success) {
+                        alert("Sửa thông tin phiếu giảm giá thành công!");
+                        location.reload();
+                    }
+                },
+                error: function (xhr) {
+                    var errors = xhr.responseJSON;
+                    $("h6").text("");
+                    if (errors.TenGiamGia) $("#TenGiamGia1Error").text(errors.TenGiamGia).css("color", "red");
+                    if (errors.ImageFile) $("#ImageFile1Error").text(errors.ImageFile).css("color", "red");
+                    if (errors.NgayBatDau) $("#NgayBatDau1Error").text(errors.NgayBatDau).css("color", "red");
+                    if (errors.NgayKetThuc) $("#NgayKetThuc1Error").text(errors.NgayKetThuc).css("color", "red");
+                    if (errors.GiaTri) $("#GiaTri1Error").text(errors.GiaTri).css("color", "red");
+                    if (errors.SoLuong) $("#SoLuong1Error").text(errors.SoLuong).css("color", "red");
+                }
+            });
+        });
+    });
+    $('#ImageFile1').on('change', function (e) {
+        var file = e.target.files[0];
+        var reader = new FileReader();
+
+        reader.onload = function (event) {
+            $('#ShowHinhAnh1').attr('src', event.target.result);
+        };
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
+<script>
+    $(document).on('click', '.delete-discount', function (e) {
+        e.preventDefault();
+
+        const discountId = $(this).data('id');
+        if (confirm("Bạn có chắc chắn muốn xóa giảm giá này?")) {
+            $.ajax({
+                url: '/Admin/GiamGia/Xoa', // Thay 'YourController' bằng tên controller của bạn
+                type: 'POST',
+                data: { id: discountId },
+                success: function (response) {
+                    if (response.success) {
+                        alert(response.message);
+                        location.reload(); // Tải lại trang sau khi xóa thành công
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                error: function () {
+                    alert("Đã xảy ra lỗi. Vui lòng thử lại!");
+                }
+            });
+        }
+    });
+</script>
+<script>
+    $(document).on('click', '.detail-discount', function () {
+        var id = $(this).data('id');
+        console.log(id);
+        $.ajax({
+            url: '/Admin/GiamGia/GetGiamGia',
+            type: 'GET',
+            data: { id: id },
+            success: function (response) {
+                if (response.success) {
+                    console.log(response.data);
+
+                    // Gán dữ liệu vào các thẻ label
+                    $('#TenGiamGia2').text(response.data.tenGiamGia);
+                    $('#NgayBatDau2').text('Ngày Bắt Đầu: ' +response.data.ngayBatDau.split('T')[0]);
+                    $('#NgayKetThuc2').text('Ngày Kết Thúc: ' +response.data.ngayKetThuc.split('T')[0]);
+                    $('#MoTa2').text('Mô Tả: ' +response.data.moTa);
+                    $('#GiaTri2').text('Giá Trị: '+response.data.giaTri + '%');
+                    $('#SoLuong2').text(
+                        'Số Lượng Tổng cộng: ' +
+                        (parseInt(response.data.soLuongDaDung) + parseInt(response.data.soLuongConLai)).toString()
+                    );
+                    $('#SoLuong21').text('Số Lượng Đã Dùng: ' + response.data.soLuongDaDung);
+                    $('#SoLuong22').text('Số Lượng Còn Lại: ' + response.data.soLuongConLai);
+
+                    // Hiển thị hình ảnh
+                    var imageUrl = "data:image/jpeg;base64," + response.data.hinhAnh;
+                    $('#ShowHinhAnh2').attr('src', imageUrl);
+                    var couponListHtml = ''; // Chuỗi HTML để cập nhật
+                    response.data.couponList.forEach(function (item) {
+                        couponListHtml += `
+                                <div class="row">
+                                    <div class="col-6" style="text-align: left">
+                                        ${item.trangThai
+                                ? `<label><strong>${item.maNhap}</strong></label>`
+                                : `<label style="text-decoration-line: line-through">${item.maNhap}</label>`
+                            }
+                                    </div>
+                                    <div class="col-6" style="text-align: right">
+                                        <i class="bi bi-x"></i>
+                                    </div>
+                                </div>`;
+                    });
+
+                    // Chèn HTML mới vào thẻ div
+                    $('#coupon-list-container').html(couponListHtml);
+                    console.log(@CouponList);
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function () {
+                alert('Có lỗi xảy ra khi lấy dữ liệu!');
+            }
+        });
+    });
+</script>
+
 

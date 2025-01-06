@@ -97,7 +97,7 @@ namespace ProjectGSMAUI.Api.Controllers
                 {
                     var _newtoken = new JwtSecurityToken(
                         claims: principal.Claims.ToArray(),
-                        expires: DateTime.Now.AddSeconds(30),
+                        expires: DateTime.Now.AddSeconds(7200),
                         signingCredentials: new SigningCredentials(
                             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.jwtSettings.securitykey)),
                             SecurityAlgorithms.HmacSha256));
