@@ -333,6 +333,8 @@ namespace ProjectGSMAUI.Api.Data
                     MaGiamGia = 1,
                     TenGiamGia = "Khuyến mãi nửa đầu 2025",
                     GiaTri = 20,
+                    MoTa = "GiamGiaNuaDauNam",
+                    HinhAnh = null,
                     NgayBatDau = DateOnly.FromDateTime(new DateTime(2025, 1, 1)),
                     NgayKetThuc = DateOnly.FromDateTime(new DateTime(2024, 6, 30)),
                     SoLuong =10,

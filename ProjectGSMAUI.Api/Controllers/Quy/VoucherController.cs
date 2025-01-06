@@ -64,5 +64,17 @@ namespace ProjectGSMAUI.Api.Controllers.Quy
             var data = await this.service.Remove(id);
             return Ok(data);
         }
+        [HttpGet("GetByGiamGia")]
+        public async Task<IActionResult> GetByGiamGia(int Id)
+        {
+            var data = await this.service.GetByGiamGia(Id);
+
+            if (data == null || !data.Any())
+            {
+                return NotFound(new { message = "Không tìm thấy dữ liệu cho mã giảm giá này." });
+            }
+
+            return Ok(data);
+        }
     }
 }

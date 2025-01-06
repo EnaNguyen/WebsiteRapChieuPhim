@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-
-namespace ProjectGSMAUI.Api.Modal
+﻿namespace ProjectGSMVC.Areas.Admin.ViewModel
 {
-	public class ActiveGiamGia
+	public class GiamGiaViewModel
 	{
 		public int MaGiamGia { get; set; }
 
