@@ -58,8 +58,8 @@ namespace ProjectGSMAUI.Api.Data
 
                 entity.Property(e => e.MaChiTietHoaDon).ValueGeneratedNever();
 
-                entity.HasOne(d => d.MaGheNavigation).WithMany(p => p.ChiTietHoaDons)
-                    .HasForeignKey(d => d.MaGhe)
+                entity.HasOne(d => d.MaVeNavigation).WithMany(p => p.ChiTietHoaDons)
+                    .HasForeignKey(d => d.MaVe)
                     .HasConstraintName("FK__ChiTietHo__MaGhe__59FA5E80");
 
                 entity.HasOne(d => d.MaHoaDonNavigation).WithMany(p => p.ChiTietHoaDons)
@@ -583,21 +583,12 @@ namespace ProjectGSMAUI.Api.Data
             );
             modelBuilder.Entity<ChiTietHoaDon>().HasData(
 
-                        new ChiTietHoaDon { MaChiTietHoaDon = 1, MaGhe = 1, MaHoaDon = 1, Gia = 250000 },
-                        new ChiTietHoaDon { MaChiTietHoaDon = 2, MaGhe = 2, MaHoaDon = 1, Gia = 250000 },
-                        new ChiTietHoaDon { MaChiTietHoaDon = 3, MaGhe = 1, MaHoaDon = 2, Gia = 260000 },
-                        new ChiTietHoaDon { MaChiTietHoaDon = 4, MaGhe = 1, MaHoaDon = 2, Gia = 260000 },
-                        new ChiTietHoaDon { MaChiTietHoaDon = 5, MaGhe = 1, MaHoaDon = 3, Gia = 270000 }
+                new ChiTietHoaDon { MaChiTietHoaDon = 1, MaVe = "1", MaHoaDon = 1, Gia = 250000 },
+                new ChiTietHoaDon { MaChiTietHoaDon = 2, MaVe = "2", MaHoaDon = 1, Gia = 250000 },
+                new ChiTietHoaDon { MaChiTietHoaDon = 3, MaVe = "3", MaHoaDon = 2, Gia = 260000 },
+                new ChiTietHoaDon { MaChiTietHoaDon = 4, MaVe = "4", MaHoaDon = 2, Gia = 260000 },
+                new ChiTietHoaDon { MaChiTietHoaDon = 5, MaVe = "5", MaHoaDon = 3, Gia = 270000 }
             );
-            modelBuilder.Entity<ChiTietHoaDon>().HasData(
-
-                new Ghe { MaGhe = "1", SoHang = "A", SoCot = 1 },
-                new Ghe { MaGhe = "2", SoHang = "A", SoCot = 2 },
-                new Ghe { MaGhe = "3", SoHang = "B", SoCot = 1 },
-                new Ghe { MaGhe = "4", SoHang = "B", SoCot = 2 },
-                new Ghe { MaGhe = "5", SoHang = "C", SoCot = 3 }
-            );
-
         }
     }
 }

@@ -8,15 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ProjectGSMAUI.Api.Migrations
 {
     /// <inheritdoc />
-<<<<<<<< HEAD:ProjectGSMAUI.Api/Migrations/20250106141845_AddDuLieuDb.cs
-<<<<<<<< HEAD:ProjectGSMAUI.Api/Migrations/20250106141845_AddDuLieuDb.cs
-    public partial class AddDuLieuDb : Migration
-========
-    public partial class DLSS : Migration
->>>>>>>> origin/HungNguyenCRUD2:ProjectGSMAUI.Api/Migrations/20250112033140_DLSS.cs
-========
-    public partial class dls : Migration
->>>>>>>> origin/VVh-View:ProjectGSMAUI.Api/Migrations/20250113131309_dls.cs
+    public partial class AddDuLieu : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -117,7 +109,9 @@ namespace ProjectGSMAUI.Api.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TenSanPham = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Gia = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    MoTa = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    MoTa = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SoLuong = table.Column<int>(type: "int", nullable: false),
+                    HinhAnh = table.Column<byte[]>(type: "varbinary(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -139,7 +133,7 @@ namespace ProjectGSMAUI.Api.Migrations
                     NgayDangKy = table.Column<DateOnly>(type: "date", nullable: true),
                     TrangThai = table.Column<int>(type: "int", nullable: true),
                     DiemTichLuy = table.Column<int>(type: "int", nullable: true),
-                    Hinh = table.Column<string>(type: "text", nullable: true),
+                    Hinh = table.Column<byte[]>(type: "VARBINARY(MAX)", nullable: true),
                     CCCD = table.Column<string>(type: "char(20)", unicode: false, fixedLength: true, maxLength: 20, nullable: true),
                     GioiTinh = table.Column<bool>(type: "bit", nullable: true),
                     DiaChi = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true)
@@ -221,8 +215,7 @@ namespace ProjectGSMAUI.Api.Migrations
                     NgayKetThuc = table.Column<DateOnly>(type: "date", nullable: true),
                     SoSuatChieu = table.Column<int>(type: "int", nullable: true),
                     TrangThai = table.Column<int>(type: "int", nullable: true),
-                    MoTa = table.Column<string>(type: "text", nullable: true),
-                    PosterBase64 = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    MoTa = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -362,7 +355,7 @@ namespace ProjectGSMAUI.Api.Migrations
                 columns: table => new
                 {
                     MaChiTietHoaDon = table.Column<int>(type: "int", nullable: false),
-                    MaGhe = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    MaVe = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     MaHoaDon = table.Column<int>(type: "int", nullable: true),
                     Gia = table.Column<int>(type: "int", nullable: true),
                     GheMaGhe = table.Column<string>(type: "char(10)", nullable: true)
@@ -377,7 +370,7 @@ namespace ProjectGSMAUI.Api.Migrations
                         principalColumn: "MaGhe");
                     table.ForeignKey(
                         name: "FK__ChiTietHo__MaGhe__59FA5E80",
-                        column: x => x.MaGhe,
+                        column: x => x.MaVe,
                         principalTable: "Ve",
                         principalColumn: "MaVe");
                     table.ForeignKey(
@@ -613,11 +606,7 @@ namespace ProjectGSMAUI.Api.Migrations
             migrationBuilder.InsertData(
                 table: "GiamGia",
                 columns: new[] { "MaGiamGia", "GiaTri", "HinhAnh", "MoTa", "NgayBatDau", "NgayKetThuc", "SoLuong", "TenGiamGia" },
-<<<<<<<< HEAD:ProjectGSMAUI.Api/Migrations/20250106141845_AddDuLieuDb.cs
-                values: new object[] { 1, 20, null, "GiamGiaNuaDauNam", new DateOnly(2025, 1, 1), new DateOnly(2024, 6, 30), 10, "Khuyến mãi nửa đầu 2025" });
-========
                 values: new object[] { 1, 20, null, "abc", new DateOnly(2025, 1, 1), new DateOnly(2024, 6, 30), 10, "Khuyến mãi nửa đầu 2025" });
->>>>>>>> origin/HungNguyenCRUD2:ProjectGSMAUI.Api/Migrations/20250112033140_DLSS.cs
 
             migrationBuilder.InsertData(
                 table: "KhungGio",
@@ -648,15 +637,7 @@ namespace ProjectGSMAUI.Api.Migrations
             migrationBuilder.InsertData(
                 table: "TaiKhoan",
                 columns: new[] { "IDTaiKhoan", "CCCD", "DiaChi", "DiemTichLuy", "Email", "GioiTinh", "Hinh", "MatKhau", "NgayDangKy", "NgaySinh", "SDT", "TenNguoiDung", "TenTaiKhoan", "TrangThai", "VaiTro" },
-<<<<<<<< HEAD:ProjectGSMAUI.Api/Migrations/20250106141845_AddDuLieuDb.cs
-<<<<<<<< HEAD:ProjectGSMAUI.Api/Migrations/20250106141845_AddDuLieuDb.cs
-                values: new object[] { "TK001", "123456789012", "123 Đường ABC, Thành phố XYZ", 0, "nguyenquangquyX@gmail.com", true, null, "8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92", new DateOnly(2025, 1, 6), new DateOnly(1999, 5, 19), "0973713274", "Quản trị viên", "Admin", 1, 2 });
-========
-                values: new object[] { "TK001", "123456789012", "123 Đường ABC, Thành phố XYZ", 0, "nguyenquangquyX@gmail.com", true, null, "8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92", new DateOnly(2025, 1, 12), new DateOnly(1999, 5, 19), "0973713274", "Quản trị viên", "Admin", 1, 2 });
->>>>>>>> origin/HungNguyenCRUD2:ProjectGSMAUI.Api/Migrations/20250112033140_DLSS.cs
-========
                 values: new object[] { "TK001", "123456789012", "123 Đường ABC, Thành phố XYZ", 0, "nguyenquangquyX@gmail.com", true, null, "8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92", new DateOnly(2025, 1, 13), new DateOnly(1999, 5, 19), "0973713274", "Quản trị viên", "Admin", 1, 2 });
->>>>>>>> origin/VVh-View:ProjectGSMAUI.Api/Migrations/20250113131309_dls.cs
 
             migrationBuilder.InsertData(
                 table: "TheLoaiPhim",
@@ -701,14 +682,26 @@ namespace ProjectGSMAUI.Api.Migrations
 
             migrationBuilder.InsertData(
                 table: "Phim",
-                columns: new[] { "ID", "DaoDien", "GioiHanDoTuoi", "MoTa", "NgayKetThuc", "NgayKhoiChieu", "PosterBase64", "SoSuatChieu", "TenPhim", "TheLoai", "ThoiLuong", "TrangThai" },
+                columns: new[] { "ID", "DaoDien", "GioiHanDoTuoi", "MoTa", "NgayKetThuc", "NgayKhoiChieu", "SoSuatChieu", "TenPhim", "TheLoai", "ThoiLuong", "TrangThai" },
                 values: new object[,]
                 {
-                    { 1, "Director A", 13, "Action-packed movie about...", new DateOnly(2024, 2, 28), new DateOnly(2024, 1, 15), null, 50, "Action Movie 1", "TLP001", 120, 1 },
-                    { 2, "Director B", 16, "A romantic story about...", new DateOnly(2024, 3, 15), new DateOnly(2024, 2, 1), null, 40, "Romantic Movie 1", "TLP002", 110, 1 },
-                    { 3, "Director C", 18, "A terrifying horror film...", new DateOnly(2024, 3, 31), new DateOnly(2024, 3, 1), null, 35, "Horror Movie 1", "TLP003", 95, 1 },
-                    { 4, "Director D", 0, "An animated adventure for...", new DateOnly(2024, 4, 15), new DateOnly(2024, 3, 20), null, 15, "Animated Movie 1", "TLP004", 90, 1 },
-                    { 5, "Director E", 13, "A sci-fi epic about...", new DateOnly(2024, 4, 30), new DateOnly(2024, 4, 10), null, 22, "Sci-Fi Movie 1", "TLP005", 135, 1 }
+                    { 1, "Director A", 13, "Action-packed movie about...", new DateOnly(2024, 2, 28), new DateOnly(2024, 1, 15), 50, "Action Movie 1", "TLP001", 120, 1 },
+                    { 2, "Director B", 16, "A romantic story about...", new DateOnly(2024, 3, 15), new DateOnly(2024, 2, 1), 40, "Romantic Movie 1", "TLP002", 110, 1 },
+                    { 3, "Director C", 18, "A terrifying horror film...", new DateOnly(2024, 3, 31), new DateOnly(2024, 3, 1), 35, "Horror Movie 1", "TLP003", 95, 1 },
+                    { 4, "Director D", 0, "An animated adventure for...", new DateOnly(2024, 4, 15), new DateOnly(2024, 3, 20), 15, "Animated Movie 1", "TLP004", 90, 1 },
+                    { 5, "Director E", 13, "A sci-fi epic about...", new DateOnly(2024, 4, 30), new DateOnly(2024, 4, 10), 22, "Sci-Fi Movie 1", "TLP005", 135, 1 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "HoaDon",
+                columns: new[] { "MaHoaDon", "MaDatVe", "MaGiamGia", "MaKhachHang", "NgayXuat", "TinhTrang", "TongTien" },
+                values: new object[,]
+                {
+                    { 1, 101, 1, "TK001", new DateOnly(2023, 12, 1), 1, 500000 },
+                    { 3, 103, 2, "TK001", new DateOnly(2023, 12, 3), 1, 530000 },
+                    { 5, 105, 3, "TK001", new DateOnly(2023, 12, 5), 1, 550000 },
+                    { 7, 107, 4, "TK001", new DateOnly(2023, 12, 7), 1, 570000 },
+                    { 9, 109, 5, "TK001", new DateOnly(2023, 12, 9), 1, 590000 }
                 });
 
             migrationBuilder.InsertData(
@@ -746,21 +739,16 @@ namespace ProjectGSMAUI.Api.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "HoaDon",
-                columns: new[] { "MaHoaDon", "MaDatVe", "MaGiamGia", "MaKhachHang", "NgayXuat", "TinhTrang", "TongTien" },
+                table: "ChiTietHoaDon",
+                columns: new[] { "MaChiTietHoaDon", "GheMaGhe", "Gia", "MaHoaDon", "MaVe" },
                 values: new object[,]
                 {
-                    { 1, 101, 1, "TK001", new DateOnly(2023, 12, 1), 1, 500000 },
-                    { 3, 103, 2, "TK001", new DateOnly(2023, 12, 3), 1, 530000 },
-                    { 5, 105, 3, "TK001", new DateOnly(2023, 12, 5), 1, 550000 },
-                    { 7, 107, 4, "TK001", new DateOnly(2023, 12, 7), 1, 570000 },
-                    { 9, 109, 5, "TK001", new DateOnly(2023, 12, 9), 1, 590000 }
+                    { 1, null, 250000, 1, "1" },
+                    { 2, null, 250000, 1, "2" },
+                    { 3, null, 260000, 2, "3" },
+                    { 4, null, 260000, 2, "4" },
+                    { 5, null, 270000, 3, "5" }
                 });
-
-            migrationBuilder.InsertData(
-                table: "ChiTietHoaDon",
-                columns: new[] { "MaChiTietHoaDon", "Gia", "MaGhe", "MaHoaDon" },
-                values: new object[] { 1, 250000, 1, 1 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ChiTietCombos_ComboId",
@@ -778,14 +766,14 @@ namespace ProjectGSMAUI.Api.Migrations
                 column: "GheMaGhe");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ChiTietHoaDon_MaGhe",
-                table: "ChiTietHoaDon",
-                column: "MaGhe");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ChiTietHoaDon_MaHoaDon",
                 table: "ChiTietHoaDon",
                 column: "MaHoaDon");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ChiTietHoaDon_MaVe",
+                table: "ChiTietHoaDon",
+                column: "MaVe");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Coupon_MaGiamGia",

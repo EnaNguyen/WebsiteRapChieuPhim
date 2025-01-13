@@ -15,25 +15,21 @@
           "Microsoft.Maui.Controls.Compatibility": "8.0.83",
           "ProjectGSMAUI.Shared": "1.0.0",
           "System.Security.Cryptography.Cng": "5.0.0",
-          "runtimepack.Microsoft.Windows.SDK.NET.Ref": "10.0.19041.34",
-          "Microsoft.Maui.Controls.HotReload.Forms": "17.0.0.0",
-          "Microsoft.VisualStudio.DesignTools.MobileTapContracts": "17.0.0.0",
-          "Microsoft.VisualStudio.DesignTools.TapContract": "17.0.0.0",
-          "runtimepack.Microsoft.Windows.SDK.NET.Ref": "10.0.19041.57"
+          "runtimepack.Microsoft.Windows.SDK.NET.Ref": "10.0.19041.53"
         },
         "runtime": {
           "ProjectGS.dll": {}
         }
       },
-      "runtimepack.Microsoft.Windows.SDK.NET.Ref/10.0.19041.57": {
+      "runtimepack.Microsoft.Windows.SDK.NET.Ref/10.0.19041.53": {
         "runtime": {
           "Microsoft.Windows.SDK.NET.dll": {
             "assemblyVersion": "10.0.19041.38",
-            "fileVersion": "10.0.19041.55"
+            "fileVersion": "10.0.19041.52"
           },
           "WinRT.Runtime.dll": {
-            "assemblyVersion": "2.2.0.0",
-            "fileVersion": "2.2.0.48161"
+            "assemblyVersion": "2.1.0.0",
+            "fileVersion": "2.1.6.47881"
           }
         }
       },
@@ -501,30 +497,6 @@
             "fileVersion": "1.0.0.0"
           }
         }
-      },
-      "Microsoft.Maui.Controls.HotReload.Forms/17.0.0.0": {
-        "runtime": {
-          "Microsoft.Maui.Controls.HotReload.Forms.dll": {
-            "assemblyVersion": "17.0.0.0",
-            "fileVersion": "17.13.39189.45364"
-          }
-        }
-      },
-      "Microsoft.VisualStudio.DesignTools.MobileTapContracts/17.0.0.0": {
-        "runtime": {
-          "Microsoft.VisualStudio.DesignTools.MobileTapContracts.dll": {
-            "assemblyVersion": "17.0.0.0",
-            "fileVersion": "17.13.39189.45364"
-          }
-        }
-      },
-      "Microsoft.VisualStudio.DesignTools.TapContract/17.0.0.0": {
-        "runtime": {
-          "Microsoft.VisualStudio.DesignTools.TapContract.dll": {
-            "assemblyVersion": "17.0.0.0",
-            "fileVersion": "17.13.39189.45364"
-          }
-        }
       }
     }
   },
@@ -534,7 +506,7 @@
       "serviceable": false,
       "sha512": ""
     },
-    "runtimepack.Microsoft.Windows.SDK.NET.Ref/10.0.19041.57": {
+    "runtimepack.Microsoft.Windows.SDK.NET.Ref/10.0.19041.53": {
       "type": "runtimepack",
       "serviceable": false,
       "sha512": ""
@@ -728,20 +700,6 @@
       "path": "system.security.cryptography.cng/5.0.0",
       "hashPath": "system.security.cryptography.cng.5.0.0.nupkg.sha512"
     },
-    "System.Formats.Asn1/5.0.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-MTvUIktmemNB+El0Fgw9egyqT9AYSIk6DTJeoDSpc3GIHxHCMo8COqkWT1mptX5tZ1SlQ6HJZ0OsSvMth1c12w==",
-      "path": "system.formats.asn1/5.0.0",
-      "hashPath": "system.formats.asn1.5.0.0.nupkg.sha512"
-    },
-    "System.Security.Cryptography.Cng/5.0.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-jIMXsKn94T9JY7PvPq/tMfqa6GAaHpElRDpmG+SuL+D3+sTw2M8VhnibKnN8Tq+4JqbPJ/f+BwtLeDMEnzAvRg==",
-      "path": "system.security.cryptography.cng/5.0.0",
-      "hashPath": "system.security.cryptography.cng.5.0.0.nupkg.sha512"
-    },
     "System.Speech/8.0.0": {
       "type": "package",
       "serviceable": true,
@@ -751,21 +709,6 @@
     },
     "ProjectGSMAUI.Shared/1.0.0": {
       "type": "project",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "Microsoft.Maui.Controls.HotReload.Forms/17.0.0.0": {
-      "type": "reference",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "Microsoft.VisualStudio.DesignTools.MobileTapContracts/17.0.0.0": {
-      "type": "reference",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "Microsoft.VisualStudio.DesignTools.TapContract/17.0.0.0": {
-      "type": "reference",
       "serviceable": false,
       "sha512": ""
     }

@@ -12,8 +12,8 @@ using ProjectGSMAUI.Api.Data;
 namespace ProjectGSMAUI.Api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250112033140_DLSS")]
-    partial class DLSS
+    [Migration("20250113135118_AddDuLieu")]
+    partial class AddDuLieu
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -62,22 +62,59 @@ namespace ProjectGSMAUI.Api.Migrations
                     b.Property<int?>("Gia")
                         .HasColumnType("int");
 
-                    b.Property<string>("MaGhe")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<int?>("MaHoaDon")
                         .HasColumnType("int");
+
+                    b.Property<string>("MaVe")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("MaChiTietHoaDon")
                         .HasName("PK__ChiTietH__CFF2C426609D1D0B");
 
                     b.HasIndex("GheMaGhe");
 
-                    b.HasIndex("MaGhe");
-
                     b.HasIndex("MaHoaDon");
 
+                    b.HasIndex("MaVe");
+
                     b.ToTable("ChiTietHoaDon", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            MaChiTietHoaDon = 1,
+                            Gia = 250000,
+                            MaHoaDon = 1,
+                            MaVe = "1"
+                        },
+                        new
+                        {
+                            MaChiTietHoaDon = 2,
+                            Gia = 250000,
+                            MaHoaDon = 1,
+                            MaVe = "2"
+                        },
+                        new
+                        {
+                            MaChiTietHoaDon = 3,
+                            Gia = 260000,
+                            MaHoaDon = 2,
+                            MaVe = "3"
+                        },
+                        new
+                        {
+                            MaChiTietHoaDon = 4,
+                            Gia = 260000,
+                            MaHoaDon = 2,
+                            MaVe = "4"
+                        },
+                        new
+                        {
+                            MaChiTietHoaDon = 5,
+                            Gia = 270000,
+                            MaHoaDon = 3,
+                            MaVe = "5"
+                        });
                 });
 
             modelBuilder.Entity("ProjectGSMAUI.Api.Data.Entities.Combo", b =>
@@ -1517,6 +1554,103 @@ namespace ProjectGSMAUI.Api.Migrations
                     b.HasIndex("MaKhachHang");
 
                     b.ToTable("HoaDon", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            MaHoaDon = 1,
+                            MaDatVe = 101,
+                            MaGiamGia = 1,
+                            MaKhachHang = "TK001",
+                            NgayXuat = new DateOnly(2023, 12, 1),
+                            TinhTrang = 1,
+                            TongTien = 500000
+                        },
+                        new
+                        {
+                            MaHoaDon = 2,
+                            MaDatVe = 102,
+                            MaKhachHang = "TK001",
+                            NgayXuat = new DateOnly(2023, 12, 2),
+                            TinhTrang = 0,
+                            TongTien = 520000
+                        },
+                        new
+                        {
+                            MaHoaDon = 3,
+                            MaDatVe = 103,
+                            MaGiamGia = 2,
+                            MaKhachHang = "TK001",
+                            NgayXuat = new DateOnly(2023, 12, 3),
+                            TinhTrang = 1,
+                            TongTien = 530000
+                        },
+                        new
+                        {
+                            MaHoaDon = 4,
+                            MaDatVe = 104,
+                            MaKhachHang = "TK001",
+                            NgayXuat = new DateOnly(2023, 12, 4),
+                            TinhTrang = 0,
+                            TongTien = 540000
+                        },
+                        new
+                        {
+                            MaHoaDon = 5,
+                            MaDatVe = 105,
+                            MaGiamGia = 3,
+                            MaKhachHang = "TK001",
+                            NgayXuat = new DateOnly(2023, 12, 5),
+                            TinhTrang = 1,
+                            TongTien = 550000
+                        },
+                        new
+                        {
+                            MaHoaDon = 6,
+                            MaDatVe = 106,
+                            MaKhachHang = "TK001",
+                            NgayXuat = new DateOnly(2023, 12, 6),
+                            TinhTrang = 0,
+                            TongTien = 560000
+                        },
+                        new
+                        {
+                            MaHoaDon = 7,
+                            MaDatVe = 107,
+                            MaGiamGia = 4,
+                            MaKhachHang = "TK001",
+                            NgayXuat = new DateOnly(2023, 12, 7),
+                            TinhTrang = 1,
+                            TongTien = 570000
+                        },
+                        new
+                        {
+                            MaHoaDon = 8,
+                            MaDatVe = 108,
+                            MaKhachHang = "TK001",
+                            NgayXuat = new DateOnly(2023, 12, 8),
+                            TinhTrang = 0,
+                            TongTien = 580000
+                        },
+                        new
+                        {
+                            MaHoaDon = 9,
+                            MaDatVe = 109,
+                            MaGiamGia = 5,
+                            MaKhachHang = "TK001",
+                            NgayXuat = new DateOnly(2023, 12, 9),
+                            TinhTrang = 1,
+                            TongTien = 590000
+                        },
+                        new
+                        {
+                            MaHoaDon = 10,
+                            MaDatVe = 110,
+                            MaKhachHang = "TK001",
+                            NgayXuat = new DateOnly(2023, 12, 10),
+                            TinhTrang = 0,
+                            TongTien = 600000
+                        });
                 });
 
             modelBuilder.Entity("ProjectGSMAUI.Api.Data.Entities.KhungGio", b =>
@@ -1737,9 +1871,6 @@ namespace ProjectGSMAUI.Api.Migrations
                     b.Property<DateOnly?>("NgayKhoiChieu")
                         .HasColumnType("date");
 
-                    b.Property<string>("PosterBase64")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int?>("SoSuatChieu")
                         .HasColumnType("int");
 
@@ -1934,9 +2065,15 @@ namespace ProjectGSMAUI.Api.Migrations
                     b.Property<decimal>("Gia")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<byte[]>("HinhAnh")
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<string>("MoTa")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SoLuong")
+                        .HasColumnType("int");
 
                     b.Property<string>("TenSanPham")
                         .IsRequired()
@@ -1978,8 +2115,8 @@ namespace ProjectGSMAUI.Api.Migrations
                     b.Property<bool?>("GioiTinh")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Hinh")
-                        .HasColumnType("text");
+                    b.Property<byte[]>("Hinh")
+                        .HasColumnType("VARBINARY(MAX)");
 
                     b.Property<string>("MatKhau")
                         .HasMaxLength(64)
@@ -2031,7 +2168,7 @@ namespace ProjectGSMAUI.Api.Migrations
                             Email = "nguyenquangquyX@gmail.com",
                             GioiTinh = true,
                             MatKhau = "8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92",
-                            NgayDangKy = new DateOnly(2025, 1, 12),
+                            NgayDangKy = new DateOnly(2025, 1, 13),
                             NgaySinh = new DateOnly(1999, 5, 19),
                             Sdt = "0973713274",
                             TenNguoiDung = "Quản trị viên",
@@ -2257,19 +2394,19 @@ namespace ProjectGSMAUI.Api.Migrations
                         .WithMany("ChiTietHoaDons")
                         .HasForeignKey("GheMaGhe");
 
-                    b.HasOne("ProjectGSMAUI.Api.Data.Entities.Ve", "MaGheNavigation")
-                        .WithMany("ChiTietHoaDons")
-                        .HasForeignKey("MaGhe")
-                        .HasConstraintName("FK__ChiTietHo__MaGhe__59FA5E80");
-
                     b.HasOne("ProjectGSMAUI.Api.Data.Entities.HoaDon", "MaHoaDonNavigation")
                         .WithMany("ChiTietHoaDons")
                         .HasForeignKey("MaHoaDon")
                         .HasConstraintName("FK__ChiTietHo__MaHoa__5AEE82B9");
 
-                    b.Navigation("MaGheNavigation");
+                    b.HasOne("ProjectGSMAUI.Api.Data.Entities.Ve", "MaVeNavigation")
+                        .WithMany("ChiTietHoaDons")
+                        .HasForeignKey("MaVe")
+                        .HasConstraintName("FK__ChiTietHo__MaGhe__59FA5E80");
 
                     b.Navigation("MaHoaDonNavigation");
+
+                    b.Navigation("MaVeNavigation");
                 });
 
             modelBuilder.Entity("ProjectGSMAUI.Api.Data.Entities.Coupon", b =>

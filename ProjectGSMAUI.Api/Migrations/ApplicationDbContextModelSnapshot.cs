@@ -59,20 +59,20 @@ namespace ProjectGSMAUI.Api.Migrations
                     b.Property<int?>("Gia")
                         .HasColumnType("int");
 
-                    b.Property<string>("MaGhe")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<int?>("MaHoaDon")
                         .HasColumnType("int");
+
+                    b.Property<string>("MaVe")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("MaChiTietHoaDon")
                         .HasName("PK__ChiTietH__CFF2C426609D1D0B");
 
                     b.HasIndex("GheMaGhe");
 
-                    b.HasIndex("MaGhe");
-
                     b.HasIndex("MaHoaDon");
+
+                    b.HasIndex("MaVe");
 
                     b.ToTable("ChiTietHoaDon", (string)null);
 
@@ -81,8 +81,36 @@ namespace ProjectGSMAUI.Api.Migrations
                         {
                             MaChiTietHoaDon = 1,
                             Gia = 250000,
-                            MaGhe = 1,
-                            MaHoaDon = 1
+                            MaHoaDon = 1,
+                            MaVe = "1"
+                        },
+                        new
+                        {
+                            MaChiTietHoaDon = 2,
+                            Gia = 250000,
+                            MaHoaDon = 1,
+                            MaVe = "2"
+                        },
+                        new
+                        {
+                            MaChiTietHoaDon = 3,
+                            Gia = 260000,
+                            MaHoaDon = 2,
+                            MaVe = "3"
+                        },
+                        new
+                        {
+                            MaChiTietHoaDon = 4,
+                            Gia = 260000,
+                            MaHoaDon = 2,
+                            MaVe = "4"
+                        },
+                        new
+                        {
+                            MaChiTietHoaDon = 5,
+                            Gia = 270000,
+                            MaHoaDon = 3,
+                            MaVe = "5"
                         });
                 });
 
@@ -1840,9 +1868,6 @@ namespace ProjectGSMAUI.Api.Migrations
                     b.Property<DateOnly?>("NgayKhoiChieu")
                         .HasColumnType("date");
 
-                    b.Property<string>("PosterBase64")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int?>("SoSuatChieu")
                         .HasColumnType("int");
 
@@ -2087,8 +2112,8 @@ namespace ProjectGSMAUI.Api.Migrations
                     b.Property<bool?>("GioiTinh")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Hinh")
-                        .HasColumnType("text");
+                    b.Property<byte[]>("Hinh")
+                        .HasColumnType("VARBINARY(MAX)");
 
                     b.Property<string>("MatKhau")
                         .HasMaxLength(64)
@@ -2140,7 +2165,7 @@ namespace ProjectGSMAUI.Api.Migrations
                             Email = "nguyenquangquyX@gmail.com",
                             GioiTinh = true,
                             MatKhau = "8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92",
-                            NgayDangKy = new DateOnly(2025, 1, 12),
+                            NgayDangKy = new DateOnly(2025, 1, 13),
                             NgaySinh = new DateOnly(1999, 5, 19),
                             Sdt = "0973713274",
                             TenNguoiDung = "Quản trị viên",
@@ -2366,19 +2391,19 @@ namespace ProjectGSMAUI.Api.Migrations
                         .WithMany("ChiTietHoaDons")
                         .HasForeignKey("GheMaGhe");
 
-                    b.HasOne("ProjectGSMAUI.Api.Data.Entities.Ve", "MaGheNavigation")
-                        .WithMany("ChiTietHoaDons")
-                        .HasForeignKey("MaGhe")
-                        .HasConstraintName("FK__ChiTietHo__MaGhe__59FA5E80");
-
                     b.HasOne("ProjectGSMAUI.Api.Data.Entities.HoaDon", "MaHoaDonNavigation")
                         .WithMany("ChiTietHoaDons")
                         .HasForeignKey("MaHoaDon")
                         .HasConstraintName("FK__ChiTietHo__MaHoa__5AEE82B9");
 
-                    b.Navigation("MaGheNavigation");
+                    b.HasOne("ProjectGSMAUI.Api.Data.Entities.Ve", "MaVeNavigation")
+                        .WithMany("ChiTietHoaDons")
+                        .HasForeignKey("MaVe")
+                        .HasConstraintName("FK__ChiTietHo__MaGhe__59FA5E80");
 
                     b.Navigation("MaHoaDonNavigation");
+
+                    b.Navigation("MaVeNavigation");
                 });
 
             modelBuilder.Entity("ProjectGSMAUI.Api.Data.Entities.Coupon", b =>

@@ -191,7 +191,7 @@ namespace ProjectGSMAUI.MVC.Areas.Admin.Controllers
                 var json = JsonConvert.SerializeObject(sanPhamMoi);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var response = await _httpClient.PutAsync(_baseApiUrl, content);
+                var response = await _httpClient.PutAsync(_baseApiUrl+ "/UpdateSanPham", content);
                 if (response.IsSuccessStatusCode)
                 {
                     return Json(new { success = true });

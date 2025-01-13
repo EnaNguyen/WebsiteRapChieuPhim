@@ -38,7 +38,7 @@ namespace ProjectGSMAUI.Api.Controllers
             return CreatedAtAction(nameof(GetSanPham), new { id = sanPham.Id }, sanPham);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("UpdateSanPham")]
         public async Task<IActionResult> UpdateSanPham(int id, SanPham sanPham)
         {
             if (id != sanPham.Id) return BadRequest("ID không khớp");
