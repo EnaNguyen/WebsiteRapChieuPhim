@@ -82,5 +82,6 @@ namespace ProjectGSMAUI.Api.Controllers
             return Ok(response.Data);
         }
 
+       
     }
 }

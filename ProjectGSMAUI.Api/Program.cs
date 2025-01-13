@@ -71,7 +71,7 @@ builder.Services.AddRateLimiter(_ => _.AddFixedWindowLimiter(policyName: "fixedw
     option.PermitLimit = 5;
     option.QueueLimit = 0;
     option.QueueProcessingOrder = System.Threading.RateLimiting.QueueProcessingOrder.OldestFirst;
-}).RejectionStatusCode=401);
+}).RejectionStatusCode = 401);
 builder.Services.AddSingleton(mapper);
 
 

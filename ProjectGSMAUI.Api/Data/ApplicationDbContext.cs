@@ -589,6 +589,8 @@ namespace ProjectGSMAUI.Api.Data
                 new ChiTietHoaDon { MaChiTietHoaDon = 4, MaVe = "4", MaHoaDon = 2, Gia = 260000 },
                 new ChiTietHoaDon { MaChiTietHoaDon = 5, MaVe = "5", MaHoaDon = 3, Gia = 270000 }
             );
+
+
         }
     }
 }
