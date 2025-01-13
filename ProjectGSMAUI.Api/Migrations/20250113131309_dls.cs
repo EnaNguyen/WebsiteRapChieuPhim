@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ProjectGSMAUI.Api.Migrations
 {
     /// <inheritdoc />
-    public partial class DLM : Migration
+    public partial class dls : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -427,7 +427,7 @@ namespace ProjectGSMAUI.Api.Migrations
             migrationBuilder.InsertData(
                 table: "TaiKhoan",
                 columns: new[] { "IDTaiKhoan", "CCCD", "DiaChi", "DiemTichLuy", "Email", "GioiTinh", "Hinh", "MatKhau", "NgayDangKy", "NgaySinh", "SDT", "TenNguoiDung", "TenTaiKhoan", "TrangThai", "VaiTro" },
-                values: new object[] { "TK001", "123456789012", "123 Đường ABC, Thành phố XYZ", 0, "nguyenquangquyX@gmail.com", true, null, "8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92", new DateOnly(2025, 1, 3), new DateOnly(1999, 5, 19), "0973713274", "Quản trị viên", "Admin", 1, 2 });
+                values: new object[] { "TK001", "123456789012", "123 Đường ABC, Thành phố XYZ", 0, "nguyenquangquyX@gmail.com", true, null, "8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92", new DateOnly(2025, 1, 13), new DateOnly(1999, 5, 19), "0973713274", "Quản trị viên", "Admin", 1, 2 });
 
             migrationBuilder.InsertData(
                 table: "TheLoaiPhim",
@@ -459,6 +459,18 @@ namespace ProjectGSMAUI.Api.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "HoaDon",
+                columns: new[] { "MaHoaDon", "MaDatVe", "MaGiamGia", "MaKhachHang", "NgayXuat", "TinhTrang", "TongTien" },
+                values: new object[,]
+                {
+                    { 2, 102, null, "TK001", new DateOnly(2023, 12, 2), 0, 520000 },
+                    { 4, 104, null, "TK001", new DateOnly(2023, 12, 4), 0, 540000 },
+                    { 6, 106, null, "TK001", new DateOnly(2023, 12, 6), 0, 560000 },
+                    { 8, 108, null, "TK001", new DateOnly(2023, 12, 8), 0, 580000 },
+                    { 10, 110, null, "TK001", new DateOnly(2023, 12, 10), 0, 600000 }
+                });
+
+            migrationBuilder.InsertData(
                 table: "Phim",
                 columns: new[] { "ID", "DaoDien", "GioiHanDoTuoi", "MoTa", "NgayKetThuc", "NgayKhoiChieu", "SoSuatChieu", "TenPhim", "TheLoai", "ThoiLuong", "TrangThai" },
                 values: new object[,]
@@ -469,6 +481,23 @@ namespace ProjectGSMAUI.Api.Migrations
                     { 4, "Director D", 0, "An animated adventure for...", new DateOnly(2024, 4, 15), new DateOnly(2024, 3, 20), 6, "Animated Movie 1", 4, 90, 1 },
                     { 5, "Director E", 13, "A sci-fi epic about...", new DateOnly(2024, 4, 30), new DateOnly(2024, 4, 10), 5, "Sci-Fi Movie 1", 5, 135, 1 }
                 });
+
+            migrationBuilder.InsertData(
+                table: "HoaDon",
+                columns: new[] { "MaHoaDon", "MaDatVe", "MaGiamGia", "MaKhachHang", "NgayXuat", "TinhTrang", "TongTien" },
+                values: new object[,]
+                {
+                    { 1, 101, 1, "TK001", new DateOnly(2023, 12, 1), 1, 500000 },
+                    { 3, 103, 2, "TK001", new DateOnly(2023, 12, 3), 1, 530000 },
+                    { 5, 105, 3, "TK001", new DateOnly(2023, 12, 5), 1, 550000 },
+                    { 7, 107, 4, "TK001", new DateOnly(2023, 12, 7), 1, 570000 },
+                    { 9, 109, 5, "TK001", new DateOnly(2023, 12, 9), 1, 590000 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "ChiTietHoaDon",
+                columns: new[] { "MaChiTietHoaDon", "Gia", "MaGhe", "MaHoaDon" },
+                values: new object[] { 1, 250000, 1, 1 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ChiTietCombos_ComboId",
