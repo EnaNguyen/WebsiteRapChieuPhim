@@ -12,13 +12,8 @@ using ProjectGSMAUI.Api.Data;
 namespace ProjectGSMAUI.Api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-<<<<<<<< HEAD:ProjectGSMAUI.Api/Migrations/20250103150704_DLM.Designer.cs
-    [Migration("20250103150704_DLM")]
-    partial class DLM
-========
-    [Migration("20250104143049_DLSS")]
+    [Migration("20250109024709_DLSS")]
     partial class DLSS
->>>>>>>> origin/PBH-TaiKhoan3:ProjectGSMAUI.Api/Migrations/20250104143049_DLSS.Designer.cs
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -264,6 +259,13 @@ namespace ProjectGSMAUI.Api.Migrations
                     b.Property<int?>("GiaTri")
                         .HasColumnType("int");
 
+                    b.Property<byte[]>("HinhAnh")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("MoTa")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateOnly?>("NgayBatDau")
                         .HasColumnType("date");
 
@@ -287,6 +289,7 @@ namespace ProjectGSMAUI.Api.Migrations
                         {
                             MaGiamGia = 1,
                             GiaTri = 20,
+                            MoTa = "GiamGiaNuaDauNam",
                             NgayBatDau = new DateOnly(2025, 1, 1),
                             NgayKetThuc = new DateOnly(2024, 6, 30),
                             SoLuong = 10,
@@ -663,9 +666,15 @@ namespace ProjectGSMAUI.Api.Migrations
                     b.Property<decimal>("Gia")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<byte[]>("HinhAnh")
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<string>("MoTa")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SoLuong")
+                        .HasColumnType("int");
 
                     b.Property<string>("TenSanPham")
                         .IsRequired()
@@ -760,11 +769,7 @@ namespace ProjectGSMAUI.Api.Migrations
                             Email = "nguyenquangquyX@gmail.com",
                             GioiTinh = true,
                             MatKhau = "8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92",
-<<<<<<<< HEAD:ProjectGSMAUI.Api/Migrations/20250103150704_DLM.Designer.cs
-                            NgayDangKy = new DateOnly(2025, 1, 3),
-========
-                            NgayDangKy = new DateOnly(2025, 1, 4),
->>>>>>>> origin/PBH-TaiKhoan3:ProjectGSMAUI.Api/Migrations/20250104143049_DLSS.Designer.cs
+                            NgayDangKy = new DateOnly(2025, 1, 9),
                             NgaySinh = new DateOnly(1999, 5, 19),
                             Sdt = "0973713274",
                             TenNguoiDung = "Quản trị viên",

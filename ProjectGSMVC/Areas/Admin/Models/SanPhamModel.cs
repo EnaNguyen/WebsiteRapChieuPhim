@@ -1,10 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ProjectGSMAUI.Api.Data.Entities
+namespace ProjectGSMAUI.MVC.Models
 {
-    public class SanPham
+    public class SanPhamModel
     {
-        [Key]
         public int Id { get; set; }
 
         public string TenSanPham { get; set; } = string.Empty;
@@ -13,10 +12,9 @@ namespace ProjectGSMAUI.Api.Data.Entities
 
         public string MoTa { get; set; } = string.Empty;
 
-        public int SoLuong { get; set; }
+        public int SoLuong { get; set; } 
 
-        public byte[]? HinhAnh { get; set; }
-
-        public ICollection<ChiTietCombo> ChiTietCombos { get; set; } = new List<ChiTietCombo>();
+        public IFormFile HinhAnh { get; set; } 
+        public string? HinhAnh64 { get; set; }
     }
 }

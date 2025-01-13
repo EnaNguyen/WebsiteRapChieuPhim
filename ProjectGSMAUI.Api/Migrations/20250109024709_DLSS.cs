@@ -8,11 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ProjectGSMAUI.Api.Migrations
 {
     /// <inheritdoc />
-<<<<<<<< HEAD:ProjectGSMAUI.Api/Migrations/20250103150704_DLM.cs
-    public partial class DLM : Migration
-========
     public partial class DLSS : Migration
->>>>>>>> origin/PBH-TaiKhoan3:ProjectGSMAUI.Api/Migrations/20250104143049_DLSS.cs
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -53,6 +49,8 @@ namespace ProjectGSMAUI.Api.Migrations
                     MaGiamGia = table.Column<int>(type: "int", nullable: false),
                     TenGiamGia = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     GiaTri = table.Column<int>(type: "int", nullable: true),
+                    MoTa = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    HinhAnh = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     NgayBatDau = table.Column<DateOnly>(type: "date", nullable: true),
                     NgayKetThuc = table.Column<DateOnly>(type: "date", nullable: true),
                     SoLuong = table.Column<int>(type: "int", nullable: true)
@@ -111,7 +109,9 @@ namespace ProjectGSMAUI.Api.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TenSanPham = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Gia = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    MoTa = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    MoTa = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SoLuong = table.Column<int>(type: "int", nullable: false),
+                    HinhAnh = table.Column<byte[]>(type: "varbinary(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -399,8 +399,8 @@ namespace ProjectGSMAUI.Api.Migrations
 
             migrationBuilder.InsertData(
                 table: "GiamGia",
-                columns: new[] { "MaGiamGia", "GiaTri", "NgayBatDau", "NgayKetThuc", "SoLuong", "TenGiamGia" },
-                values: new object[] { 1, 20, new DateOnly(2025, 1, 1), new DateOnly(2024, 6, 30), 10, "Khuyến mãi nửa đầu 2025" });
+                columns: new[] { "MaGiamGia", "GiaTri", "HinhAnh", "MoTa", "NgayBatDau", "NgayKetThuc", "SoLuong", "TenGiamGia" },
+                values: new object[] { 1, 20, null, "GiamGiaNuaDauNam", new DateOnly(2025, 1, 1), new DateOnly(2024, 6, 30), 10, "Khuyến mãi nửa đầu 2025" });
 
             migrationBuilder.InsertData(
                 table: "KhungGio",
@@ -431,11 +431,7 @@ namespace ProjectGSMAUI.Api.Migrations
             migrationBuilder.InsertData(
                 table: "TaiKhoan",
                 columns: new[] { "IDTaiKhoan", "CCCD", "DiaChi", "DiemTichLuy", "Email", "GioiTinh", "Hinh", "MatKhau", "NgayDangKy", "NgaySinh", "SDT", "TenNguoiDung", "TenTaiKhoan", "TrangThai", "VaiTro" },
-<<<<<<<< HEAD:ProjectGSMAUI.Api/Migrations/20250103150704_DLM.cs
-                values: new object[] { "TK001", "123456789012", "123 Đường ABC, Thành phố XYZ", 0, "nguyenquangquyX@gmail.com", true, null, "8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92", new DateOnly(2025, 1, 3), new DateOnly(1999, 5, 19), "0973713274", "Quản trị viên", "Admin", 1, 2 });
-========
-                values: new object[] { "TK001", "123456789012", "123 Đường ABC, Thành phố XYZ", 0, "nguyenquangquyX@gmail.com", true, null, "8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92", new DateOnly(2025, 1, 4), new DateOnly(1999, 5, 19), "0973713274", "Quản trị viên", "Admin", 1, 2 });
->>>>>>>> origin/PBH-TaiKhoan3:ProjectGSMAUI.Api/Migrations/20250104143049_DLSS.cs
+                values: new object[] { "TK001", "123456789012", "123 Đường ABC, Thành phố XYZ", 0, "nguyenquangquyX@gmail.com", true, null, "8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92", new DateOnly(2025, 1, 9), new DateOnly(1999, 5, 19), "0973713274", "Quản trị viên", "Admin", 1, 2 });
 
             migrationBuilder.InsertData(
                 table: "TheLoaiPhim",

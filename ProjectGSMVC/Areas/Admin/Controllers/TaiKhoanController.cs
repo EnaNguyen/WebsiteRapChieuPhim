@@ -25,7 +25,7 @@ namespace ProjectGSMVC.Areas.Admin.Controllers
         // Danh sách khách hàng
         public async Task<IActionResult> Customer()
         {
-            var response = await _httpClient.GetAsync("http://localhost:5030/api/TaiKhoan");
+            var response = await _httpClient.GetAsync("http://localhost:7147/api/TaiKhoan");
             if (!response.IsSuccessStatusCode) return NotFound();
 
             var responseData = await response.Content.ReadAsStringAsync();
@@ -39,7 +39,7 @@ namespace ProjectGSMVC.Areas.Admin.Controllers
         // Danh sách admin
         public async Task<IActionResult> Admin()
         {
-            var response = await _httpClient.GetAsync("http://localhost:5030/api/TaiKhoan");
+            var response = await _httpClient.GetAsync("http://localhost:7147/api/TaiKhoan");
             if (!response.IsSuccessStatusCode) return NotFound();
 
             var responseData = await response.Content.ReadAsStringAsync();

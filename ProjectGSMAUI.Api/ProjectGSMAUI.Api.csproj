@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\HoangAnh\**" />
+    <Content Remove="Controllers\HoangAnh\**" />
+    <EmbeddedResource Remove="Controllers\HoangAnh\**" />
+    <None Remove="Controllers\HoangAnh\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.11" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
@@ -26,10 +33,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ProjectGSMAUI.Shared\ProjectGSMAUI.Shared.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers\HoangAnh\" />
   </ItemGroup>
 
 </Project>

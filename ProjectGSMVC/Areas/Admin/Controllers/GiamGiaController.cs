@@ -220,7 +220,6 @@ namespace ProjectGSMVC.Areas.Admin.Controllers
             {
                 return BadRequest(errors);
             }
-
             try
             {
                 GiamGiaRequest giamGiaRequest = new GiamGiaRequest();
@@ -277,7 +276,6 @@ namespace ProjectGSMVC.Areas.Admin.Controllers
                     "application/json"
                 );
 
-                // Call the API to update the discount
                 var response = await _httpClient.PutAsync($"/api/GiamGia/Update", jsonContent);
 
                 if (response.IsSuccessStatusCode)
