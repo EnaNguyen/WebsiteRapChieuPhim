@@ -9,7 +9,7 @@ public partial class Phim
 
     public string? TenPhim { get; set; }
 
-    public int? TheLoai { get; set; }
+    public string? TheLoai { get; set; }
 
     public int? ThoiLuong { get; set; }
 
@@ -27,6 +27,7 @@ public partial class Phim
 
     public string? MoTa { get; set; }
 
+    
     public virtual ICollection<HinhAnh> HinhAnhs { get; set; } = new List<HinhAnh>();
 
     public virtual ICollection<LichChieu> LichChieus { get; set; } = new List<LichChieu>();
@@ -35,3 +36,4 @@ public partial class Phim
 
     public virtual ICollection<Video> Videos { get; set; } = new List<Video>();
 }
+    

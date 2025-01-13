@@ -9,7 +9,7 @@ public partial class DatVe
 
     public string? MaKhachHang { get; set; }
 
-    public int? MaVe { get; set; }
+    public string? MaVe { get; set; }
 
     public DateOnly? NgayDat { get; set; }
 

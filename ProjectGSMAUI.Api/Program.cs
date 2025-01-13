@@ -28,6 +28,7 @@ builder.Services.AddScoped<IVoucherServices, VoucherServices>();
 builder.Services.AddScoped<IGiamGiaServices, TaiKhoanServices>();
 builder.Services.AddScoped<ITheLoaiPhimService, TheLoaiPhimService>();
 builder.Services.AddScoped<ILichChieuService, LichChieuService>();
+builder.Services.AddScoped<IVeService, VeService>();
 builder.Services.AddTransient<IRefreshHandler, RefreshHandler>();
 builder.Services.AddTransient<ITaiKhoanService, TaiKhoanService>();
 builder.Services.AddScoped<ISanPham, SanPhamService>();

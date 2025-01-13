@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProjectGSMAUI.Api.Data;
 
@@ -11,9 +12,11 @@ using ProjectGSMAUI.Api.Data;
 namespace ProjectGSMAUI.Api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250112033140_DLSS")]
+    partial class DLSS
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1931,15 +1934,9 @@ namespace ProjectGSMAUI.Api.Migrations
                     b.Property<decimal>("Gia")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<byte[]>("HinhAnh")
-                        .HasColumnType("varbinary(max)");
-
                     b.Property<string>("MoTa")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SoLuong")
-                        .HasColumnType("int");
 
                     b.Property<string>("TenSanPham")
                         .IsRequired()

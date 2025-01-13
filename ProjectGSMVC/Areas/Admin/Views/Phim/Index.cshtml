@@ -1,0 +1,549 @@
+﻿@using ProjectGSMVC.Areas.Admin.Models;
+@using ProjectGSMAUI.Api.Data.Entities;
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    var PhimList = ViewData["ListPhim"] as List<PhimViewModel>;
+    var Searching = ViewData["Searching"] as string;
+
+}
+
+<div class="pd-ltr-20 xs-pd-20-10">
+    <div class="min-height-200px">
+        <div class="page-header">
+            <div class="row">
+                <div class="col-md-12 col-sm-12">
+                    <div class="title">
+                        <h4>Quản lý Phim</h4>
+                    </div>
+                    <nav aria-label="breadcrumb" role="navigation">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="index.html">Trang Chủ</a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">
+                                Quản lý Phim
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="container mt-3" style="margin-top: 40px; margin-bottom: 40px">
+            <div class="container">
+                <div class="row">
+                    <div class="col-6">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal" id="ThemPhimModal">
+                            Thêm Phim Mới
+                        </button>
+                    </div>
+                    <div class="col-6" style="text-align: right">
+                        <form method="get" action="/Admin/Phim/Index" style="display: inline;">
+                            <input type="text" name="searching" id="Searching" value="@Searching" placeholder="Gõ Tên Phim" style="height: 40px; width: 200px; border-radius: 5px; padding-left:20px; padding-right: 20px" />
+                            <button type="submit" class="btn btn-secondary">Tìm kiếm</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row clearfix">
+            @if (PhimList != null && PhimList.Any())
+            {
+                @foreach (var item in PhimList)
+                {
+                    <div class="col-lg-3 col-md-6 col-sm-12 mb-30">
+                        <div class="da-card">
+                            <div class="da-card-photo">
+                                <div style="height:200px; border-bottom: 1px solid grey">
+                                    <img src="data:image/jpeg;base64,@item.ImageBase64" alt="" style="max-width:400px; height:100%" />
+                                </div>
+                                <div class="da-overlay da-slide-top">
+                                    <div class="da-social">
+                                        <ul class="clearfix">
+                                            <li>
+                                                <a href="#" class="detail-phim" data-id="@item.Id" data-bs-toggle="modal" data-bs-target="#myModal2">
+                                                    <i class="bi bi-info-circle"></i>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#" class="edit-phim" data-id="@item.Id" data-bs-toggle="modal" data-bs-target="#myModal1">
+                                                    <i class="bi bi-pencil"></i>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#" class="delete-phim" data-id="@item.Id"><i class="bi bi-x"></i></a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="mb-0">
+                                <strong>Từ ngày</strong> @(item.NgayKhoiChieu.HasValue ? item.NgayKhoiChieu.Value.ToString("dd/MM/yyyy") : "N/A") &nbsp
+                                <strong>Đến </strong> @(item.NgayKetThuc.HasValue ? item.NgayKetThuc.Value.ToString("dd/MM/yyyy") : "N/A")
+                            </p>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="col-12">
+                    <p class="text-center">Không tìm thấy phim nào.</p>
+                </div>
+            }
+        </div>
+    </div>
+
+
+<!-- Create Phim Modal -->
+    <!-- Create Modal -->
+    <div class="modal fade" id="myModal">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Thêm Phim Mới</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="TenPhim">Tên Phim</label>
+                                <input type="text" class="form-control" id="TenPhim" name="TenPhim" placeholder="Nhập tên phim" required />
+                                <h6 id="TenPhimError"></h6>
+                            </div>
+                            <div class="form-group">
+                                <label for="TheLoai">Thể Loại</label>
+                                <input type="text" class="form-control" id="TheLoai" name="TheLoai" placeholder="Nhập thể loại" required />
+                                <h6 id="TheLoaiError"></h6>
+                            </div>
+                            <div class="form-group">
+                                <label for="ThoiLuong">Thời Lượng (phút)</label>
+                                <input type="number" class="form-control" id="ThoiLuong" name="ThoiLuong" min="1" placeholder="Nhập thời lượng" required />
+                                <h6 id="ThoiLuongError"></h6>
+                            </div>
+                            <div class="form-group">
+                                <label for="DaoDien">Đạo Diễn</label>
+                                <input type="text" class="form-control" id="DaoDien" name="DaoDien" placeholder="Nhập tên đạo diễn" required />
+                                <h6 id="DaoDienError"></h6>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="GioiHanDoTuoi">Giới Hạn Độ Tuổi</label>
+                                <input type="number" class="form-control" id="GioiHanDoTuoi" name="GioiHanDoTuoi" min="0" placeholder="Nhập giới hạn độ tuổi" required />
+                                <h6 id="GioiHanDoTuoiError"></h6>
+                            </div>
+                            <div class="form-group">
+                                <label for="NgayKhoiChieu">Ngày Khởi Chiếu</label>
+                                <input type="date" class="form-control" id="NgayKhoiChieu" name="NgayKhoiChieu" required />
+                                <h6 id="NgayKhoiChieuError"></h6>
+                            </div>
+                            <div class="form-group">
+                                <label for="NgayKetThuc">Ngày Kết Thúc</label>
+                                <input type="date" class="form-control" id="NgayKetThuc" name="NgayKetThuc" required />
+                                <h6 id="NgayKetThucError"></h6>
+                            </div>
+                            <div class="form-group">
+                                <label for="MoTa">Mô Tả</label>
+                                <textarea class="form-control" id="MoTa" name="MoTa" rows="3" placeholder="Nhập mô tả phim"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="ImageFile">Poster Phim</label>
+                                <input type="file" class="form-control-file" id="ImageFile" name="ImageFile" accept="image/*" required />
+                                <div>
+                                    <img src="" id="ShowHinhAnh" style="max-height: 200px" />
+                                </div>
+                                <h6 id="ImageFileError"></h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="btnAddPhim">Thêm Mới</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+<!-- Edit Phim Modal -->
+    <div class="modal fade" id="myModal1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Chỉnh Sửa Thông Tin Phim</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="TenPhim1">Tên Phim</label>
+                                <input type="text" class="form-control" id="TenPhim1" name="TenPhim" placeholder="Nhập tên phim" />
+                                <h6 id="TenPhim1Error"></h6>
+                            </div>
+                            <div class="form-group">
+                                <label for="TheLoai1">Thể Loại</label>
+                                <input type="text" class="form-control" id="TheLoai1" name="TheLoai" placeholder="Nhập thể loại" />
+                                <h6 id="TheLoai1Error"></h6>
+                            </div>
+                            <div class="form-group">
+                                <label for="ThoiLuong1">Thời Lượng (phút)</label>
+                                <input type="number" class="form-control" id="ThoiLuong1" name="ThoiLuong" min="1" />
+                                <h6 id="ThoiLuong1Error"></h6>
+                            </div>
+                            <div class="form-group">
+                                <label for="DaoDien1">Đạo Diễn</label>
+                                <input type="text" class="form-control" id="DaoDien1" name="DaoDien" placeholder="Nhập tên đạo diễn" />
+                                <h6 id="DaoDien1Error"></h6>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="GioiHanDoTuoi1">Giới Hạn Độ Tuổi</label>
+                                <input type="number" class="form-control" id="GioiHanDoTuoi1" name="GioiHanDoTuoi" min="0" />
+                                <h6 id="GioiHanDoTuoi1Error"></h6>
+                            </div>
+                            <div class="form-group">
+                                <label for="NgayKhoiChieu1">Ngày Khởi Chiếu</label>
+                                <input type="date" class="form-control" id="NgayKhoiChieu1" name="NgayKhoiChieu" />
+                                <h6 id="NgayKhoiChieu1Error"></h6>
+                            </div>
+                            <div class="form-group">
+                                <label for="NgayKetThuc1">Ngày Kết Thúc</label>
+                                <input type="date" class="form-control" id="NgayKetThuc1" name="NgayKetThuc" />
+                                <h6 id="NgayKetThuc1Error"></h6>
+                            </div>
+                            <div class="form-group">
+                                <label for="MoTa1">Mô Tả</label>
+                                <textarea class="form-control" id="MoTa1" name="MoTa" rows="3"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="ImageFile1">Poster Phim</label>
+                                <input type="file" class="form-control-file" id="ImageFile1" name="ImageFile" accept="image/*" />
+                                <h6 id="ImageFile1Error"></h6>
+                                <div>
+                                    <img src="" id="ShowHinhAnh1" style="max-height: 200px" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="btnChangePhim">Cập Nhật</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+<!-- Detail Phim Modal -->
+    <div class="modal fade" id="myModal2">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Chi Tiết Phim</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <h3 id="TenPhim2" style="font-weight: bold; color: red"></h3>
+                            </div>
+                            <div class="form-group">
+                                <label><strong>Thể loại: </strong><span id="TheLoai2"></span></label>
+                            </div>
+                            <div class="form-group">
+                                <label><strong>Đạo diễn: </strong><span id="DaoDien2"></span></label>
+                            </div>
+                            <div class="form-group">
+                                <label><strong>Thời lượng: </strong><span id="ThoiLuong2"></span> phút</label>
+                            </div>
+                            <div class="form-group">
+                                <label><strong>Giới hạn độ tuổi: </strong><span id="GioiHanDoTuoi2"></span>+</label>
+                            </div>
+                            <div class="form-group">
+                                <label><strong>Ngày khởi chiếu: </strong><span id="NgayKhoiChieu2"></span></label>
+                            </div>
+                            <div class="form-group">
+                                <label><strong>Ngày kết thúc: </strong><span id="NgayKetThuc2"></span></label>
+                            </div>
+                            <div class="form-group">
+                                <label><strong>Số suất chiếu: </strong><span id="SoSuatChieu2"></span></label>
+                            </div>
+                            <div class="form-group">
+                                <label><strong>Trạng thái: </strong><span id="TrangThai2"></span></label>
+                            </div>
+                            <div class="form-group">
+                                <label><strong>Mô tả: </strong></label>
+                                <p id="MoTa2"></p>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group text-center">
+                                <img src="" id="ShowHinhAnh2" style="max-width: 100%; max-height: 400px" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<script>
+        $(document).ready(function () {
+            $("#btnAddPhim").click(function () {
+                var formData = new FormData();
+                formData.append("TenPhim", $("#TenPhim").val());
+                formData.append("TheLoai", $("#TheLoai").val());
+                formData.append("ThoiLuong", $("#ThoiLuong").val());
+                formData.append("DaoDien", $("#DaoDien").val());
+                formData.append("GioiHanDoTuoi", $("#GioiHanDoTuoi").val());
+                formData.append("NgayKhoiChieu", $("#NgayKhoiChieu").val());
+                formData.append("NgayKetThuc", $("#NgayKetThuc").val());
+                formData.append("MoTa", $("#MoTa").val());
+
+                var imageFile = $("#ImageFile")[0].files[0];
+                if (imageFile) {
+                    formData.append("ImageFile", imageFile);
+                }
+
+                $.ajax({
+                    url: "/Admin/Phim/Create",
+                    type: "POST",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response.success) {
+                            alert("Thêm phim mới thành công!");
+                            location.reload();
+                        }
+                    },
+                    error: function (xhr) {
+                        var errors = xhr.responseJSON;
+                        $("h6").text("");
+                        if (errors.TenPhim) $("#TenPhimError").text(errors.TenPhim).css("color", "red");
+                        if (errors.TheLoai) $("#TheLoaiError").text(errors.TheLoai).css("color", "red");
+                        if (errors.ThoiLuong) $("#ThoiLuongError").text(errors.ThoiLuong).css("color", "red");
+                        if (errors.DaoDien) $("#DaoDienError").text(errors.DaoDien).css("color", "red");
+                        if (errors.GioiHanDoTuoi) $("#GioiHanDoTuoiError").text(errors.GioiHanDoTuoi).css("color", "red");
+                        if (errors.NgayKhoiChieu) $("#NgayKhoiChieuError").text(errors.NgayKhoiChieu).css("color", "red");
+                        if (errors.NgayKetThuc) $("#NgayKetThucError").text(errors.NgayKetThuc).css("color", "red");
+                        if (errors.ImageFile) $("#ImageFileError").text(errors.ImageFile).css("color", "red");
+                    }
+                });
+            });
+        });
+
+        // $('#poster').on('change', function () {
+        //     var preview = document.getElementById('posterPreview');
+        //     var file = this.files[0];
+        //     var reader = new FileReader();
+
+        //     reader.onloadend = function () {
+        //         preview.src = reader.result;
+        //         preview.style.display = 'block';
+        //     }
+
+        //     if (file) {
+        //         reader.readAsDataURL(file);
+        //     } else {
+        //         preview.src = "";
+        //         preview.style.display = 'none'; Or 'block' if you want it to always be present
+        //     }
+        // });
+
+    
+</script>
+<script>
+
+    $(document).on('click', '.edit-phim', function () {
+        var id = $(this).data('id');
+        $.ajax({
+            url: '/Admin/Phim/GetPhim',
+            type: 'GET',
+            data: { id: id },
+            success: function (response) {
+                if (response.success) {
+
+                    var data = response.data;
+
+                    $('#editPhimId').val(data.id);
+                    $('#editTenPhim').val(data.tenPhim);
+                    $('#editTheLoai').val(data.theLoai);
+                    $('#editThoiLuong').val(data.thoiLuong);
+                    $('#editDaoDien').val(data.daoDien);
+                    $('#editGioiHanDoTuoi').val(data.gioiHanDoTuoi);
+                    $('#editNgayKhoiChieu').val(data.ngayKhoiChieu.split('T')[0]);
+                    $('#editNgayKetThuc').val(data.ngayKetThuc.split('T')[0]);
+                    $('#editSoSuatChieu').val(data.soSuatChieu);
+                    $('#editMoTa').val(data.moTa);
+
+                    var imageSrc = `data:image/jpeg;base64,${Convert.ToBase64String(data.hinhAnhs[0].hinhAnh1)}`; // Assuming you have the image data in base64 format
+                    $('#editPosterPreview').attr('src', imageSrc);
+
+
+
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function () {
+                alert('Có lỗi xảy ra khi lấy dữ liệu phim!');
+            }
+        });
+    });
+</script>
+<script>
+    $("#btnUpdatePhim").click(function () {
+        var id = $("#editPhimId").val();
+        var formData = new FormData();
+
+        // Add form data to FormData object
+        formData.append("id", id);
+        formData.append("TenPhim", $("#editTenPhim").val());
+        formData.append("TheLoai", $("#editTheLoai").val());
+        formData.append("ThoiLuong", $("#editThoiLuong").val());
+        formData.append("DaoDien", $("#editDaoDien").val());
+        formData.append("GioiHanDoTuoi", $("#editGioiHanDoTuoi").val());
+        formData.append("NgayKhoiChieu", $("#editNgayKhoiChieu").val());
+        formData.append("NgayKetThuc", $("#editNgayKetThuc").val());
+        formData.append("SoSuatChieu", $("#editSoSuatChieu").val());
+        formData.append("MoTa", $("#editMoTa").val());
+
+        var posterFile = $("#editPoster")[0].files[0];
+        if (posterFile) {
+            formData.append("Poster", posterFile);
+        }
+
+        $.ajax({
+            url: "/Admin/Phim/Update",
+            type: "POST",
+            data: formData,
+            processData: false, // Important for FormData
+            contentType: false, // Important for FormData
+            success: function (response) {
+                if (response.success) {
+                    alert("Cập nhật phim thành công!");
+                    location.reload();
+                } else {
+                    alert("Cập nhật phim thất bại!"); // Or handle specific error messages
+                }
+            },
+            error: function (xhr, status, error) {
+                alert("Đã xảy ra lỗi khi cập nhật phim.");
+                console.error("Error updating movie:", xhr.responseText);
+            }
+        });
+    });
+
+
+    $('#editPoster').on('change', function () {
+        var preview = document.getElementById('editPosterPreview');
+        var file = this.files[0];
+        var reader = new FileReader();
+
+        reader.onloadend = function () {
+            preview.src = reader.result;
+        }
+
+        if (file) {
+            reader.readAsDataURL(file);
+        } else {
+            preview.src = ""; // Or keep the old image if you want
+        }
+    });
+
+</script>
+<script>
+    $(document).on('click', '.delete-phim', function (e) {
+        e.preventDefault();
+
+        const phimId = $(this).data('id');
+        if (confirm("Bạn có chắc chắn muốn xóa phim này?")) {
+            $.ajax({
+                url: '/Admin/Phim/Delete', // Thay 'YourController' bằng tên controller của bạn
+                type: 'POST',
+                data: { id: phimId },
+                success: function (response) {
+                    if (response.success) {
+                        alert(response.message);
+                        location.reload(); // Tải lại trang sau khi xóa thành công
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                error: function () {
+                    alert("Đã xảy ra lỗi. Vui lòng thử lại!");
+                }
+            });
+        }
+    });
+</script>
+<script>
+    $(document).on('click', '.detail-phim', function () {
+
+        var id = $(this).data('id');
+        $.ajax({
+            url: '/Admin/Phim/GetPhim',
+            type: 'GET',
+            data: { id: id },
+            success: function (response) {
+
+                if (response.success) {
+
+                    var data = response.data;
+                    console.log(data);
+
+                    $('#detailTenPhim').text(data.tenPhim);
+                    $('#detailTheLoai').text(data.theLoai);
+                    $('#detailThoiLuong').text(data.thoiLuong + " phút");
+                    $('#detailDaoDien').text(data.daoDien);
+                    $('#detailGioiHanDoTuoi').text(data.gioiHanDoTuoi);
+                    $('#detailNgayKhoiChieu').text(data.ngayKhoiChieu.split('T')[0]);
+                    $('#detailNgayKetThuc').text(data.ngayKetThuc.split('T')[0]);
+                    $('#detailSoSuatChieu').text(data.soSuatChieu);
+                    $('#detailMoTa').text(data.moTa);
+
+
+                    // Assuming the first image in hinhAnhs is the poster
+                    if (data.hinhAnhs && data.hinhAnhs.length > 0) {
+                        var imageSrc = `data:image/jpeg;base64,${Convert.ToBase64String(data.hinhAnhs[0].hinhAnh1)}`;
+                        $('#detailPoster').attr('src', imageSrc);
+                        $('#detailPoster').show(); // Ensure the image is visible
+                    } else {
+                        $('#detailPoster').hide(); // Hide the image if there's none
+                    }
+
+
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function () {
+                alert('Có lỗi xảy ra khi lấy dữ liệu phim!');
+            }
+        });
+    });
+
+</script>

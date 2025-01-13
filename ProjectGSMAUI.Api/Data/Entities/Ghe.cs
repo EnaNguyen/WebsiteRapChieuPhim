@@ -12,4 +12,5 @@ public partial class Ghe
     public int? SoCot { get; set; }
 
     public virtual ICollection<Ve> Ves { get; set; } = new List<Ve>();
+    public virtual ICollection<ChiTietHoaDon> ChiTietHoaDons { get; set; } = new List<ChiTietHoaDon>();
 }

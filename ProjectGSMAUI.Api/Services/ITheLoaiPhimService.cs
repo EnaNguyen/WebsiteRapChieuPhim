@@ -6,9 +6,9 @@ namespace ProjectGSMAUI.Api.Services
     public interface ITheLoaiPhimService
     {
         Task<APIResponse> GetAll();
-        Task<TheLoaiPhim> GetByID(int id);
+        Task<TheLoaiPhim> GetByID(string id);
         Task<APIResponse> Create(TheLoaiPhim data);
-        Task<APIResponse> Remove(int id);
-        Task<APIResponse> Update(TheLoaiPhim data, int id);
+        Task<APIResponse> Remove(string id);
+        Task<APIResponse> Update(TheLoaiPhim data, string id);
     }
 }

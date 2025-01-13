@@ -45,9 +45,9 @@ namespace ProjectGSMAUI.Api.Data
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<RefreshToken>(entity =>
             {
-                entity.HasKey(e => e.UserID);             
-                entity.Property(e => e.UserID).IsRequired(); 
-                entity.Property(e => e.TokenID).IsRequired(); 
+                entity.HasKey(e => e.UserID);
+                entity.Property(e => e.UserID).IsRequired();
+                entity.Property(e => e.TokenID).IsRequired();
                 entity.Property(e => e.refreshtoken).IsRequired();
             });
             modelBuilder.Entity<ChiTietHoaDon>(entity =>
@@ -201,6 +201,8 @@ namespace ProjectGSMAUI.Api.Data
                     .HasForeignKey(d => d.MaPhong)
                     .HasConstraintName("FK__LichChieu__MaPho__4222D4EF");
             });
+
+
             modelBuilder.Entity<Phim>(entity =>
             {
                 entity.HasKey(e => e.Id).HasName("PK__Phim__3214EC27C9B2D53C");
@@ -327,19 +329,18 @@ namespace ProjectGSMAUI.Api.Data
                 .HasOne(ct => ct.SanPham)
                 .WithMany(sp => sp.ChiTietCombos)
                 .HasForeignKey(ct => ct.SanPhamId);
-             modelBuilder.Entity<GiamGia>().HasData(
-                new GiamGia
-                {
-                    MaGiamGia = 1,
-                    TenGiamGia = "Khuyến mãi nửa đầu 2025",
-                    GiaTri = 20,
-                    MoTa = "GiamGiaNuaDauNam",
-                    HinhAnh = null,
-                    NgayBatDau = DateOnly.FromDateTime(new DateTime(2025, 1, 1)),
-                    NgayKetThuc = DateOnly.FromDateTime(new DateTime(2024, 6, 30)),
-                    SoLuong =10,
-                }
-            );
+            modelBuilder.Entity<GiamGia>().HasData(
+               new GiamGia
+               {
+                   MaGiamGia = 1,
+                   TenGiamGia = "Khuyến mãi nửa đầu 2025",
+                   GiaTri = 20,
+                   MoTa = "abc",
+                   NgayBatDau = DateOnly.FromDateTime(new DateTime(2025, 1, 1)),
+                   NgayKetThuc = DateOnly.FromDateTime(new DateTime(2024, 6, 30)),
+                   SoLuong = 10,
+               }
+           );
             modelBuilder.Entity<Coupon>().HasData(
                 new Coupon
                 {
@@ -433,11 +434,11 @@ namespace ProjectGSMAUI.Api.Data
                 }
             );
             modelBuilder.Entity<TheLoaiPhim>().HasData(
-                new TheLoaiPhim { Id = 1, TenTheLoai = "Hành Động" },
-                new TheLoaiPhim { Id = 2, TenTheLoai = "Lãng Mạn" },
-                new TheLoaiPhim { Id = 3, TenTheLoai = "Kinh Dị" },
-                new TheLoaiPhim { Id = 4, TenTheLoai = "Hoạt Hình" },
-                new TheLoaiPhim { Id = 5, TenTheLoai = "Khoa Học Viễn Tưởng" }
+                new TheLoaiPhim { Id = "TLP001", TenTheLoai = "Hành Động" },
+                new TheLoaiPhim { Id = "TLP002", TenTheLoai = "Lãng Mạn" },
+                new TheLoaiPhim { Id = "TLP003", TenTheLoai = "Kinh Dị" },
+                new TheLoaiPhim { Id = "TLP004", TenTheLoai = "Hoạt Hình" },
+                new TheLoaiPhim { Id = "TLP005", TenTheLoai = "Khoa Học Viễn Tưởng" }
             );
             modelBuilder.Entity<Phim>().HasData(
                 new Phim
@@ -448,9 +449,9 @@ namespace ProjectGSMAUI.Api.Data
                     MoTa = "Action-packed movie about...",
                     NgayKetThuc = new DateOnly(2024, 2, 28),
                     NgayKhoiChieu = new DateOnly(2024, 1, 15),
-                    SoSuatChieu = 5,
+                    SoSuatChieu = 50,
                     TenPhim = "Action Movie 1",
-                    TheLoai = 1, // Action
+                    TheLoai = "TLP001", // Action
                     ThoiLuong = 120,
                     TrangThai = 1
                 },
@@ -462,9 +463,9 @@ namespace ProjectGSMAUI.Api.Data
                     MoTa = "A romantic story about...",
                     NgayKetThuc = new DateOnly(2024, 3, 15),
                     NgayKhoiChieu = new DateOnly(2024, 2, 1),
-                    SoSuatChieu = 4,
+                    SoSuatChieu = 40,
                     TenPhim = "Romantic Movie 1",
-                    TheLoai = 2, // Romantic
+                    TheLoai = "TLP002", // Romantic
                     ThoiLuong = 110,
                     TrangThai = 1
 
@@ -477,9 +478,9 @@ namespace ProjectGSMAUI.Api.Data
                     MoTa = "A terrifying horror film...",
                     NgayKetThuc = new DateOnly(2024, 3, 31),
                     NgayKhoiChieu = new DateOnly(2024, 3, 1),
-                    SoSuatChieu = 3,
+                    SoSuatChieu = 35,
                     TenPhim = "Horror Movie 1",
-                    TheLoai = 3, // Horror
+                    TheLoai = "TLP003", // Horror
                     ThoiLuong = 95,
                     TrangThai = 1
                 },
@@ -491,9 +492,9 @@ namespace ProjectGSMAUI.Api.Data
                     MoTa = "An animated adventure for...",
                     NgayKetThuc = new DateOnly(2024, 4, 15),
                     NgayKhoiChieu = new DateOnly(2024, 3, 20),
-                    SoSuatChieu = 6,
+                    SoSuatChieu = 15,
                     TenPhim = "Animated Movie 1",
-                    TheLoai = 4, // Animated
+                    TheLoai = "TLP004", // Animated
                     ThoiLuong = 90,
                     TrangThai = 1
                 },
@@ -505,9 +506,9 @@ namespace ProjectGSMAUI.Api.Data
                     MoTa = "A sci-fi epic about...",
                     NgayKetThuc = new DateOnly(2024, 4, 30),
                     NgayKhoiChieu = new DateOnly(2024, 4, 10),
-                    SoSuatChieu = 5,
+                    SoSuatChieu = 22,
                     TenPhim = "Sci-Fi Movie 1",
-                    TheLoai = 5, // Sci-fi
+                    TheLoai = "TLP005", // Sci-fi
                     ThoiLuong = 135,
                     TrangThai = 1
                 }
@@ -515,22 +516,60 @@ namespace ProjectGSMAUI.Api.Data
             );
 
             modelBuilder.Entity<Phong>().HasData(
-                new Phong { Id = 1, TenPhong = "Phòng 1", SoLuongGhe = 112, TinhTrang = 1 }, 
+                new Phong { Id = 1, TenPhong = "Phòng 1", SoLuongGhe = 112, TinhTrang = 1 },
                 new Phong { Id = 2, TenPhong = "Phòng 2", SoLuongGhe = 112, TinhTrang = 1 },
-                new Phong { Id = 3, TenPhong = "Phòng 3", SoLuongGhe = 112, TinhTrang = 1 }, 
-                new Phong { Id = 4, TenPhong = "Phòng 4", SoLuongGhe = 112, TinhTrang = 1 }, 
-                new Phong { Id = 5, TenPhong = "Phòng 5", SoLuongGhe = 112, TinhTrang = 1 }, 
+                new Phong { Id = 3, TenPhong = "Phòng 3", SoLuongGhe = 112, TinhTrang = 1 },
+                new Phong { Id = 4, TenPhong = "Phòng 4", SoLuongGhe = 112, TinhTrang = 1 },
+                new Phong { Id = 5, TenPhong = "Phòng 5", SoLuongGhe = 112, TinhTrang = 1 },
                 new Phong { Id = 6, TenPhong = "Phòng 6", SoLuongGhe = 112, TinhTrang = 1 }
 
             );
             modelBuilder.Entity<KhungGio>().HasData(
-                new KhungGio { Id = 1, GioBatDau = new TimeOnly(9, 0), GioKetThuc = new TimeOnly(11, 0) },
-                new KhungGio { Id = 2, GioBatDau = new TimeOnly(12, 0), GioKetThuc = new TimeOnly(14, 0) },
-                new KhungGio { Id = 3, GioBatDau = new TimeOnly(15, 0), GioKetThuc = new TimeOnly(17, 0) },
-                new KhungGio { Id = 4, GioBatDau = new TimeOnly(18, 0), GioKetThuc = new TimeOnly(20, 0) },
-                new KhungGio { Id = 5, GioBatDau = new TimeOnly(21, 0), GioKetThuc = new TimeOnly(23, 0) },
-                new KhungGio { Id = 6, GioBatDau = new TimeOnly(0, 0), GioKetThuc = new TimeOnly(2, 0) }
+                new KhungGio { Id = 1, GioBatDau = new TimeOnly(9, 15), GioKetThuc = new TimeOnly(11, 45) },
+                new KhungGio { Id = 2, GioBatDau = new TimeOnly(12, 30), GioKetThuc = new TimeOnly(14, 15) },
+                new KhungGio { Id = 3, GioBatDau = new TimeOnly(15, 10), GioKetThuc = new TimeOnly(17, 25) },
+                new KhungGio { Id = 4, GioBatDau = new TimeOnly(18, 5), GioKetThuc = new TimeOnly(20, 50) },
+                new KhungGio { Id = 5, GioBatDau = new TimeOnly(21, 20), GioKetThuc = new TimeOnly(23, 35) },
+                new KhungGio { Id = 6, GioBatDau = new TimeOnly(0, 15), GioKetThuc = new TimeOnly(2, 40) }
             );
+            var seats = new List<Ghe>();
+            var rows = "ABCDEFGHIJKL".ToCharArray();
+            var columns = 16;
+
+            foreach (var row in rows)
+            {
+                for (int col = 1; col <= columns; col++)
+                {
+                    seats.Add(new Ghe { MaGhe = $"{row}{col}", SoHang = row.ToString(), SoCot = col });
+                }
+            }
+            modelBuilder.Entity<Ghe>().HasData(seats);
+
+            modelBuilder.Entity<LichChieu>().HasData(
+                new LichChieu { MaLichChieu = 1, NgayChieu = new DateOnly(2025, 1, 8), GioChieu = 1, MaPhim = 1, MaPhong = 1, GiaVe = 100000, TinhTrang = true },
+                new LichChieu { MaLichChieu = 2, NgayChieu = new DateOnly(2025, 1, 9), GioChieu = 2, MaPhim = 2, MaPhong = 2, GiaVe = 100000, TinhTrang = true },
+                new LichChieu { MaLichChieu = 3, NgayChieu = new DateOnly(2025, 1, 10), GioChieu = 3, MaPhim = 3, MaPhong = 3, GiaVe = 100000, TinhTrang = true },
+                new LichChieu { MaLichChieu = 4, NgayChieu = new DateOnly(2025, 1, 11), GioChieu = 4, MaPhim = 4, MaPhong = 4, GiaVe = 100000, TinhTrang = true },
+                new LichChieu { MaLichChieu = 5, NgayChieu = new DateOnly(2025, 1, 12), GioChieu = 5, MaPhim = 5, MaPhong = 5, GiaVe = 100000, TinhTrang = true },
+                new LichChieu { MaLichChieu = 6, NgayChieu = new DateOnly(2025, 1, 13), GioChieu = 6, MaPhim = 1, MaPhong = 6, GiaVe = 100000, TinhTrang = true },
+                new LichChieu { MaLichChieu = 7, NgayChieu = new DateOnly(2025, 1, 14), GioChieu = 1, MaPhim = 2, MaPhong = 1, GiaVe = 100000, TinhTrang = true },
+                new LichChieu { MaLichChieu = 8, NgayChieu = new DateOnly(2025, 1, 15), GioChieu = 2, MaPhim = 3, MaPhong = 2, GiaVe = 100000, TinhTrang = true },
+                new LichChieu { MaLichChieu = 9, NgayChieu = new DateOnly(2025, 1, 16), GioChieu = 3, MaPhim = 4, MaPhong = 3, GiaVe = 100000, TinhTrang = true },
+                new LichChieu { MaLichChieu = 10, NgayChieu = new DateOnly(2025, 1, 17), GioChieu = 4, MaPhim = 5, MaPhong = 4, GiaVe = 100000, TinhTrang = true }
+            );
+            modelBuilder.Entity<Ve>().HasData(
+                new Ve { MaVe = "1", MaLichChieu = 1, MaPhong = 1, MaPhim = 1, TinhTrang = 1, MaGhe = "A1" },
+                new Ve { MaVe = "2", MaLichChieu = 2, MaPhong = 2, MaPhim = 2, TinhTrang = 1, MaGhe = "A2" },
+                new Ve { MaVe = "3", MaLichChieu = 3, MaPhong = 3, MaPhim = 3, TinhTrang = 1, MaGhe = "A3" },
+                new Ve { MaVe = "4", MaLichChieu = 4, MaPhong = 4, MaPhim = 4, TinhTrang = 1, MaGhe = "A4" },
+                new Ve { MaVe = "5", MaLichChieu = 5, MaPhong = 5, MaPhim = 5, TinhTrang = 1, MaGhe = "A5" },
+                new Ve { MaVe = "6", MaLichChieu = 6, MaPhong = 6, MaPhim = 6, TinhTrang = 1, MaGhe = "A6" },
+                new Ve { MaVe = "7", MaLichChieu = 7, MaPhong = 7, MaPhim = 7, TinhTrang = 1, MaGhe = "A7" },
+                new Ve { MaVe = "8", MaLichChieu = 8, MaPhong = 8, MaPhim = 8, TinhTrang = 1, MaGhe = "A8" },
+                new Ve { MaVe = "9", MaLichChieu = 9, MaPhong = 9, MaPhim = 9, TinhTrang = 1, MaGhe = "A9" },
+                new Ve { MaVe = "10", MaLichChieu = 10, MaPhong = 10, MaPhim = 10, TinhTrang = 1, MaGhe = "A10" }
+            );//M + Mã Phòng + Mã Ca + Ngày + Tháng + Năm
+
         }
     }
 }
