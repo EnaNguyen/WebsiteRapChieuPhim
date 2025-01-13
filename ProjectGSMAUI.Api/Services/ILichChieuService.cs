@@ -13,5 +13,6 @@ namespace ProjectGSMAUI.Api.Services
         Task<APIResponse> AddSchedule(LichChieu schedule);
         Task<APIResponse> DeleteSchedule(int id);
         Task<APIResponse> GenerateScheduleWithAdjustments(int phimCanTangId, int soSuatCanTang); // Phương thức mới
+
     }
 }

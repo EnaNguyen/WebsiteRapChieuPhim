@@ -12,7 +12,7 @@ using ProjectGSMAUI.Api.Data;
 namespace ProjectGSMAUI.Api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250103150704_DLM")]
+    [Migration("20250107032254_DLM")]
     partial class DLM
     {
         /// <inheritdoc />
@@ -369,38 +369,38 @@ namespace ProjectGSMAUI.Api.Migrations
                         new
                         {
                             Id = 1,
-                            GioBatDau = new TimeOnly(9, 0, 0),
-                            GioKetThuc = new TimeOnly(11, 0, 0)
+                            GioBatDau = new TimeOnly(9, 15, 0),
+                            GioKetThuc = new TimeOnly(11, 45, 0)
                         },
                         new
                         {
                             Id = 2,
-                            GioBatDau = new TimeOnly(12, 0, 0),
-                            GioKetThuc = new TimeOnly(14, 0, 0)
+                            GioBatDau = new TimeOnly(12, 30, 0),
+                            GioKetThuc = new TimeOnly(14, 15, 0)
                         },
                         new
                         {
                             Id = 3,
-                            GioBatDau = new TimeOnly(15, 0, 0),
-                            GioKetThuc = new TimeOnly(17, 0, 0)
+                            GioBatDau = new TimeOnly(15, 10, 0),
+                            GioKetThuc = new TimeOnly(17, 25, 0)
                         },
                         new
                         {
                             Id = 4,
-                            GioBatDau = new TimeOnly(18, 0, 0),
-                            GioKetThuc = new TimeOnly(20, 0, 0)
+                            GioBatDau = new TimeOnly(18, 5, 0),
+                            GioKetThuc = new TimeOnly(20, 50, 0)
                         },
                         new
                         {
                             Id = 5,
-                            GioBatDau = new TimeOnly(21, 0, 0),
-                            GioKetThuc = new TimeOnly(23, 0, 0)
+                            GioBatDau = new TimeOnly(21, 20, 0),
+                            GioKetThuc = new TimeOnly(23, 35, 0)
                         },
                         new
                         {
                             Id = 6,
-                            GioBatDau = new TimeOnly(0, 0, 0),
-                            GioKetThuc = new TimeOnly(2, 0, 0)
+                            GioBatDau = new TimeOnly(0, 15, 0),
+                            GioKetThuc = new TimeOnly(2, 40, 0)
                         });
                 });
 
@@ -471,8 +471,8 @@ namespace ProjectGSMAUI.Api.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int?>("TheLoai")
-                        .HasColumnType("int");
+                    b.Property<string>("TheLoai")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int?>("ThoiLuong")
                         .HasColumnType("int");
@@ -496,9 +496,9 @@ namespace ProjectGSMAUI.Api.Migrations
                             MoTa = "Action-packed movie about...",
                             NgayKetThuc = new DateOnly(2024, 2, 28),
                             NgayKhoiChieu = new DateOnly(2024, 1, 15),
-                            SoSuatChieu = 5,
+                            SoSuatChieu = 50,
                             TenPhim = "Action Movie 1",
-                            TheLoai = 1,
+                            TheLoai = "TLP001",
                             ThoiLuong = 120,
                             TrangThai = 1
                         },
@@ -510,9 +510,9 @@ namespace ProjectGSMAUI.Api.Migrations
                             MoTa = "A romantic story about...",
                             NgayKetThuc = new DateOnly(2024, 3, 15),
                             NgayKhoiChieu = new DateOnly(2024, 2, 1),
-                            SoSuatChieu = 4,
+                            SoSuatChieu = 40,
                             TenPhim = "Romantic Movie 1",
-                            TheLoai = 2,
+                            TheLoai = "TLP002",
                             ThoiLuong = 110,
                             TrangThai = 1
                         },
@@ -524,9 +524,9 @@ namespace ProjectGSMAUI.Api.Migrations
                             MoTa = "A terrifying horror film...",
                             NgayKetThuc = new DateOnly(2024, 3, 31),
                             NgayKhoiChieu = new DateOnly(2024, 3, 1),
-                            SoSuatChieu = 3,
+                            SoSuatChieu = 35,
                             TenPhim = "Horror Movie 1",
-                            TheLoai = 3,
+                            TheLoai = "TLP003",
                             ThoiLuong = 95,
                             TrangThai = 1
                         },
@@ -538,9 +538,9 @@ namespace ProjectGSMAUI.Api.Migrations
                             MoTa = "An animated adventure for...",
                             NgayKetThuc = new DateOnly(2024, 4, 15),
                             NgayKhoiChieu = new DateOnly(2024, 3, 20),
-                            SoSuatChieu = 6,
+                            SoSuatChieu = 15,
                             TenPhim = "Animated Movie 1",
-                            TheLoai = 4,
+                            TheLoai = "TLP004",
                             ThoiLuong = 90,
                             TrangThai = 1
                         },
@@ -552,9 +552,9 @@ namespace ProjectGSMAUI.Api.Migrations
                             MoTa = "A sci-fi epic about...",
                             NgayKetThuc = new DateOnly(2024, 4, 30),
                             NgayKhoiChieu = new DateOnly(2024, 4, 10),
-                            SoSuatChieu = 5,
+                            SoSuatChieu = 22,
                             TenPhim = "Sci-Fi Movie 1",
-                            TheLoai = 5,
+                            TheLoai = "TLP005",
                             ThoiLuong = 135,
                             TrangThai = 1
                         });
@@ -755,7 +755,7 @@ namespace ProjectGSMAUI.Api.Migrations
                             Email = "nguyenquangquyX@gmail.com",
                             GioiTinh = true,
                             MatKhau = "8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92",
-                            NgayDangKy = new DateOnly(2025, 1, 3),
+                            NgayDangKy = new DateOnly(2025, 1, 7),
                             NgaySinh = new DateOnly(1999, 5, 19),
                             Sdt = "0973713274",
                             TenNguoiDung = "Quản trị viên",
@@ -767,8 +767,8 @@ namespace ProjectGSMAUI.Api.Migrations
 
             modelBuilder.Entity("ProjectGSMAUI.Api.Data.Entities.TheLoaiPhim", b =>
                 {
-                    b.Property<int>("Id")
-                        .HasColumnType("int")
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)")
                         .HasColumnName("ID");
 
                     b.Property<string>("TenTheLoai")
@@ -783,27 +783,27 @@ namespace ProjectGSMAUI.Api.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = "TLP001",
                             TenTheLoai = "Hành Động"
                         },
                         new
                         {
-                            Id = 2,
+                            Id = "TLP002",
                             TenTheLoai = "Lãng Mạn"
                         },
                         new
                         {
-                            Id = 3,
+                            Id = "TLP003",
                             TenTheLoai = "Kinh Dị"
                         },
                         new
                         {
-                            Id = 4,
+                            Id = "TLP004",
                             TenTheLoai = "Hoạt Hình"
                         },
                         new
                         {
-                            Id = 5,
+                            Id = "TLP005",
                             TenTheLoai = "Khoa Học Viễn Tưởng"
                         });
                 });

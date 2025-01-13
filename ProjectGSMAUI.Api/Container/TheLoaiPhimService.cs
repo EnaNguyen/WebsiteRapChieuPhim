@@ -39,7 +39,7 @@ namespace ProjectGSMAUI.Api.Services
             }
         }
 
-        public async Task<TheLoaiPhim> GetByID(int id)
+        public async Task<TheLoaiPhim> GetByID(string id)
         {
             return await context.TheLoaiPhims.FindAsync(id);
         }
@@ -47,13 +47,26 @@ namespace ProjectGSMAUI.Api.Services
         {
             try
             {
+                // Tạo ID tự động với điều kiện không trùng lặp
+                string randomString;
+                do
+                {
+                    randomString = new string(Enumerable.Range(0, 8)
+                        .Select(_ => "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"[new Random().Next(36)])
+                        .ToArray());
+                    data.Id = "TLP" + randomString;
+                } while (await context.TheLoaiPhims.AnyAsync(x => x.Id == data.Id));
+                // Thêm dữ liệu vào cơ sở dữ liệu
                 context.TheLoaiPhims.Add(data);
                 await context.SaveChangesAsync();
+
+                // Trả về phản hồi, bao gồm dữ liệu mới tạo
                 return new APIResponse
                 {
                     ResponseCode = 200,
                     Result = "Tạo thành công!",
-                    ErrorMessage = null
+                    ErrorMessage = null,
+                    Data = data // Bao gồm cả Id mới
                 };
             }
             catch (Exception ex)
@@ -67,7 +80,8 @@ namespace ProjectGSMAUI.Api.Services
             }
         }
 
-        public async Task<APIResponse> Update(TheLoaiPhim data, int id)
+
+        public async Task<APIResponse> Update(TheLoaiPhim data, string id)
         {
             var existing = await context.TheLoaiPhims.FindAsync(id);
             if (existing == null)
@@ -103,7 +117,7 @@ namespace ProjectGSMAUI.Api.Services
             }
         }
 
-        public async Task<APIResponse> Remove(int id)
+        public async Task<APIResponse> Remove(string id)
         {
             var existing = await context.TheLoaiPhims.FindAsync(id);
             if (existing == null)

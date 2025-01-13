@@ -9,7 +9,7 @@ public partial class Phim
 
     public string? TenPhim { get; set; }
 
-    public int? TheLoai { get; set; }
+    public string? TheLoai { get; set; }
 
     public int? ThoiLuong { get; set; }
 

@@ -201,6 +201,8 @@ namespace ProjectGSMAUI.Api.Data
                     .HasForeignKey(d => d.MaPhong)
                     .HasConstraintName("FK__LichChieu__MaPho__4222D4EF");
             });
+
+
             modelBuilder.Entity<Phim>(entity =>
             {
                 entity.HasKey(e => e.Id).HasName("PK__Phim__3214EC27C9B2D53C");
@@ -431,11 +433,11 @@ namespace ProjectGSMAUI.Api.Data
                 }
             );
             modelBuilder.Entity<TheLoaiPhim>().HasData(
-                new TheLoaiPhim { Id = 1, TenTheLoai = "Hành Động" },
-                new TheLoaiPhim { Id = 2, TenTheLoai = "Lãng Mạn" },
-                new TheLoaiPhim { Id = 3, TenTheLoai = "Kinh Dị" },
-                new TheLoaiPhim { Id = 4, TenTheLoai = "Hoạt Hình" },
-                new TheLoaiPhim { Id = 5, TenTheLoai = "Khoa Học Viễn Tưởng" }
+                new TheLoaiPhim { Id = "TLP001", TenTheLoai = "Hành Động" },
+                new TheLoaiPhim { Id = "TLP002", TenTheLoai = "Lãng Mạn" },
+                new TheLoaiPhim { Id = "TLP003", TenTheLoai = "Kinh Dị" },
+                new TheLoaiPhim { Id = "TLP004", TenTheLoai = "Hoạt Hình" },
+                new TheLoaiPhim { Id = "TLP005", TenTheLoai = "Khoa Học Viễn Tưởng" }
             );
             modelBuilder.Entity<Phim>().HasData(
                 new Phim
@@ -446,9 +448,9 @@ namespace ProjectGSMAUI.Api.Data
                     MoTa = "Action-packed movie about...",
                     NgayKetThuc = new DateOnly(2024, 2, 28),
                     NgayKhoiChieu = new DateOnly(2024, 1, 15),
-                    SoSuatChieu = 5,
+                    SoSuatChieu = 50,
                     TenPhim = "Action Movie 1",
-                    TheLoai = 1, // Action
+                    TheLoai = "TLP001", // Action
                     ThoiLuong = 120,
                     TrangThai = 1
                 },
@@ -460,9 +462,9 @@ namespace ProjectGSMAUI.Api.Data
                     MoTa = "A romantic story about...",
                     NgayKetThuc = new DateOnly(2024, 3, 15),
                     NgayKhoiChieu = new DateOnly(2024, 2, 1),
-                    SoSuatChieu = 4,
+                    SoSuatChieu = 40,
                     TenPhim = "Romantic Movie 1",
-                    TheLoai = 2, // Romantic
+                    TheLoai = "TLP002", // Romantic
                     ThoiLuong = 110,
                     TrangThai = 1
 
@@ -475,9 +477,9 @@ namespace ProjectGSMAUI.Api.Data
                     MoTa = "A terrifying horror film...",
                     NgayKetThuc = new DateOnly(2024, 3, 31),
                     NgayKhoiChieu = new DateOnly(2024, 3, 1),
-                    SoSuatChieu = 3,
+                    SoSuatChieu = 35,
                     TenPhim = "Horror Movie 1",
-                    TheLoai = 3, // Horror
+                    TheLoai = "TLP003", // Horror
                     ThoiLuong = 95,
                     TrangThai = 1
                 },
@@ -489,9 +491,9 @@ namespace ProjectGSMAUI.Api.Data
                     MoTa = "An animated adventure for...",
                     NgayKetThuc = new DateOnly(2024, 4, 15),
                     NgayKhoiChieu = new DateOnly(2024, 3, 20),
-                    SoSuatChieu = 6,
+                    SoSuatChieu = 15,
                     TenPhim = "Animated Movie 1",
-                    TheLoai = 4, // Animated
+                    TheLoai = "TLP004", // Animated
                     ThoiLuong = 90,
                     TrangThai = 1
                 },
@@ -503,9 +505,9 @@ namespace ProjectGSMAUI.Api.Data
                     MoTa = "A sci-fi epic about...",
                     NgayKetThuc = new DateOnly(2024, 4, 30),
                     NgayKhoiChieu = new DateOnly(2024, 4, 10),
-                    SoSuatChieu = 5,
+                    SoSuatChieu = 22,
                     TenPhim = "Sci-Fi Movie 1",
-                    TheLoai = 5, // Sci-fi
+                    TheLoai = "TLP005", // Sci-fi
                     ThoiLuong = 135,
                     TrangThai = 1
                 }
@@ -522,13 +524,15 @@ namespace ProjectGSMAUI.Api.Data
 
             );
             modelBuilder.Entity<KhungGio>().HasData(
-                new KhungGio { Id = 1, GioBatDau = new TimeOnly(9, 0), GioKetThuc = new TimeOnly(11, 0) },
-                new KhungGio { Id = 2, GioBatDau = new TimeOnly(12, 0), GioKetThuc = new TimeOnly(14, 0) },
-                new KhungGio { Id = 3, GioBatDau = new TimeOnly(15, 0), GioKetThuc = new TimeOnly(17, 0) },
-                new KhungGio { Id = 4, GioBatDau = new TimeOnly(18, 0), GioKetThuc = new TimeOnly(20, 0) },
-                new KhungGio { Id = 5, GioBatDau = new TimeOnly(21, 0), GioKetThuc = new TimeOnly(23, 0) },
-                new KhungGio { Id = 6, GioBatDau = new TimeOnly(0, 0), GioKetThuc = new TimeOnly(2, 0) }
+                new KhungGio { Id = 1, GioBatDau = new TimeOnly(9, 15), GioKetThuc = new TimeOnly(11, 45) },
+                new KhungGio { Id = 2, GioBatDau = new TimeOnly(12, 30), GioKetThuc = new TimeOnly(14, 15) },
+                new KhungGio { Id = 3, GioBatDau = new TimeOnly(15, 10), GioKetThuc = new TimeOnly(17, 25) },
+                new KhungGio { Id = 4, GioBatDau = new TimeOnly(18, 5), GioKetThuc = new TimeOnly(20, 50) },
+                new KhungGio { Id = 5, GioBatDau = new TimeOnly(21, 20), GioKetThuc = new TimeOnly(23, 35) },
+                new KhungGio { Id = 6, GioBatDau = new TimeOnly(0, 15), GioKetThuc = new TimeOnly(2, 40) }
             );
+
+
         }
     }
 }

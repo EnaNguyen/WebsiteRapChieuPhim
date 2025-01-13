@@ -1,0 +1,464 @@
+﻿@using System.Globalization
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<style>
+	th[data-sort] {
+		cursor: pointer;
+	}
+
+		th[data-sort].ascending::after {
+			content: ' 🔼';
+		}
+
+		th[data-sort].descending::after {
+			content: ' 🔽';
+		}
+
+</style>
+<div class="pd-ltr-20 height-100-p xs-pd-20-10">
+	<div class="min-height-200px">
+		<div class="page-header">
+			<div class="row">
+				<div class="col-md-12 col-sm-12">
+					<div class="title">
+						<h4>Lịch chiếu phim</h4>
+					</div>
+					<nav aria-label="breadcrumb" role="navigation">
+						<ol class="breadcrumb">
+							<li class="breadcrumb-item">
+								<a href="@Url.Action("Index", "Home")">Trang chủ</a>
+							</li>
+							<li class="breadcrumb-item active" aria-current="page">
+								Lịch chiếu phim
+							</li>
+						</ol>
+					</nav>
+				</div>
+			</div>
+		</div>
+		<div class="blog-wrap">
+			<div class="pd-20 card-box mb-30">
+				<div class="clearfix mb-20">
+					<div class="pull-left">
+						<h4 class="text-blue h4">Lịch Chiếu Phim</h4>
+					</div>
+				</div>
+				<table class="table table-striped">
+					<div class="d-flex justify-content-start align-items-center mb-3">
+						<button id="generateSchedule" class="btn btn-primary me-2" style="margin-right: 10px;">
+							<i class="fas fa-calendar-plus"></i> Tạo lịch chiếu
+						</button>
+						<button id="deleteSelected" class="btn btn-danger" style="margin-right: 10px;" onclick="deleteSelectedSchedules()">
+							<i class="fas fa-trash-alt"></i> Xóa đã chọn
+						</button>
+						@* <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addScheduleModal">
+							Thêm Lịch Chiếu
+						</button> *@
+
+					</div>
+					<br />
+					<thead>
+						<tr>
+							<th>
+								<div class="dt-checkbox" style="margin-left: -3px">
+									<input type="checkbox" name="select_all" value="1" id="example-select-all" onclick="selectAllCheckboxes(this)" />
+									<span class="dt-checkbox-label"></span>
+								</div>
+							</th>
+							<th scope="col" data-sort="tenPhim">
+								Tên Phim <i class="fas fa-film"></i>
+							</th>
+							<th scope="col" data-sort="ngayChieu">
+								Ngày Chiếu <i class="fas fa-calendar-day"></i>
+							</th>
+							<th scope="col" data-sort="gioChieu">
+								Giờ Chiếu <i class="fas fa-clock"></i>
+							</th>
+							<th scope="col" data-sort="tenPhong">
+								Phòng <i class="fas fa-door-closed"></i>
+							</th>
+							<th scope="col" data-sort="tinhTrang">
+								Trạng thái <i class="fas fa-info-circle"></i>
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (var item in Model)
+						{
+							<tr>
+								<th>
+									<div class="dt-checkbox">
+										<input type="checkbox" name="select_item" value="@item.MaLichChieu" class="item-checkbox" />
+										<span class="dt-checkbox-label"></span>
+									</div>
+								</th>
+								<td>@item.TenPhim</td>
+								<td>@item.NgayChieu?.ToString("dd/MM/yyyy")</td>
+								<td>@DateTime.ParseExact(item.GioChieu, "HH:mm:ss", CultureInfo.InvariantCulture).ToString("HH:mm")</td>
+								<td>@item.TenPhong</td>
+								<td>
+									@if (item.TinhTrang == false)
+									{
+										<span class="badge badge-primary">Sắp chiếu</span>
+									}
+									else if (item.TinhTrang == true)
+									{
+										<span class="badge badge-success">Đang chiếu</span>
+									}
+									else
+									{
+										<span class="badge badge-secondary">Hết hạn</span>
+									}
+								</td>
+
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div>
+			<div class="blog-pagination mb-30">
+				<div class="btn-toolbar justify-content-center mb-15">
+					<div class="btn-group" id="paginationControls">
+						<a href="#" class="btn btn-outline-primary prev">
+							<i class="fa fa-angle-double-left"></i>
+						</a>
+						<!-- Các nút trang sẽ được thêm vào đây bằng JavaScript -->
+						<a href="#" class="btn btn-outline-primary next">
+							<i class="fa fa-angle-double-right"></i>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="addScheduleModal" tabindex="-1" aria-labelledby="addScheduleModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="addScheduleModalLabel">Thêm Lịch Chiếu Phim</h5>
+				<i class="bi bi-x-lg" data-bs-dismiss="modal" aria-label="Close" style="cursor: pointer;"></i>
+			</div>
+			<div class="modal-body">
+				<form id="scheduleForm">
+					<input type="hidden" id="createId" />
+					<div class="form-group">
+						<label for="TenPhim">Tên Phim</label>
+						<select id="TenPhim" class="form-control">
+							<option value="">Chọn phim</option> <!-- Giá trị mặc định -->
+						</select>
+					</div>
+
+					<div class="form-group">
+						<label for="NgayChieu">Ngày Chiếu</label>
+						<input type="date" id="NgayChieu" class="form-control">
+					</div>
+					<div class="form-group">
+						<label for="GioChieu">Giờ Chiếu</label>
+						<input type="time" id="GioChieu" class="form-control">
+					</div>
+					<div class="form-group">
+						<label for="TenPhong">Phòng</label>
+						<input type="text" id="TenPhong" class="form-control" placeholder="Nhập tên phòng">
+					</div>
+					<div class="form-group">
+						<label for="TinhTrang">Trạng thái</label>
+						<select id="TinhTrang" class="form-control">
+							<option value="false">Sắp chiếu</option>
+							<option value="true">Đang chiếu</option>
+							<option value="null">Hết hạn</option>
+						</select>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+				<button type="button" id="addScheduleBtn" class="btn btn-primary">Thêm Lịch Chiếu</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+	function selectAllCheckboxes(selectAll) {
+		const checkboxes = document.querySelectorAll('.item-checkbox');
+		checkboxes.forEach(checkbox => {
+			checkbox.checked = selectAll.checked;
+		});
+	}
+	const apiBaseUrl = "http://localhost:5030/api/LichChieu";
+
+	// Hàm xử lý xóa các lịch chiếu phim đã chọn
+		async function deleteSelectedSchedules() {
+		const selectedIds = [];
+		$(".item-checkbox:checked").each(function() {
+			selectedIds.push($(this).val());
+		});
+
+		if (selectedIds.length === 0) {
+			Swal.fire('Thông báo', 'Vui lòng chọn ít nhất một lịch chiếu phim để xóa.', 'warning');
+			return;
+		}
+
+		const result = await Swal.fire({
+			title: 'Bạn có chắc chắn muốn xóa những lịch chiếu phim đã chọn?',
+			text: "Hành động này không thể hoàn tác!",
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonText: 'Có, xóa!',
+			cancelButtonText: 'Hủy',
+		});
+
+		if (result.isConfirmed) {
+			try {
+				const deletePromises = selectedIds.map(id => {
+					return $.ajax({
+						url: `${apiBaseUrl}/${id}`,
+						type: "DELETE",
+					});
+				});
+				await Promise.all(deletePromises);
+
+				Swal.fire(
+					'Đã xóa!',
+					'Lịch chiếu phim đã được xóa.',
+					'success'
+				).then(() => {
+					location.reload();
+				});
+			} catch (xhrError) {
+				console.error('Lỗi khi xóa lịch chiếu phim:', xhrError);
+				Swal.fire(
+					'Lỗi!',
+					'Có lỗi xảy ra khi xóa lịch chiếu phim.',
+					'error'
+				);
+			}
+		}
+	}	
+	// Xử lý sự kiện nhấn nút "Tạo lịch chiếu"
+	$("#generateSchedule").on("click", async function () {
+		try {
+			const result = await Swal.fire({
+				title: 'Bạn có chắc muốn tạo lịch chiếu mới?',
+				text: "Lịch chiếu sẽ được tạo tự động.",
+				icon: 'question',
+				showCancelButton: true,
+				confirmButtonText: 'Tạo',
+				cancelButtonText: 'Hủy',
+			});
+
+			if (result.isConfirmed) {
+				const response = await $.ajax({
+					url: `${apiBaseUrl}/Generate`,
+					type: "POST",
+				});
+
+				console.log(response); // In toàn bộ phản hồi ra console để kiểm tra
+				if (response) {
+					Swal.fire(
+						'Thành công!',
+						'Lịch chiếu phim đã được tạo thành công.',
+						'success'
+					).then(() => {
+						location.reload();
+					});
+				} else {
+					Swal.fire(
+						'Lỗi!',
+						response.message || 'Không thể tạo lịch chiếu phim.',
+						'error'
+					);
+				}
+
+			}
+		} catch (xhrError) {
+			console.error('Lỗi khi tạo lịch chiếu:', xhrError);
+			Swal.fire(
+				'Lỗi!',
+				'Có lỗi xảy ra trong quá trình tạo lịch chiếu.',
+				'error'
+			);
+		}
+	});
+
+	const itemsPerPage = 15; // Số dòng mỗi trang là 10
+	const $tableBody = $('table tbody');
+	const totalItems = $tableBody.find('tr').length;
+	const totalPages = Math.ceil(totalItems / itemsPerPage);
+	let currentPage = 1;
+
+	function showPage(page) {
+		currentPage = page;
+		const start = (currentPage - 1) * itemsPerPage;
+		const end = start + itemsPerPage;
+
+		// Chỉ hiển thị các dòng thuộc trang hiện tại
+		$tableBody.find('tr').hide().slice(start, end).show();
+
+		// Cập nhật các nút phân trang
+		$('#paginationControls').find('.page-number').remove();
+		for (let i = 1; i <= totalPages; i++) {
+			const $pageButton = $('<a href="#" class="btn btn-outline-primary page-number"></a>').text(i);
+			if (i === currentPage) {
+				$pageButton.addClass('current');
+			}
+			$pageButton.on('click', function (e) {
+				e.preventDefault();
+				showPage(i);
+			});
+			$pageButton.insertBefore($('.next'));
+		}
+	}
+
+	// Khởi tạo trang đầu tiên
+	showPage(1);
+
+	// Xử lý sự kiện cho nút "Next" và "Previous"
+	$('.next').on('click', function (e) {
+		e.preventDefault();
+		if (currentPage < totalPages) {
+			showPage(currentPage + 1);
+		}
+	});
+
+	$('.prev').on('click', function (e) {
+		e.preventDefault();
+		if (currentPage > 1) {
+			showPage(currentPage - 1);
+		}
+	});
+
+
+
+
+		$(document).ready(function () {
+		$.ajax({
+			url: "http://localhost:5030/api/Phim",
+			type: "GET",
+			success: function (data) {
+			console.log("Dữ liệu phim nhận được: ", data); // Xem toàn bộ dữ liệu trả về từ API
+			const phimDropdown = $("#TenPhim");
+			phimDropdown.empty(); // Làm sạch các lựa chọn cũ
+
+			if (data.length > 0) {
+				data.forEach(function (phim) {
+					console.log("Dữ liệu phim:", phim); // Kiểm tra chi tiết của từng phần tử phim
+					console.log("Tên phim: ", phim.TenPhim); // Kiểm tra trường TenPhim
+					phimDropdown.append('<option value="' + phim.id + '">' + phim.tenPhim + '</option>');
+				});
+			}
+		},
+
+		});
+	});
+
+
+
+
+
+	$("#addScheduleBtn").on("click", async function () {
+
+		// Lấy dữ liệu từ các trường nhập liệu trong modal
+		const scheduleData = {
+			Id: $("#createId").val()?.trim() || guid(),
+			TenPhim: $("#TenPhim").val(),
+			NgayChieu: $("#NgayChieu").val(),
+			GioChieu: $("#GioChieu").val(),
+			TenPhong: $("#TenPhong").val(),
+			TinhTrang: $("#TinhTrang").val() === "true" // Tình trạng là giá trị boolean
+		};
+
+		try {
+			// Gọi API để thêm lịch chiếu
+			const response = await $.ajax({
+				url: "http://localhost:5030/api/LichChieu/Add", // Địa chỉ API
+				type: "POST",
+				contentType: "application/json",
+				data: JSON.stringify(scheduleData),
+				success: function (data) {
+					Swal.fire(
+						'Thành công!',
+						'Lịch chiếu phim đã được thêm thành công.',
+						'success'
+					).then(() => {
+						$('#addScheduleModal').modal('hide'); // Đóng modal sau khi thêm thành công
+						location.reload(); // Reload lại trang
+					});
+				},
+				error: function (xhr, status, error) {
+					Swal.fire(
+						'Lỗi!',
+						'Có lỗi xảy ra khi thêm lịch chiếu.',
+						'error'
+					);
+				}
+			});
+		} catch (xhrError) {
+			console.error('Lỗi khi gọi API:', xhrError);
+			Swal.fire(
+				'Lỗi!',
+				'Có lỗi xảy ra trong quá trình gọi API.',
+				'error'
+			);
+		}
+	});
+		// Hàm tạo GUID
+	function guid() {
+		return 'TLP' + Array.from({ length: 8 }, () =>
+			"ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".charAt(
+				Math.floor(Math.random() * 36)
+			)
+		).join('');
+	}
+
+		$(document).ready(function () {
+		$('th[data-sort]').on('click', function () {
+			const sortBy = $(this).data('sort'); // Lấy thông tin cột cần sắp xếp
+			const $rows = $('table tbody tr'); // Lấy tất cả các hàng trong tbody
+			const ascending = $(this).data('ascending') || false; // Kiểm tra trạng thái sắp xếp hiện tại
+
+			const sortedRows = $rows.toArray().sort((a, b) => {
+				const aValue = $(a).find(`td:nth-child(${this.cellIndex + 1})`).text().trim();
+				const bValue = $(b).find(`td:nth-child(${this.cellIndex + 1})`).text().trim();
+
+				if (sortBy === 'ngayChieu' || sortBy === 'gioChieu') {
+					// Chuyển đổi chuỗi ngày/giờ thành giá trị thời gian để so sánh
+					return ascending
+						? new Date(aValue) - new Date(bValue)
+						: new Date(bValue) - new Date(aValue);
+				} else if (sortBy === 'tinhTrang') {
+					// Sắp xếp theo trạng thái
+					return ascending
+						? aValue.localeCompare(bValue)
+						: bValue.localeCompare(aValue);
+				} else {
+					// Sắp xếp các cột khác
+					return ascending
+						? aValue.localeCompare(bValue)
+						: bValue.localeCompare(aValue);
+				}
+			});
+
+			// Lật trạng thái sắp xếp
+			$(this).data('ascending', !ascending);
+
+			// Cập nhật lại bảng
+			$('table tbody').html(sortedRows);
+		});
+	});
+
+</script>

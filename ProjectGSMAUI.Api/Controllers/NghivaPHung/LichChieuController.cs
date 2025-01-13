@@ -16,7 +16,7 @@ namespace ProjectGSMAUI.Api.Controllers
             this.service = service;
         }
 
-        [HttpGet("GetAll")]
+        [HttpGet]
         public async Task<IActionResult> Get()
         {
             var response = await this.service.GetAll();
@@ -27,7 +27,7 @@ namespace ProjectGSMAUI.Api.Controllers
             return Ok(response.Data);
         }
 
-        [HttpGet("GetByID")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetByID(int id)
         {
             var data = await this.service.GetByID(id);
@@ -60,7 +60,7 @@ namespace ProjectGSMAUI.Api.Controllers
             return Ok(response.Data);
         }
 
-        [HttpDelete("Delete/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSchedule(int id)
         {
             var response = await this.service.DeleteSchedule(id);
@@ -81,5 +81,6 @@ namespace ProjectGSMAUI.Api.Controllers
             }
             return Ok(response.Data);
         }
+       
     }
 }
