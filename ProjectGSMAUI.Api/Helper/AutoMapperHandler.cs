@@ -28,6 +28,21 @@ namespace ProjectGSMAUI.Api.Helper
 			   )
 			   .ReverseMap();
 			 int i = 1;
-		}
+
+
+
+            // Mapping cho HoaDon và Billmodal
+            CreateMap<HoaDon, Billmodal>()
+                .ForMember(dest => dest.TinhTrangDisplay, opt => opt.MapFrom(src =>
+                    src.TinhTrang == 1 ? "Đã thanh toán" : "Chưa thanh toán"))
+                .ReverseMap()
+                .ForMember(dest => dest.TinhTrang, opt => opt.MapFrom(src =>
+                    src.TinhTrangDisplay != null && src.TinhTrangDisplay.ToLower() == "đã thanh toán" ? 1 : 0));
+
+            // Mapping cho ChiTietHoaDon và detailBillModal
+            CreateMap<ChiTietHoaDon, detailBillModal>()
+                 .ReverseMap();
+
+        }
     }
 }

@@ -1,0 +1,41 @@
+﻿@model ProjectGSMVC.Areas.Admin.Models.BillMViewModels
+
+@{
+    ViewData["Title"] = "Chi tiết hóa đơn";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml"; // Layout dùng chung
+}
+
+<div class="page-header">
+    <h4>Chi tiết hóa đơn</h4>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="form-group">
+            <label>Mã hóa đơn:</label>
+            <input type="text" class="form-control" value="@Model.MaHoaDon" readonly />
+        </div>
+        <div class="form-group">
+            <label>Mã đặt vé:</label>
+            <input type="text" class="form-control" value="@Model.MaDatVe" readonly />
+        </div>
+        <div class="form-group">
+            <label>Mã khách hàng:</label>
+            <input type="text" class="form-control" value="@Model.MaKhachHang" readonly />
+        </div>
+        <div class="form-group">
+            <label>Tổng tiền:</label>
+            <input type="text" class="form-control" value="@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C}", Model.TongTien)" readonly />
+        </div>
+        <div class="form-group">
+            <label>Mã giảm giá:</label>
+            <input type="text" class="form-control" value="@Model.MaGiamGia" readonly />
+        </div>
+        <div class="form-group">
+            <label>Tình trạng:</label>
+            <input type="text" class="form-control" value="@Model.TinhTrangDisplay" readonly />
+        </div>
+    </div>
+</div>
+
+<a asp-action="Index" class="btn btn-secondary mt-3">Quay lại</a>

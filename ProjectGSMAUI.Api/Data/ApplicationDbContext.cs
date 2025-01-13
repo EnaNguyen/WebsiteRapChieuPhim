@@ -569,6 +569,34 @@ namespace ProjectGSMAUI.Api.Data
                 new Ve { MaVe = "9", MaLichChieu = 9, MaPhong = 9, MaPhim = 9, TinhTrang = 1, MaGhe = "A9" },
                 new Ve { MaVe = "10", MaLichChieu = 10, MaPhong = 10, MaPhim = 10, TinhTrang = 1, MaGhe = "A10" }
             );//M + Mã Phòng + Mã Ca + Ngày + Tháng + Năm
+            modelBuilder.Entity<HoaDon>().HasData(
+                new HoaDon { MaHoaDon = 1, MaDatVe = 101, MaKhachHang = "TK001", TongTien = 500000, MaGiamGia = 1, NgayXuat = new DateOnly(2023, 12, 1), TinhTrang = 1 },
+                new HoaDon { MaHoaDon = 2, MaDatVe = 102, MaKhachHang = "TK001", TongTien = 520000, MaGiamGia = null, NgayXuat = new DateOnly(2023, 12, 2), TinhTrang = 0 },
+                new HoaDon { MaHoaDon = 3, MaDatVe = 103, MaKhachHang = "TK001", TongTien = 530000, MaGiamGia = 2, NgayXuat = new DateOnly(2023, 12, 3), TinhTrang = 1 },
+                new HoaDon { MaHoaDon = 4, MaDatVe = 104, MaKhachHang = "TK001", TongTien = 540000, MaGiamGia = null, NgayXuat = new DateOnly(2023, 12, 4), TinhTrang = 0 },
+                new HoaDon { MaHoaDon = 5, MaDatVe = 105, MaKhachHang = "TK001", TongTien = 550000, MaGiamGia = 3, NgayXuat = new DateOnly(2023, 12, 5), TinhTrang = 1 },
+                new HoaDon { MaHoaDon = 6, MaDatVe = 106, MaKhachHang = "TK001", TongTien = 560000, MaGiamGia = null, NgayXuat = new DateOnly(2023, 12, 6), TinhTrang = 0 },
+                new HoaDon { MaHoaDon = 7, MaDatVe = 107, MaKhachHang = "TK001", TongTien = 570000, MaGiamGia = 4, NgayXuat = new DateOnly(2023, 12, 7), TinhTrang = 1 },
+                new HoaDon { MaHoaDon = 8, MaDatVe = 108, MaKhachHang = "TK001", TongTien = 580000, MaGiamGia = null, NgayXuat = new DateOnly(2023, 12, 8), TinhTrang = 0 },
+                new HoaDon { MaHoaDon = 9, MaDatVe = 109, MaKhachHang = "TK001", TongTien = 590000, MaGiamGia = 5, NgayXuat = new DateOnly(2023, 12, 9), TinhTrang = 1 },
+                new HoaDon { MaHoaDon = 10, MaDatVe = 110, MaKhachHang = "TK001", TongTien = 600000, MaGiamGia = null, NgayXuat = new DateOnly(2023, 12, 10), TinhTrang = 0 }
+            );
+            modelBuilder.Entity<ChiTietHoaDon>().HasData(
+
+                        new ChiTietHoaDon { MaChiTietHoaDon = 1, MaGhe = 1, MaHoaDon = 1, Gia = 250000 },
+                        new ChiTietHoaDon { MaChiTietHoaDon = 2, MaGhe = 2, MaHoaDon = 1, Gia = 250000 },
+                        new ChiTietHoaDon { MaChiTietHoaDon = 3, MaGhe = 1, MaHoaDon = 2, Gia = 260000 },
+                        new ChiTietHoaDon { MaChiTietHoaDon = 4, MaGhe = 1, MaHoaDon = 2, Gia = 260000 },
+                        new ChiTietHoaDon { MaChiTietHoaDon = 5, MaGhe = 1, MaHoaDon = 3, Gia = 270000 }
+            );
+            modelBuilder.Entity<ChiTietHoaDon>().HasData(
+
+                new Ghe { MaGhe = "1", SoHang = "A", SoCot = 1 },
+                new Ghe { MaGhe = "2", SoHang = "A", SoCot = 2 },
+                new Ghe { MaGhe = "3", SoHang = "B", SoCot = 1 },
+                new Ghe { MaGhe = "4", SoHang = "B", SoCot = 2 },
+                new Ghe { MaGhe = "5", SoHang = "C", SoCot = 3 }
+            );
 
         }
     }

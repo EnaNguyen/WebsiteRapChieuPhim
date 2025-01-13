@@ -75,6 +75,15 @@ namespace ProjectGSMAUI.Api.Migrations
                     b.HasIndex("MaHoaDon");
 
                     b.ToTable("ChiTietHoaDon", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            MaChiTietHoaDon = 1,
+                            Gia = 250000,
+                            MaGhe = 1,
+                            MaHoaDon = 1
+                        });
                 });
 
             modelBuilder.Entity("ProjectGSMAUI.Api.Data.Entities.Combo", b =>
@@ -1514,6 +1523,103 @@ namespace ProjectGSMAUI.Api.Migrations
                     b.HasIndex("MaKhachHang");
 
                     b.ToTable("HoaDon", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            MaHoaDon = 1,
+                            MaDatVe = 101,
+                            MaGiamGia = 1,
+                            MaKhachHang = "TK001",
+                            NgayXuat = new DateOnly(2023, 12, 1),
+                            TinhTrang = 1,
+                            TongTien = 500000
+                        },
+                        new
+                        {
+                            MaHoaDon = 2,
+                            MaDatVe = 102,
+                            MaKhachHang = "TK001",
+                            NgayXuat = new DateOnly(2023, 12, 2),
+                            TinhTrang = 0,
+                            TongTien = 520000
+                        },
+                        new
+                        {
+                            MaHoaDon = 3,
+                            MaDatVe = 103,
+                            MaGiamGia = 2,
+                            MaKhachHang = "TK001",
+                            NgayXuat = new DateOnly(2023, 12, 3),
+                            TinhTrang = 1,
+                            TongTien = 530000
+                        },
+                        new
+                        {
+                            MaHoaDon = 4,
+                            MaDatVe = 104,
+                            MaKhachHang = "TK001",
+                            NgayXuat = new DateOnly(2023, 12, 4),
+                            TinhTrang = 0,
+                            TongTien = 540000
+                        },
+                        new
+                        {
+                            MaHoaDon = 5,
+                            MaDatVe = 105,
+                            MaGiamGia = 3,
+                            MaKhachHang = "TK001",
+                            NgayXuat = new DateOnly(2023, 12, 5),
+                            TinhTrang = 1,
+                            TongTien = 550000
+                        },
+                        new
+                        {
+                            MaHoaDon = 6,
+                            MaDatVe = 106,
+                            MaKhachHang = "TK001",
+                            NgayXuat = new DateOnly(2023, 12, 6),
+                            TinhTrang = 0,
+                            TongTien = 560000
+                        },
+                        new
+                        {
+                            MaHoaDon = 7,
+                            MaDatVe = 107,
+                            MaGiamGia = 4,
+                            MaKhachHang = "TK001",
+                            NgayXuat = new DateOnly(2023, 12, 7),
+                            TinhTrang = 1,
+                            TongTien = 570000
+                        },
+                        new
+                        {
+                            MaHoaDon = 8,
+                            MaDatVe = 108,
+                            MaKhachHang = "TK001",
+                            NgayXuat = new DateOnly(2023, 12, 8),
+                            TinhTrang = 0,
+                            TongTien = 580000
+                        },
+                        new
+                        {
+                            MaHoaDon = 9,
+                            MaDatVe = 109,
+                            MaGiamGia = 5,
+                            MaKhachHang = "TK001",
+                            NgayXuat = new DateOnly(2023, 12, 9),
+                            TinhTrang = 1,
+                            TongTien = 590000
+                        },
+                        new
+                        {
+                            MaHoaDon = 10,
+                            MaDatVe = 110,
+                            MaKhachHang = "TK001",
+                            NgayXuat = new DateOnly(2023, 12, 10),
+                            TinhTrang = 0,
+                            TongTien = 600000
+                        });
                 });
 
             modelBuilder.Entity("ProjectGSMAUI.Api.Data.Entities.KhungGio", b =>
