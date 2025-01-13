@@ -11,12 +11,12 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ProjectGSMAUI.Api.Container
 {
-    public class GiamGiaServices: IGiamGiaServices
+    public class TaiKhoanServices: IGiamGiaServices
     {
         private readonly ApplicationDbContext context;
 		private readonly IMapper mapper;
-		private readonly ILogger<GiamGiaServices> logger;
-		public GiamGiaServices(ApplicationDbContext _context, IMapper mapper, ILogger<GiamGiaServices> _logger)
+		private readonly ILogger<TaiKhoanServices> logger;
+		public TaiKhoanServices(ApplicationDbContext _context, IMapper mapper, ILogger<TaiKhoanServices> _logger)
         {
 			context = _context;
 			this.mapper = mapper;
@@ -144,9 +144,6 @@ namespace ProjectGSMAUI.Api.Container
             }
             return response;
         }
-
-
-
         public async Task<List<ActiveGiamGia>> GetAll(string Name)
 		{
             
@@ -171,7 +168,7 @@ namespace ProjectGSMAUI.Api.Container
                     {
                         _response = this.mapper.Map<List<GiamGia>, List<ActiveGiamGia>>(_data);
                     }
-                }
+                }              
             }
 			return _response;
 		}
@@ -296,5 +293,7 @@ namespace ProjectGSMAUI.Api.Container
 		{
 			return Guid.NewGuid().ToString("N").Substring(0, 8).ToUpper();
 		}
-	}
+
+
+    }
 }

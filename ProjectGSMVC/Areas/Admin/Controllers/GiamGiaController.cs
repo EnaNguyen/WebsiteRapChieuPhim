@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using ProjectGSMVC.Areas.Admin.ViewModel;
+using ProjectGSMVC.Areas.Admin.ViewModels;
 using System.Net.Http;
 using System.IO;
 using ProjectGSMVC.Areas.Admin.Models;
@@ -18,6 +18,7 @@ namespace ProjectGSMVC.Areas.Admin.Controllers
 	[Area("Admin")]
 	public class GiamGiaController : Controller
 	{
+        private static int LoadPageTime =0;
 		Uri baseAddress = new Uri("https://localhost:7141/api");
 		private readonly HttpClient _httpClient;
 		public GiamGiaController()
@@ -45,9 +46,26 @@ namespace ProjectGSMVC.Areas.Admin.Controllers
                 string apiError =  response.Content.ToString();
                 return BadRequest(new { message = $"Lỗi từ API: {apiError}" });
             }
-            ViewData["ListGiamGia"] = giamGiaList;
-            ViewData["Searching"] = searching; // Lưu từ khóa tìm kiếm để hiển thị lại trên giao diện
-            return View();
+            if(searching != null)
+            {
+                LoadPageTime++;
+                if(giamGiaList.Count==0)
+                {
+                    return PartialView("SearchingGiamGia", null);
+                }    
+                return PartialView("SearchingGiamGia", giamGiaList);
+            }   
+            else
+            {
+                if (LoadPageTime == 0)
+                {
+                    ViewData["ListGiamGia"] = giamGiaList;
+                    ViewData["Searching"] = searching;
+                    return View();
+                }
+                LoadPageTime = 0;
+                return PartialView("SearchingGiamGia", giamGiaList);
+            }    
         }
 
         [HttpPost]
@@ -311,6 +329,5 @@ namespace ProjectGSMVC.Areas.Admin.Controllers
                 return BadRequest(new { message = $"Lỗi từ API: {apiError}" });
             }
         }
-
     }
 }

@@ -256,6 +256,13 @@ namespace ProjectGSMAUI.Api.Migrations
                     b.Property<int?>("GiaTri")
                         .HasColumnType("int");
 
+                    b.Property<byte[]>("HinhAnh")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("MoTa")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateOnly?>("NgayBatDau")
                         .HasColumnType("date");
 
@@ -279,6 +286,7 @@ namespace ProjectGSMAUI.Api.Migrations
                         {
                             MaGiamGia = 1,
                             GiaTri = 20,
+                            MoTa = "GiamGiaNuaDauNam",
                             NgayBatDau = new DateOnly(2025, 1, 1),
                             NgayKetThuc = new DateOnly(2024, 6, 30),
                             SoLuong = 10,
@@ -752,7 +760,7 @@ namespace ProjectGSMAUI.Api.Migrations
                             Email = "nguyenquangquyX@gmail.com",
                             GioiTinh = true,
                             MatKhau = "8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92",
-                            NgayDangKy = new DateOnly(2025, 1, 3),
+                            NgayDangKy = new DateOnly(2025, 1, 6),
                             NgaySinh = new DateOnly(1999, 5, 19),
                             Sdt = "0973713274",
                             TenNguoiDung = "Quản trị viên",

@@ -12,7 +12,7 @@ namespace ProjectGSMAUI.Api.Controllers.Quy
 {
     //[Authorize]
     //[DisableCors]
-    [EnableRateLimiting("fixedwindow")]
+/*    [EnableRateLimiting("fixedwindow")]*/
     [Route("api/[controller]")]
     [ApiController]
     public class VoucherController : ControllerBase

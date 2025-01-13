@@ -4,10 +4,13 @@ using Microsoft.EntityFrameworkCore;
 using ProjectGSMAUI.Api.Container;
 using ProjectGSMAUI.Api.Data;
 using ProjectGSMAUI.Api.Data.Entities;
+using ProjectGSMAUI.Api.Helper;
+using ProjectGSMAUI.Api.Modal;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ProjectGSMAUI.Api.Controllers.PBH
 {
@@ -37,7 +40,7 @@ namespace ProjectGSMAUI.Api.Controllers.PBH
                 MatKhau = t.MatKhau?.Trim(),
                 TenNguoiDung = t.TenNguoiDung?.Trim(),
                 TrangThai = t.TrangThai,
-                Hinh = t.Hinh?.Trim(),
+                Hinh = t.Hinh,
                 Cccd = t.Cccd?.Trim(),
                 VaiTro = t.VaiTro,
                 Email = t.Email?.Trim(),
@@ -46,17 +49,18 @@ namespace ProjectGSMAUI.Api.Controllers.PBH
             return Ok(result);
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<TaiKhoan>> GetTaiKhoan(string id)
+        [HttpGet("GetTaiKhoan")]
+        public async Task<TaiKhoan> GetTaiKhoan(string id)
         {
+            TaiKhoan tk = new TaiKhoan();
             var taiKhoan = await _taiKhoanService.GetTaiKhoanByIdAsync(id);
 
-            if (taiKhoan == null)
+            if (taiKhoan != null)
             {
-                return NotFound();
+                tk = taiKhoan;
             }
 
-            return Ok(taiKhoan);
+            return tk;
         }
         [HttpGet("GenerateId")]
         public ActionResult<string> GenerateId()
@@ -77,7 +81,7 @@ namespace ProjectGSMAUI.Api.Controllers.PBH
         [HttpPost]
         public async Task<ActionResult<TaiKhoan>> PostTaiKhoan([FromForm] TaiKhoan taiKhoan)
         {
-            try
+            /*try
             {
                 // Tự động tạo ID nếu không có
                 if (string.IsNullOrEmpty(taiKhoan.IdtaiKhoan))
@@ -114,14 +118,10 @@ namespace ProjectGSMAUI.Api.Controllers.PBH
                 return CreatedAtAction(nameof(GetTaiKhoan), new { id = taiKhoan.IdtaiKhoan }, taiKhoan);
             }
             catch (Exception ex)
-            {
-                return StatusCode(500, $"Lỗi hệ thống: {ex.Message}");
-            }
+            {*/
+            return StatusCode(500, $"Lỗi hệ thống:");
+            /*}*/
         }
-
-
-
-
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTaiKhoan(string id, [FromForm] TaiKhoan taiKhoan)
         {
@@ -157,7 +157,7 @@ namespace ProjectGSMAUI.Api.Controllers.PBH
                     Email = taiKhoan.Email,
                     Sdt = taiKhoan.Sdt, // Nếu SĐT có thể để trống
                     TrangThai = taiKhoan.TrangThai, // Nếu trạng thái có thể để trống
-                    Anh = taiKhoan.Anh // Nếu hình ảnh có thể để trống
+                    Hinh = taiKhoan.Hinh // Nếu hình ảnh có thể để trống
                 };
 
                 await _taiKhoanService.UpdateTaiKhoanAsync(updatedTaiKhoan);
@@ -171,10 +171,6 @@ namespace ProjectGSMAUI.Api.Controllers.PBH
 
             return NoContent();
         }
-
-
-
-
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTaiKhoan(string id)
         {
@@ -186,6 +182,107 @@ namespace ProjectGSMAUI.Api.Controllers.PBH
         {
             var taiKhoan = await _taiKhoanService.GetTaiKhoanByIdAsync(id);
             return taiKhoan != null;
+        }
+
+
+
+
+        //Admin
+        [HttpGet("TaiKhoanAdmin")]
+        public async Task<IActionResult> TaiKhoanAdmin([FromQuery] string Name = null)
+        {
+            var data = await this._taiKhoanService.TaiKhoanAdmin(Name);
+            return Ok(data);
+        }
+        [HttpPost("CreateAdmin")]
+        public async Task<IActionResult> CreateAdmin(TaiKhoanRequest _data)
+        {
+            var data = await _taiKhoanService.CreateAdmin(_data);
+            return Ok(data);
+        }
+        [HttpGet("GetByTenTaiKhoan")]
+        public async Task<IActionResult> GetByTenTaiKhoan(string Name)
+        {
+            var data = await _taiKhoanService.GetByTenTaiKhoan(Name);
+            return Ok(data);
+        }
+        [HttpGet("GetByEmail")]
+        public async Task<IActionResult> GetByEmail(string Name)
+        {
+            var data = await _taiKhoanService.GetByEmail(Name);
+            return Ok(data);
+        }
+        [HttpPut("UpdateAdmin")]
+        public async Task<IActionResult> UpdateAdmin([FromBody] TaiKhoanEdit request)
+        {
+            string id = request.Id;
+            TaiKhoanRequest data = request.TaiKhoanRequest;
+
+            // Gọi phương thức Update hiện tại
+            var response = await _taiKhoanService.UpdateAdmin(id, data);
+
+            if (response.ResponseCode == 201)
+            {
+                return Ok(response.Result);
+            }
+            else
+            {
+                return BadRequest(response.ErrorMessage);
+            }
+        }
+        [HttpPut("VoHieuHoa")]
+        public async Task<IActionResult> VoHieuHoa([FromBody] string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                return BadRequest("ID không hợp lệ.");
+            }
+
+            var response = await _taiKhoanService.VoHieuHoa(id);
+
+            if (response.ResponseCode == 201)
+            {
+                return Ok(response.Result);
+            }
+            else
+            {
+                return BadRequest(response.ErrorMessage);
+            }
+        }
+
+
+
+
+        //Customer
+        [HttpGet("TaiKhoanCustomer")]
+        public async Task<IActionResult> TaiKhoanCustomer([FromQuery] string Name = null)
+        {
+            var data = await this._taiKhoanService.TaiKhoanCustomer(Name);
+            return Ok(data);
+        }
+        [HttpPost("CreateCustomer")]
+        public async Task<IActionResult> CreateCustomer(TaiKhoanRequest _data)
+        {
+            var data = await _taiKhoanService.CreateCustomer(_data);
+            return Ok(data);
+        }
+        [HttpPut("UpdateCustomer")]
+        public async Task<IActionResult> UpdateCustomer([FromBody] TaiKhoanEdit request)
+        {
+            string id = request.Id;
+            TaiKhoanRequest data = request.TaiKhoanRequest;
+
+            // Gọi phương thức Update hiện tại
+            var response = await _taiKhoanService.UpdateCustomer(id, data);
+
+            if (response.ResponseCode == 201)
+            {
+                return Ok(response.Result);
+            }
+            else
+            {
+                return BadRequest(response.ErrorMessage);
+            }
         }
     }
 }

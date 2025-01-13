@@ -26,10 +26,6 @@ namespace ProjectGSMAUI.Api.Controllers.Quy
         public async Task<IActionResult> GetAll([FromQuery] string Name = null)
         {
             var data = await this.service.GetAll(Name);
-            if (data == null || !data.Any())
-            {
-                return NotFound("Không tìm thấy chương trình giảm giá nào.");
-            }
             return Ok(data);
         }
         [HttpPost("Create")]
@@ -62,8 +58,6 @@ namespace ProjectGSMAUI.Api.Controllers.Quy
                 return BadRequest(response.ErrorMessage);
             }
         }
-
-		[DisableRateLimiting]
 		[HttpGet("GetByID")]
 		public async Task<IActionResult> GetByID(int Id)
 		{

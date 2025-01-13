@@ -8,7 +8,7 @@
         public string? MoTa { get; set; }
         public int GiaTri { get; set; }
         public int SoLuong { get; set; }
-        public IFormFile ImageFile { get; set; } // Đổi kiểu từ string thành IFormFile
-        public string? ImageBase64 { get; set; } // Thuộc tính này để lưu hình ảnh dưới dạng Base64 nếu cần
+        public IFormFile ImageFile { get; set; } 
+        public string? ImageBase64 { get; set; }
     }
 }

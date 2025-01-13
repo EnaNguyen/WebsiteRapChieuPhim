@@ -1,0 +1,45 @@
+﻿@if (Model!=null)
+{
+    @foreach (var item in Model)
+    {
+        <div class="col-lg-3 col-md-6 col-sm-12 mb-30">
+            <div class="da-card">
+                <div class="da-card-photo">
+                    <div style="height:200px; border-bottom: 1px solid grey">
+                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(item.HinhAnh)" alt="" style="max-width:400px; height:100%" />
+                    </div>
+                    <div class="da-overlay da-slide-top">
+                        <div class="da-social">
+                            <ul class="clearfix">
+                                <li>
+                                    <a href="#" class="detail-discount" data-id="@item.MaGiamGia" data-bs-toggle="modal" data-bs-target="#myModal2">
+                                        <i class="bi bi-info-circle"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="edit-discount" data-id="@item.MaGiamGia" data-bs-toggle="modal" data-bs-target="#myModal1">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="delete-discount" data-id="@item.MaGiamGia"><i class="bi bi-x"></i></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="da-card-content">
+                    <h5 class="h5 mb-10">@item.TenGiamGia</h5>
+                    <p class="mb-0"><strong>Từ &nbsp</strong>@item.NgayBatDau &nbsp<strong>Đến </strong>@item.NgayKetThuc</p>
+                    <h5 class="h5 mb-10"><strong>Giá Trị: &nbsp</strong><strong style="color:red">@item.GiaTri &nbsp; %</strong></h5>
+                </div>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="col-12">
+        <p class="text-center">Không tìm thấy chương trình giảm giá nào.</p>
+    </div>
+}

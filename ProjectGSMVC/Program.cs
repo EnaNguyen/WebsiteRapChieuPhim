@@ -13,8 +13,6 @@ builder.Services.AddCors(options =>
               .AllowCredentials();
     });
 });
-
-var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton(new Uri("https://localhost:7141/api"));
 builder.Services.AddHttpClient<GiamGiaController>();
 

@@ -1,5 +1,5 @@
 ﻿@using ProjectGSMAUI.Api.Data.Entities
-@using ProjectGSMVC.Areas.Admin.ViewModel
+@using ProjectGSMVC.Areas.Admin.ViewModels
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
@@ -39,16 +39,14 @@
                         </button>
                     </div>
                     <div class="col-6" style="text-align: right">
-                        <form method="get" action="/Admin/GiamGia/Index" style="display: inline;">
                             <input type="text" name="searching" id="Searching" value="@Searching" placeholder="Gõ Tên Giảm Giá" style="height: 40px; width: 200px; border-radius: 5px; padding-left:20px; padding-right: 20px" />
-                            <button type="submit" class="btn btn-secondary">Tìm kiếm</button>
-                        </form>
+                            <button type="submit" class="btn btn-secondary" id="ClickSearch">Tìm kiếm</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="row clearfix">
+        <div class="row clearfix" id="ListGiamGiaTable">
             @if (GiamGiaList != null && GiamGiaList.Any())
             {
                 @foreach (var item in GiamGiaList)
@@ -95,10 +93,6 @@
                 </div>
             }
         </div>
-    </div>
-    <div class="footer-wrap pd-20 mb-20 card-box">
-        DeskApp - Bootstrap 4 Admin Template By
-        <a href="https://github.com/dropways" target="_blank">Ankit Hingarajiya</a>
     </div>
 </div>
 
@@ -284,9 +278,27 @@
                             <label id="GiaTri2">Giá Trị (%)</label>
                         </div>
                         <div class="form-group">
-                            <label id="SoLuong2">Số Lượng Tổng cộng:</label><br /><br />
-                            <label id="SoLuong21">Số Lượng Đã Dùng:</label><br />
-                            <label id="SoLuong22">Số Lượng Còn Lại:</label>
+                            <label id="SoLuong2">Số Lượng Tổng cộng:</label><br />
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Số Lượng Đã Dùng</th>
+                                        <th>Số Lượng Còn Lại</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <label id="SoLuong21">Số Lượng Đã Dùng:</label>
+                                        </td>
+                                        <td>
+                                            <label id="SoLuong22">Số Lượng Còn Lại:</label>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                           
+                           
                         </div>
                         <div class="form-group">
                             <label id="MoTa2">Mô Tả</label>
@@ -300,7 +312,20 @@
         </div>
     </div>
 </div>
-
+<style>
+    th,td{
+        border: 1px solid black;
+        text-align: center;
+        width: 250px;
+    }
+    tr{
+        height: 30px;
+        font-weight: bold;
+    }
+    td{
+        height: 50px;
+    }
+</style>
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
@@ -332,8 +357,23 @@
                 contentType: false,
                 success: function (response) {
                     if (response.success) {
-                        alert("Thêm mới thành công!");
-                        location.reload();
+                        Swal.fire({
+                            icon: 'success',
+                            title: `Đã Thêm Chương Trình Giảm Giá Mới!`,
+                            text: response.message,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            showConfirmButton: false
+                        }).then(() => {
+                            location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi!',
+                            text: response.message,
+                            showConfirmButton: true
+                        });
                     }
                 },
                 error: function (xhr) {
@@ -425,8 +465,23 @@
                 contentType: false,
                 success: function (response) {
                     if (response.success) {
-                        alert("Sửa thông tin phiếu giảm giá thành công!");
-                        location.reload();
+                        Swal.fire({
+                            icon: 'success',
+                            title: `Đã Sửa Thông Tin Chương Trình Giảm Giá Thành Công!`,
+                            text: response.message,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            showConfirmButton: false
+                        }).then(() => {
+                            location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi!',
+                            text: response.message,
+                            showConfirmButton: true
+                        });
                     }
                 },
                 error: function (xhr) {
@@ -466,10 +521,23 @@
                 data: { id: discountId },
                 success: function (response) {
                     if (response.success) {
-                        alert(response.message);
-                        location.reload(); // Tải lại trang sau khi xóa thành công
+                        Swal.fire({
+                            icon: 'success',
+                            title: `Đã Xóa Chương Trình Giảm Giá Này!`,
+                            text: response.message,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            showConfirmButton: false
+                        }).then(() => {
+                            location.reload();
+                        });
                     } else {
-                        alert(response.message);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi!',
+                            text: response.message,
+                            showConfirmButton: true
+                        });
                     }
                 },
                 error: function () {
@@ -501,8 +569,8 @@
                         'Số Lượng Tổng cộng: ' +
                         (parseInt(response.data.soLuongDaDung) + parseInt(response.data.soLuongConLai)).toString()
                     );
-                    $('#SoLuong21').text('Số Lượng Đã Dùng: ' + response.data.soLuongDaDung);
-                    $('#SoLuong22').text('Số Lượng Còn Lại: ' + response.data.soLuongConLai);
+                    $('#SoLuong21').text(response.data.soLuongDaDung);
+                    $('#SoLuong22').text(response.data.soLuongConLai);
 
                     // Hiển thị hình ảnh
                     var imageUrl = "data:image/jpeg;base64," + response.data.hinhAnh;
@@ -536,5 +604,27 @@
         });
     });
 </script>
+
+<script>
+        $(document).ready(function () {
+            // Bắt sự kiện khi nhấn nút "Tìm kiếm"
+            $('#ClickSearch').on('click', function () {
+                const searchValue = $('#Searching').val(); 
+
+                $.ajax({
+                    url: '/Admin/GiamGia/Index', 
+                    type: 'GET',
+                    data: { searching: searchValue }, // Gửi dữ liệu tìm kiếm
+                    success: function (response) {
+                        $('#ListGiamGiaTable').html(response);
+                    },
+                    error: function () {
+                        alert('Có lỗi xảy ra khi tìm kiếm.');
+                    }
+                });
+            });
+        });
+   </script>
+
 
 

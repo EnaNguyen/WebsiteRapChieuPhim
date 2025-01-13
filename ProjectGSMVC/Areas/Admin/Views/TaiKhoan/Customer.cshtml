@@ -1,335 +1,713 @@
-﻿@model IEnumerable<ProjectGSMVC.Areas.Admin.ViewModels.TaiKhoanViewModel>
-
+﻿@using ProjectGSMAUI.Api.Data.Entities
+@using ProjectGSMVC.Areas.Admin.ViewModels
 @{
-    ViewData["Title"] = "Quản lý Khách Hàng";
+    ViewData["Title"] = "Admin";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    var AdminAccountList = ViewData["ListAdminAccount"] as List<TaiKhoan>;
+    var Searching = ViewData["Searching"] as string;
 }
-<!-- Thêm vào phần <head> của bạn -->
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<div class="pd-ltr-20 xs-pd-20-10">
+    <div class="min-height-200px">
+        <div class="page-header">
+            <div class="row">
+                <div class="col-md-12 col-sm-12">
+                    <div class="title">
+                        <h4>Quản lý Tài Khoản Admin</h4>
+                    </div>
+                    <nav aria-label="breadcrumb" role="navigation">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="index.html">Trang Chủ</a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">
+                                Quản lý Tài Khoản Admin
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <!-- Slide Top effect -->
+        <div class="container mt-3" style="margin-top: 40px; margin-bottom: 40px">
+            <div class="container">
+                <div class="row">
+                    <div class="col-6">
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">Thêm Tài Khoản Admin</button>
+                    </div>
+                    <div class="col-6" style="text-align: right">
+                        <input type="text" name="searching" id="Searching" value="@Searching" placeholder="Gõ để tìm kiếm" style="height: 40px; width: 200px; border-radius: 5px; padding-left:20px; padding-right: 20px" />
+                        <button type="submit" class="btn btn-secondary" id="ClickSearch">Tìm kiếm</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-<div class="container">
-    <h2 class="mt-3">Quản lý Khách Hàng</h2>
-    <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#createModal">Thêm Khách Hàng</button>
-
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Mã Tài Khoản</th>
-                <th>Tên Tài Khoản</th>
-                <th>Email</th>
-                <th>Số Điện Thoại</th>
-                <th>Trạng Thái</th>
-                <th>Hình Ảnh</th>
-                <th>Hành Động</th>
-            </tr>
-        </thead>
-        <tbody id="customerTableBody">
-            @foreach (var taiKhoan in Model)
+        <div class="row clearfix" id="ListAdmin">
+            @if (AdminAccountList != null && AdminAccountList.Any())
             {
-                <tr id="row-@taiKhoan.IdtaiKhoan">
-                    <td>@taiKhoan.IdtaiKhoan</td>
-                    <td>@taiKhoan.TenTaiKhoan</td>
-                    <td>@taiKhoan.Email</td>
-                    <td>@taiKhoan.Sdt</td>
-                    <td>@(taiKhoan.TrangThai == 1 ? "Hoạt động" : "Không hoạt động")</td>
-                    <td>
-                        @if (!string.IsNullOrEmpty(taiKhoan.Hinh))
-                        {
-                            <img src="~/@Url.Content($"images/AnhTaiKhoan/{System.IO.Path.GetFileName(taiKhoan.Hinh)}")" alt="Avatar" class="img-thumbnail" style="width: 50px; height: 50px; object-fit: cover;">
-                        }
-                        else
-                        {
-                            <span>Chưa có ảnh</span>
-                        }
-                    </td>
-                    <td>
-                        <button class="btn btn-warning edit-btn" data-id="@taiKhoan.IdtaiKhoan">Sửa</button>
-                        <button class="btn btn-danger delete-btn" data-id="@taiKhoan.IdtaiKhoan">Xóa</button>
-                    </td>
-                </tr>
+                <div class="card-box mb-30">
+                    <div class="pb-20">
+                        <table class="data-table table stripe hover nowrap">
+                            <thead>
+                                <tr>
+                                    <th>Mã Tài Khoản</th>
+                                    <th>Tên Tài Khoản</th>
+                                    <th>Email</th>
+                                    <th>Số Điện Thoại</th>
+                                    <th>Trạng Thái</th>
+                                    <th>Hình Ảnh</th>
+                                    <th>Hành Động</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var taiKhoan in AdminAccountList)
+                                {
+                                    <tr id="row-@taiKhoan.IdtaiKhoan">
+                                        <td>@taiKhoan.IdtaiKhoan</td>
+                                        <td>@taiKhoan.TenTaiKhoan</td>
+                                        <td>@taiKhoan.Email</td>
+                                        <td>@taiKhoan.Sdt</td>
+                                        @if (taiKhoan.TrangThai == 1)
+                                        {
+                                            <td><span class="badge badge-success">Hoạt động</span></td>
+                                        }
+                                        else
+                                        {
+                                            <td><span class="badge badge-secondary">Vô Hiệu Hóa</span></td>
+                                        }
+                                        <td>
+                                            @if (taiKhoan.Hinh != null)
+                                            {
+                                                <img src="data:image/jpeg;base64,@Convert.ToBase64String(taiKhoan.Hinh)" alt="Avatar" class="img-thumbnail" style="width: 50px; height: 50px; object-fit: cover;">
+                                            }
+                                            else
+                                            {
+                                                <span>Không có ảnh</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <div class="dropdown">
+                                                <a class="btn btn-link font-24 p-0 line-height-1 no-arrow dropdown-toggle"
+                                                   href="#"
+                                                   role="button"
+                                                   data-toggle="dropdown">
+                                                    <i class="dw dw-more"></i>
+                                                </a>
+                                                <div class="dropdown-menu dropdown-menu-right dropdown-menu-icon-list">
+                                                    <button class="dropdown-item"><i class="bi bi-eye"></i> Chi Tiết</button>
+                                                    <a href="#" class="edit-taikhoan" data-id="@taiKhoan.IdtaiKhoan" data-bs-toggle="modal" data-bs-target="#myModal1">
+                                                        <button class="dropdown-item">
+                                                            <i class="dw dw-edit2"></i> Sửa
+                                                        </button>
+                                                    </a>
+                                                    <a href="#" class="delete-taikhoan" data-id="@taiKhoan.IdtaiKhoan" data-trangthai="@taiKhoan.TrangThai">
+                                                        @if (taiKhoan.TrangThai == 1)
+                                                        {
+                                                            <button class="dropdown-item"><i class="dw dw-delete-3"></i> Vô Hiệu Hóa</button>
+                                                        }
+                                                        else
+                                                        {
+                                                            <button class="dropdown-item"><i class="dw dw-delete-3"></i> Kích Hoạt</button>
+                                                        }
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             }
-        </tbody>
-    </table>
+            else
+            {
+                <div class="col-12">
+                    <p class="text-center">Không tìm thấy chương trình giảm giá nào.</p>
+                </div>
+            }
+        </div>
+    </div>
 </div>
 
-<!-- Modal Thêm -->
-<div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
+            <!-- Modal Header -->
             <div class="modal-header">
-                <h5 class="modal-title" id="createModalLabel">Thêm Khách Hàng</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <h4 class="modal-title">Thêm Tài Khoản Admin Mới</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
+            <!-- Modal body -->
             <div class="modal-body">
-                <form id="createForm" enctype="multipart/form-data">
-                    <input type="hidden" name="VaiTro" value="1" />
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="createIdtaiKhoan">Mã Tài Khoản</label>
-                                <input type="text" class="form-control" id="createIdtaiKhoan" name="IdtaiKhoan" readonly>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="ImageFile">Hình Ảnh</label>
+                            <input type="file" class="form-control-file" id="ImageFile" name="ImageFile" accept="image/*" required />
+                            <div>
+                                <img src="" id="ShowHinhAnh" style="max-height: 200px" />
                             </div>
-                            <div class="form-group">
-                                <label for="createTenTaiKhoan">Tên Tài Khoản</label>
-                                <input type="text" class="form-control" id="createTenTaiKhoan" name="TenTaiKhoan" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="createMatKhau">Mật Khẩu</label>
-                                <input type="password" class="form-control" id="createMatKhau" name="MatKhau" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="createEmail">Email</label>
-                                <input type="email" class="form-control" id="createEmail" name="Email" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="createAnh">Ảnh Đại Diện</label>
-                                <input type="file" class="form-control" id="createAnh" name="Anh" accept="image/*">
-                            </div>
+                            <h6 id="ImageFileError"></h6>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="createTenNguoiDung">Tên Người Dùng</label>
-                                <input type="text" class="form-control" id="createTenNguoiDung" name="TenNguoiDung" required>
+                        <div class="form-group">
+                            <label for="TenTaiKhoan">Tên Tài Khoản</label>
+                            <input type="text" class="form-control" id="TenTaiKhoan" name="TenTaiKhoan" placeholder="Nhập Tên Tài Khoản" required />
+                            <h6 id="TenTaiKhoanError"></h6>
+                        </div>
+                        <div class="form-group">
+                            <label for="MatKhau">Mật Khẩu</label>
+                            <input type="password" class="form-control" id="MatKhau" name="MatKhau" required />
+                            <h6 id="MatKhauError"></h6>
+                        </div>
+                        <div class="form-group">
+                            <label for="ReMatKhau">Nhập lại Mật Khẩu</label>
+                            <input type="password" class="form-control" id="ReMatKhau" name="ReMatKhau" required />
+                            <h6 id="ReMatKhauError"></h6>
+                        </div>
+                        <div class="form-group">
+                            <label for="NgaySinh">NgaySinh</label>
+                            <input type="date" class="form-control" id="NgaySinh" name="NgaySinh">
+                            <h6 id="NgaySinhError"></h6>
+                        </div>
+
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="GioiTinh">Giới tính</label>
+                            <div id="GioiTinh1">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="GioiTinh" id="GioiTinhNam" value="1">
+                                    <label class="form-check-label" for="GioiTinhNam">Nam</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="GioiTinh" id="GioiTinhNu" value="0">
+                                    <label class="form-check-label" for="GioiTinhNu">Nữ</label>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label for="createSdt">Số Điện Thoại</label>
-                                <input type="text" class="form-control" id="createSdt" name="Sdt" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="createDiaChi">Địa Chỉ</label>
-                                <input type="text" class="form-control" id="createDiaChi" name="DiaChi" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="createNgaySinh">Ngày Sinh</label>
-                                <input type="date" class="form-control" id="createNgaySinh" name="NgaySinh" required>
-                            </div>
+                            <h6 id="GioiTinhError"></h6>
+                        </div>
+                        <div class="form-group">
+                            <label for="TenNguoiDung">Tên Người Dùng</label>
+                            <input type="text" class="form-control" id="TenNguoiDung" name="TenNguoiDung" placeholder="Họ và Tên" required />
+                            <h6 id="TenNguoiDungError"></h6>
+                        </div>
+                        <div class="form-group">
+                            <label for="SDT">Số Điện Thoại</label>
+                            <input type="text" class="form-control" id="Sdt" name="Sdt" placeholder="Nhập số điện thoại" required />
+                            <h6 id="SDTError"></h6>
+                        </div>
+                        <div class="form-group">
+                            <label for="Email">Email</label>
+                            <input type="text" class="form-control" id="Email" name="Email" placeholder="Nhập Email của bạn" required />
+                            <h6 id="EmailError"></h6>
+                        </div>
+                        <div class="form-group">
+                            <label for="CCCD">CCCD</label>
+                            <input type="text" class="form-control" id="Cccd" name="Cccd" placeholder="Nhập CCCD của bạn" required />
+                            <h6 id="CCCDError"></h6>
+                        </div>
+                        <div class="form-group">
+                            <label for="DiaChi">Địa Chỉ</label>
+                            <input type="text" class="form-control" id="DiaChi" name="DiaChi" placeholder="Nhập Địa Chỉ của bạn" required />
+                            <h6 id="DiaChiError"></h6>
                         </div>
                     </div>
-                </form>
+                </div>
             </div>
+            <!-- Modal footer -->
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
-                <button type="button" class="btn btn-primary" id="saveCreate">Thêm</button>
+                <button type="button" class="btn btn-primary" id="btnAdd">Thêm Mới</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="myModal1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Chỉnh sửa Tài Khoản</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group" hidden>
+                            <label for="IdtaiKhoan1">ID</label>
+                            <input type="text" class="form-control" id="IdtaiKhoan1" name="IdtaiKhoan1" disabled />
+                            <h6 id="IdtaiKhoan1Error"></h6>
+                        </div>
+                        <div class="form-group">
+                            <label for="ImageFile1">Hình Ảnh</label>
+                            <input type="file" class="form-control-file" id="ImageFile1" name="ImageFile1" accept="image/*" required />
+                            <div>
+                                <img src="" id="ShowHinhAnh1" style="max-height: 200px" />
+                            </div>
+                            <h6 id="ImageFileError"></h6>
+                        </div>
+                        <div class="form-group">
+                            <label for="TenTaiKhoan1">Tên Tài Khoản</label>
+                            <input type="text" class="form-control" id="TenTaiKhoan1" name="TenTaiKhoan1" placeholder="Nhập Tên Tài Khoản" required disabled />
+                            <h6 id="TenTaiKhoan1Error"></h6>
+                        </div>
+                        <div class="form-group">
+                            <label for="MatKhau1">Mật Khẩu</label>
+                            <input type="password" class="form-control" id="MatKhau1" name="MatKhau1" required />
+                            <h6 id="MatKhau1Error"></h6>
+                        </div>
+                        <div class="form-group">
+                            <label for="ReMatKhau1">Nhập lại Mật Khẩu</label>
+                            <input type="password" class="form-control" id="ReMatKhau1" name="ReMatKhau1" required />
+                            <h6 id="ReMatKhau1Error"></h6>
+                        </div>
+                        <div class="form-group">
+                            <label for="NgaySinh1">NgaySinh</label>
+                            <input type="date" class="form-control" id="NgaySinh1" name="NgaySinh1">
+                            <h6 id="NgaySinh1Error"></h6>
+                        </div>
+
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="GioiTinh1">Giới tính</label>
+                            <div id="GioiTinh1">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="GioiTinh1" id="GioiTinhNam1" value="1">
+                                    <label class="form-check-label" for="GioiTinhNam1">Nam</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="GioiTinh1" id="GioiTinhNu1" value="0">
+                                    <label class="form-check-label" for="GioiTinhNu1">Nữ</label>
+                                </div>
+                            </div>
+                            <h6 id="GioiTinh1Error"></h6>
+                        </div>
+                        <div class="form-group">
+                            <label for="TenNguoiDung1">Tên Người Dùng</label>
+                            <input type="text" class="form-control" id="TenNguoiDung1" name="TenNguoiDung1" placeholder="Họ và Tên" required />
+                            <h6 id="TenNguoiDung1Error"></h6>
+                        </div>
+                        <div class="form-group">
+                            <label for="SDT1">Số Điện Thoại</label>
+                            <input type="text" class="form-control" id="Sdt1" name="Sdt1" placeholder="Nhập số điện thoại" required />
+                            <h6 id="SDT1Error"></h6>
+                        </div>
+                        <div class="form-group">
+                            <label for="Email1">Email</label>
+                            <input type="text" class="form-control" id="Email1" name="Email1" placeholder="Nhập Email của bạn" required />
+                            <h6 id="Email1Error"></h6>
+                        </div>
+                        <div class="form-group">
+                            <label for="CCCD1">CCCD</label>
+                            <input type="text" class="form-control" id="Cccd1" name="Cccd1" placeholder="Nhập CCCD của bạn" required />
+                            <h6 id="CCCD1Error"></h6>
+                        </div>
+                        <div class="form-group">
+                            <label for="DiaChi1">Địa Chỉ</label>
+                            <input type="text" class="form-control" id="DiaChi1" name="DiaChi1" placeholder="Nhập Địa Chỉ của bạn" required />
+                            <h6 id="DiaChi1Error"></h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnEditAccount">Chỉnh sửa</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="myModal2">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Chi Tiết Tài Khoản</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-6" style="margin-left: 30px">
+                        <div class="form-group">
+                            <strong><label class="title">ID Tài Khoản:</label></strong></br>
+                            &nbsp<label id="IdtaiKhoan2"></label>
+                        </div>
+                        <div class="form-group">
+                            <strong><label class="title">Hình Ảnh:</label></strong></br>
+                            &nbsp<img src="" alt="Không có hình ảnh đại diện" id="ShowHinhAnh2">
+                        </div>
+                        <div class="form-group">
+                            <strong><label class="title">Tên Tài Khoản:</label></strong></br>
+                            &nbsp<label id="TenTaiKhoan2">Tên Tài Khoản</label>
+                        </div>
+                        <div class="form-group">
+                            <strong><label class="title">Ngày Sinh</label></strong></br>
+                            &nbsp<label id="NgaySinh2">NgaySinh</label>
+                        </div>
+
+                    </div>
+                    <div class="col-6" style="margin-left: 30px">
+                        <div class="form-group">
+                            <strong><label class="title">Giới Tính:</label></strong></br>
+                            &nbsp<label id="GioiTinh2">Giới tính</label>
+                        </div>
+                        <div class="form-group">
+                            <strong><label class="title">Họ và Tên:</label></strong></br>
+                            &nbsp<label id="TenNguoiDung2">Họ Và Tên</label>
+                        </div>
+                        <div class="form-group">
+                            <strong><label class="title">Số Điện Thoại:</label></strong></br>
+                            &nbsp<label id="SDT2">Số Điện Thoại</label>
+                        </div>
+                        <div class="form-group">
+                            <strong><label class="title">Email:</label></strong></br>
+                            &nbsp<label id="Email2">Email</label>
+                        </div>
+                        <div class="form-group">
+                            <strong><label class="title">CCCD:</label></strong></br>
+                            &nbsp<label id="CCCD2">CCCD</label>
+                        </div>
+                        <div class="form-group">
+                            <strong><label class="title">Địa Chỉ:</label></strong></br>
+                            &nbsp<label id="DiaChi2">Địa Chỉ</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Đóng</button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Modal Sửa -->
-<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel">Sửa Khách Hàng</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="editForm" enctype="multipart/form-data">
-                    <input type="hidden" id="editIdtaiKhoan" name="IdtaiKhoan">
 
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="editTenTaiKhoan">Tên Tài Khoản</label>
-                                <input type="text" class="form-control" id="editTenTaiKhoan" name="TenTaiKhoan" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="editMatKhau">Mật Khẩu</label>
-                                <input type="password" class="form-control" id="editMatKhau" name="MatKhau" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="editEmail">Email</label>
-                                <input type="email" class="form-control" id="editEmail" name="Email" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="editAnh">Ảnh Đại Diện</label>
-                                <input type="file" class="form-control" id="editAnh" name="Anh" accept="image/*">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="editTenNguoiDung">Tên Người Dùng</label>
-                                <input type="text" class="form-control" id="editTenNguoiDung" name="TenNguoiDung" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="editSdt">Số Điện Thoại</label>
-                                <input type="text" class="form-control" id="editSdt" name="Sdt" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="editDiaChi">Địa Chỉ</label>
-                                <input type="text" class="form-control" id="editDiaChi" name="DiaChi" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="editNgaySinh">Ngày Sinh</label>
-                                <input type="date" class="form-control" id="editNgaySinh" name="NgaySinh" required>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
-                <button type="button" class="btn btn-warning" id="saveEdit">Lưu</button>
-            </div>
-        </div>
-    </div>
-</div>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
-@section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-        $(document).ready(function () {
-            const apiBaseUrl = "http://localhost:5030/api/TaiKhoan";
+@* Thêm Tài Khoản *@
+<script>
+    $(document).ready(function () {
+        $("#btnAdd").click(function (e) {
 
-            // Tự động tạo mã tài khoản khi mở modal thêm
-            $("#createModal").on("show.bs.modal", function () {
-                $.ajax({
-                    url: `${apiBaseUrl}/GenerateId`,
-                    type: "GET",
-                    success: function (response) {
-                        $("#createIdtaiKhoan").val(response); 
-                    },
-                    error: function () {
+            var formData = new FormData();
+            formData.append("TenTaiKhoan", $("#TenTaiKhoan").val());
+            formData.append("TenNguoiDung", $("#TenNguoiDung").val());
+            formData.append("MatKhau", $("#MatKhau").val());
+            formData.append("ReMatKhau", $("#ReMatKhau").val());
+            formData.append("Email", $("#Email").val());
+            formData.append("Sdt", $("#Sdt").val());
+            formData.append("NgaySinh", $("#NgaySinh").val());
+            formData.append("Cccd", $("#Cccd").val());
+            formData.append("DiaChi", $("#DiaChi").val());
+            formData.append("GioiTinh", $("input[name='GioiTinh']:checked").val());
+            formData.append("ImageFile", $("#ImageFile")[0].files[0]);
+            console.log(formData);
+            // Gửi AJAX
+            $.ajax({
+                url: '/Admin/TaiKhoan/CreateCustomer', 
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    if (response.success) {
                         Swal.fire({
-                            icon: "error",
-                            title: "Lỗi",
-                            text: "Không thể tạo mã tài khoản.",
+                            icon: 'success',
+                            title: `Tạo tài khoản mới Thành Công!`,
+                            text: response.message,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            showConfirmButton: false
+                        }).then(() => {
+                            location.reload();
                         });
-                    },
-                });
-            });
-
-            $("#saveCreate").click(function () {
-                const formData = new FormData($("#createForm")[0]); // Thu thập dữ liệu từ form
-
-                $.ajax({
-                    url: apiBaseUrl,
-                    type: "POST",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function () {
+                    } else {
                         Swal.fire({
-                            icon: "success",
-                            title: "Thành công",
-                            text: "Tài khoản đã được thêm!",
-                        }).then(() => location.reload());
-                    },
-                    error: function (xhr) {
-                        Swal.fire({
-                            icon: "error",
-                            title: "Lỗi",
-                            text: xhr.responseJSON?.ErrorMessage || "Không thể thêm tài khoản.",
-                        });
-                    },
-                });
-            });
-
-
-            $(document).on("click", ".edit-btn", function () {
-                const id = $(this).data("id"); // Lấy ID từ data-id
-                console.log("ID được nhấn: ", id); // Log để kiểm tra
-
-                $.ajax({
-                    url: `${apiBaseUrl}/${id}`,
-                    type: "GET",
-                    success: function (response) {
-                        console.log("Response từ API:", response); // Log dữ liệu trả về
-
-                        // Gán dữ liệu vào modal
-                        const idtaiKhoan = response.idtaiKhoan || "ID không xác định";
-                        $("#editIdtaiKhoan").val(idtaiKhoan);
-                        $("#editTenTaiKhoan").val(response.tenTaiKhoan);
-                        $("#editMatKhau").val(response.matKhau);
-                        $("#editEmail").val(response.email);
-                        $("#editTenNguoiDung").val(response.tenNguoiDung);
-                        $("#editSdt").val(response.sdt);
-                        $("#editDiaChi").val(response.diaChi);
-
-                        const ngaySinh = response.ngaySinh ? response.ngaySinh.split("T")[0] : "";
-                        $("#editNgaySinh").val(ngaySinh);
-
-                        // Hiển thị modal
-                        $("#editModal").modal("show");
-                    },
-                    error: function () {
-                        Swal.fire({
-                            icon: "error",
-                            title: "Lỗi",
-                            text: "Không thể tải thông tin tài khoản.",
-                        });
-                    },
-                });
-            });
-
-
-
-
-
-            $("#saveEdit").click(function () {
-                const id = $("#editIdtaiKhoan").val();
-                const formData = new FormData($("#editForm")[0]);
-                $.ajax({
-                    url: `${apiBaseUrl}/${id}`,
-                    type: "PUT",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function () {
-                        Swal.fire({
-                            icon: "success",
-                            title: "Thành công",
-                            text: "Tài khoản đã được cập nhật!",
-                        }).then(() => location.reload());
-                    },
-                    error: function (xhr) {
-                        Swal.fire({
-                            icon: "error",
-                            title: "Lỗi",
-                            text: xhr.responseJSON?.ErrorMessage || "Không thể cập nhật tài khoản.",
-                        });
-                    },
-                });
-            });
-
-            // Xóa tài khoản
-            $(document).on("click", ".delete-btn", function () {
-                const id = $(this).data("id");
-                Swal.fire({
-                    title: "Bạn có chắc muốn xóa?",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonText: "Xóa",
-                    cancelButtonText: "Hủy",
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            url: `${apiBaseUrl}/${id}`,
-                            type: "DELETE",
-                            success: function () {
-                                Swal.fire({
-                                    icon: "success",
-                                    title: "Thành công",
-                                    text: "Tài khoản đã được xóa!",
-                                }).then(() => $(`#row-${id}`).remove());
-                            },
-                            error: function (xhr) {
-                                Swal.fire({
-                                    icon: "error",
-                                    title: "Lỗi",
-                                    text: xhr.responseJSON?.ErrorMessage || "Không thể xóa tài khoản.",
-                                });
-                            },
+                            icon: 'error',
+                            title: 'Lỗi!',
+                            text: response.message,
+                            showConfirmButton: true
                         });
                     }
-                });
+                },
+                error: function (xhr) {
+                    // Hiển thị lỗi từ server
+                    var errors = xhr.responseJSON;
+                    if (errors) {
+                        $("#TenTaiKhoanError").text(errors.TenTaiKhoan || "");
+                        $("#MatKhauError").text(errors.MatKhau || "");
+                        $("#ReMatKhauError").text(errors.ReMatKhau || "");
+                        $("#EmailError").text(errors.Email || "");
+                        $("#SDTError").text(errors.Sdt || "");
+                        $("#NgaySinhError").text(errors.NgaySinh || "");
+                        $("#CCCDError").text(errors.CCCD || "");
+                        $("#ImageFileError").text(errors.ImageFile || "");
+                        $("#TenNguoiDungError").text(errors.TenNguoiDung || "");
+                    } else {
+                        alert("Đã xảy ra lỗi không xác định.");
+                    }
+                }
             });
         });
-    </script>
-}
+    });
+</script>
+@* Hàm Load Ảnh Trong Modal Thêm*@
+<script>
+    document.getElementById('ImageFile').addEventListener('change', function (event) {
+        const input = event.target;
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+
+                document.getElementById('ShowHinhAnh').src = e.target.result;
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    });
+</script>
+@* Load Dữ liệu Lên Modal khi Edit*@
+<script>
+    $(document).ready(function () {
+        $(document).on('click', '.edit-taikhoan', function (e) {
+            e.preventDefault();
+
+            var id = $(this).data('id');
+            $.ajax({
+                url: '/Admin/TaiKhoan/GetTaiKhoan',
+                type: 'GET',
+                data: { id: id },
+                success: function (response) {
+                    if (response.success) {
+                        console.log(response.data);
+                        $('#IdtaiKhoan1').val(response.data.idtaiKhoan);
+                        $('#TenTaiKhoan1').val(response.data.tenTaiKhoan);
+                        $('#NgaySinh1').val(response.data.ngaySinh);
+                        $('#TenNguoiDung1').val(response.data.tenNguoiDung);
+                        $('#Sdt1').val(response.data.sdt);
+                        $('#Email1').val(response.data.email);
+                        $('#Cccd1').val(response.data.cccd);
+                        $('#DiaChi1').val(response.data.diaChi);
+
+                        // Xử lý hình ảnh
+                        if (response.data.hinh) {
+                            $('#ShowHinhAnh1').attr('src', 'data:image/png;base64,' + response.data.hinh);
+                        } else {
+                            $('#ShowHinhAnh1').attr('src', '');
+                        }
+
+                        // Xử lý giới tính
+                        if (response.data.gioiTinh == true) {
+                            $('#GioiTinhNam1').prop('checked', true);
+                        } else if (response.data.gioiTinh == false) {
+                            $('#GioiTinhNu1').prop('checked', true);
+                        }
+                        // Hiển thị modal
+                        $('#myModal1').modal('show');
+                    } else {
+                        alert(response.message || "Không thể tải dữ liệu.");
+                    }
+                },
+                error: function (xhr) {
+                    alert("Lỗi khi lấy dữ liệu: " + xhr.responseText);
+                }
+            });
+        });
+    });
+</script>
+@* Sửa Tài Khoản*@
+<script>
+    $(document).ready(function () {
+        $(".edit-taikhoan").click(function () {
+            var id = $(this).data("id"); 
+            console.log("ID được lấy từ .edit-discount:", id); 
+            $("#btnEditAccount").data("id", id); 
+        });
+        $("#btnEditAccount").click(function (e) {
+            var id = $(this).data("id"); 
+            console.log("ID được lưu trong #btnEditAccount:", id);
+            var formData = new FormData();
+            formData.append("id", $(this).data("id"));
+            formData.append("IdtaiKhoan", $("#IdTaiKhoan1").val());
+            formData.append("TenTaiKhoan", $("#TenTaiKhoan1").val());
+            formData.append("TenNguoiDung", $("#TenNguoiDung1").val());
+            formData.append("MatKhau", $("#MatKhau1").val());
+            formData.append("ReMatKhau", $("#ReMatKhau1").val());
+            formData.append("Email", $("#Email1").val());
+            formData.append("Sdt", $("#Sdt1").val());
+            formData.append("NgaySinh", $("#NgaySinh1").val());
+            formData.append("Cccd", $("#Cccd1").val());
+            formData.append("DiaChi", $("#DiaChi1").val());
+            formData.append("GioiTinh", $("input[name='GioiTinh1']:checked").val());
+            formData.append("ImageFile", $("#ImageFile1")[0].files[0]);
+            console.log(formData);
+            // Gửi AJAX
+            $.ajax({
+                url: '/Admin/TaiKhoan/UpdateCustomer', 
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: `Sửa Thông Tin Tài Khoản Thành Công!`,
+                            text: response.message,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            showConfirmButton: false
+                        }).then(() => {
+                            location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi!',
+                            text: response.message,
+                            showConfirmButton: true
+                        });
+                    }
+                },
+                error: function (xhr) {
+                    var errors = xhr.responseJSON;
+                    if (errors) {
+                        $("#TenTaiKhoan1Error").text(errors.TenTaiKhoan || "");
+                        $("#MatKhau1Error").text(errors.MatKhau || "");
+                        $("#ReMatKhau1Error").text(errors.ReMatKhau || "");
+                        $("#Email1Error").text(errors.Email || "");
+                        $("#SDT1Error").text(errors.Sdt || "");
+                        $("#NgaySinh1Error").text(errors.NgaySinh || "");
+                        $("#CCCD1Error").text(errors.CCCD || "");
+                        $("#ImageFile1Error").text(errors.ImageFile || "");
+                        $("#TenNguoiDung1Error").text(errors.TenNguoiDung || "");
+                    } else {
+                        alert("Đã xảy ra lỗi không xác định.");
+                    }
+                }
+            });
+        });
+        $('#ImageFile1').on('change', function (e) {
+            var file = e.target.files[0];
+            var reader = new FileReader();
+
+            reader.onload = function (event) {
+                $('#ShowHinhAnh1').attr('src', event.target.result);
+            };
+            if (file) {
+                reader.readAsDataURL(file);
+            }
+        });
+    });
+</script>
+<script>
+    $(document).on('click', '.delete-taikhoan', function (e) {
+        e.preventDefault();
+        const DeleteID = $(this).data('id');
+        const TrangThai = $(this).data('trangthai');
+        const actionText = TrangThai === 1 ? "Vô hiệu hóa" : "Kích hoạt lại";
+
+        if (confirm(`Bạn có chắc chắn muốn ${actionText} tài khoản này?`)) {
+            $.ajax({
+                url: '/Admin/TaiKhoan/XoaTaiKhoan',
+                type: 'POST',
+                data: { id: DeleteID },
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: `Đã ${actionText} Tài Khoản Thành Công!`,
+                            text: response.message,
+                            timer: 3000, 
+                            timerProgressBar: true,
+                            showConfirmButton: false
+                        }).then(() => {
+                            location.reload(); 
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi!',
+                            text: response.message,
+                            showConfirmButton: true
+                        });
+                    }
+                },
+                error: function () {
+                    alert("Đã xảy ra lỗi. Vui lòng thử lại!");
+                }
+            });
+        }
+    });
+
+</script>
+<script>
+    $(document).ready(function () {
+        $('#ClickSearch').on('click', function () {
+            const searchValue = $('#Searching').val();
+            $.ajax({
+                url: '/Admin/TaiKhoan/Customer',
+                type: 'GET',
+                data: { searching: searchValue },
+                success: function (response) {
+                    $('#ListAdmin').html(response);
+                },
+                error: function () {
+                    alert('Có lỗi xảy ra khi tìm kiếm.');
+                }
+            });
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $(document).on('click', '.detail-taikhoan', function (e) {
+            e.preventDefault();
+
+            var id = $(this).data('id');
+            $.ajax({
+                url: '/Admin/TaiKhoan/GetTaiKhoan',
+                type: 'GET',
+                data: { id: id },
+                success: function (response) {
+                    if (response.success) {
+                        console.log(response.data);
+                        $('#IdtaiKhoan2').text(response.data.idtaiKhoan);
+                        $('#TenTaiKhoan2').text(response.data.tenTaiKhoan);
+                        $('#NgaySinh2').text(response.data.ngaySinh);
+                        $('#TenNguoiDung2').text(response.data.tenNguoiDung);
+                        $('#SDT2').text(response.data.sdt);
+                        $('#Email2').text(response.data.email);
+                        $('#CCCD2').text(response.data.cccd);
+                        $('#DiaChi2').text(response.data.diaChi);
+
+                        // Xử lý hình ảnh
+                        if (response.data.hinh) {
+                            $('#ShowHinhAnh2').attr('src', 'data:image/png;base64,' + response.data.hinh);
+                        } else {
+                            $('#ShowHinhAnh2').attr('src', '');
+                        }
+
+                        // Xử lý giới tính
+                        if (response.data.gioiTinh == true) {
+                            $('#GioiTinh2').text("Nam");
+                        } else {
+                            $('#GioiTinh2').text("Nữ");
+                        }
+                        $('#myModal2').modal('show');
+                    } else {
+                        alert(response.message || "Không thể tải dữ liệu.");
+                    }
+                },
+                error: function (xhr) {
+                    alert("Lỗi khi lấy dữ liệu: " + xhr.responseText);
+                }
+            });
+        });
+    });
+</script>

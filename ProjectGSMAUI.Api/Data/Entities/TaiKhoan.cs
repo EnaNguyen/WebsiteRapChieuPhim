@@ -18,12 +18,10 @@ namespace ProjectGSMAUI.Api.Data.Entities
         public DateOnly? NgayDangKy { get; set; }
         public int? TrangThai { get; set; }
         public int? DiemTichLuy { get; set; }
-        public string? Hinh { get; set; }
+        public byte[]? Hinh { get; set; }
         public string? Cccd { get; set; }
         public bool? GioiTinh { get; set; }
         public string? DiaChi { get; set; }
-        [NotMapped]
-        public IFormFile? Anh { get; set; } // Thêm thuộc tính NotMapped
         public virtual ICollection<HoaDon> HoaDons { get; set; } = new List<HoaDon>();
     }
 }

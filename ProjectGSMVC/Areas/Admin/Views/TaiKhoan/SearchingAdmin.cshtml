@@ -1,0 +1,74 @@
+﻿@if (Model != null)
+{
+    <table class="data-table table stripe hover nowrap">
+        <thead>
+            <tr>
+                <th>Mã Tài Khoản</th>
+                <th>Tên Tài Khoản</th>
+                <th>Email</th>
+                <th>Số Điện Thoại</th>
+                <th>Trạng Thái</th>
+                <th>Hình Ảnh</th>
+                <th>Hành Động</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var taiKhoan in Model)
+            {
+                <tr id="row-@taiKhoan.IdtaiKhoan">
+                    <td>@taiKhoan.IdtaiKhoan</td>
+                    <td>@taiKhoan.TenTaiKhoan</td>
+                    <td>@taiKhoan.Email</td>
+                    <td>@taiKhoan.Sdt</td>
+                    @if (taiKhoan.TrangThai == 1)
+                    {
+                        <td><span class="badge badge-success">Hoạt động</span></td>
+                    }
+                    else
+                    {
+                        <td><span class="badge badge-secondary">Vô Hiệu Hóa</span></td>
+                    }
+                    <td>
+                        @if (taiKhoan.Hinh != null)
+                        {
+                            <img src="data:image/jpeg;base64,@Convert.ToBase64String(taiKhoan.Hinh)" alt="Avatar" class="img-thumbnail" style="width: 50px; height: 50px; object-fit: cover;">
+                        }
+                        else
+                        {
+                            <span>Không có ảnh</span>
+                        }
+                    </td>
+                    <td>
+                        <div class="dropdown">
+                            <a class="btn btn-link font-24 p-0 line-height-1 no-arrow dropdown-toggle" href="#" role="button" data-toggle="dropdown">
+                                <i class="dw dw-more"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right dropdown-menu-icon-list">
+                                <button class="dropdown-item"><i class="dw dw-delete-3"></i> Xóa</button>
+                                <a href="#" class="edit-taikhoan" data-id="@taiKhoan.IdtaiKhoan" data-bs-toggle="modal" data-bs-target="#myModal1">
+                                    <button class="dropdown-item"><i class="dw dw-edit2"></i> Sửa</button>
+                                </a>
+                                <a href="#" class="delete-taikhoan" data-id="@taiKhoan.IdtaiKhoan">
+                                    @if (taiKhoan.TrangThai == 1)
+                                    {
+                                        <button class="dropdown-item"><i class="dw dw-delete-3"></i> Vô Hiệu Hóa</button>
+                                    }
+                                    else
+                                    {
+                                        <button class="dropdown-item"><i class="dw dw-delete-3"></i> Kích Hoạt</button>
+                                    }
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="col-12">
+        <p class="text-center">Không tìm thấy tài khoản Admin nào.</p>
+    </div>
+}

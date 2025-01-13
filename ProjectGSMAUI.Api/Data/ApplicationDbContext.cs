@@ -251,7 +251,7 @@ namespace ProjectGSMAUI.Api.Data
                 entity.Property(e => e.Email)
                     .HasMaxLength(100)
                     .IsUnicode(false);
-                entity.Property(e => e.Hinh).HasColumnType("text");
+                entity.Property(e => e.Hinh).HasColumnType("VARBINARY(MAX)");
                 entity.Property(e => e.MatKhau)
                     .HasMaxLength(64)
                     .IsUnicode(false)
