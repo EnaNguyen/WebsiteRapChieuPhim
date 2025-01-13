@@ -28,6 +28,7 @@ namespace ProjectGSMAUI.Api.Services
 
         public async Task<Phim> CreateAsync(Phim phim)
         {
+            phim.TrangThai = 1;
             _context.Phims.Add(phim);
             await _context.SaveChangesAsync();
             return phim;

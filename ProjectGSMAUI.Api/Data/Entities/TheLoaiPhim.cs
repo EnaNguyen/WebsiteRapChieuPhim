@@ -5,7 +5,7 @@ namespace ProjectGSMAUI.Api.Data.Entities;
 
 public partial class TheLoaiPhim
 {
-    public int Id { get; set; }
+    public string Id { get; set; }
 
     public string? TenTheLoai { get; set; }
 

@@ -5,7 +5,7 @@ namespace ProjectGSMAUI.Api.Data.Entities;
 
 public partial class Ve
 {
-    public int MaVe { get; set; }
+    public string MaVe { get; set; }
 
     public int? MaLichChieu { get; set; }
 

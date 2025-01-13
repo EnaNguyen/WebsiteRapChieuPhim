@@ -25,14 +25,20 @@ namespace ProjectGSMAUI.Api.Helper
                 soSuatPhimMoiNgay[phim.Id] = new int[SoNgay];
             }
 
+            // Kiểm tra và log danh sách phim, phòng và khung giờ
+            Console.WriteLine($"Danh sách phim: {danhSachPhim.Count}, Danh sách phòng: {danhSachPhong.Count}, Danh sách khung giờ: {danhSachKhungGio.Count}");
+
             // Duyệt qua tất cả các phim
             foreach (var phim in danhSachPhim)
             {
                 int soLuongSuatChieu = phim.SoSuatChieu ?? 0;
+
+                // Kiểm tra và giới hạn số suất chiếu của phim không vượt quá TongSuat
                 if (soLuongSuatChieu > TongSuat)
                 {
-                    Console.WriteLine("Số lượng suất chiếu vượt quá giới hạn của rạp!");
-                    continue;
+                    Console.WriteLine($"Số suất chiếu của phim {phim.TenPhim} vượt quá giới hạn {TongSuat}! Đang điều chỉnh...");
+                    soLuongSuatChieu = TongSuat;
+                    phim.SoSuatChieu = TongSuat; // Cập nhật lại thông tin phim
                 }
 
                 int khoangCach = TongSuat / soLuongSuatChieu; // Khoảng cách giữa các suất chiếu
@@ -41,10 +47,16 @@ namespace ProjectGSMAUI.Api.Helper
                 int attempts = 0; // Đếm số lần thử
                 int maxAttempts = TongSuat; // Giới hạn số lần thử
 
+                // Kiểm tra và log giá trị của phim trước khi bắt đầu tạo lịch chiếu
+                Console.WriteLine($"Đang tạo lịch chiếu cho phim: {phim.TenPhim}, Số suất chiếu: {soLuongSuatChieu}");
+
                 while (dem < soLuongSuatChieu && attempts < maxAttempts)
                 {
                     int ngay = chiSo / SuatMoiNgay;   // Tính ngày từ chỉ số
                     int suat = chiSo % SuatMoiNgay; // Tính suất chiếu trong ngày
+
+                    // Kiểm tra trước khi thêm suất chiếu
+                    Console.WriteLine($"Đang kiểm tra suất chiếu của phim {phim.TenPhim}, Ngày: {ngay}, Suất: {suat}, Số suất đã chiếu trong ngày: {soSuatPhimMoiNgay[phim.Id][ngay]}");
 
                     // Nếu vị trí trống và số suất chiếu trong ngày chưa vượt quá giới hạn, gán phim vào
                     if (LichChieu[ngay, suat] == null && soSuatMoiNgay[ngay] < SuatMoiNgay && soSuatPhimMoiNgay[phim.Id][ngay] < 5)
@@ -76,10 +88,14 @@ namespace ProjectGSMAUI.Api.Helper
 
                 // Giảm số suất chiếu của phim sau khi lập lịch
                 phim.SoSuatChieu -= dem;
+                if (phim.SoSuatChieu < 0) phim.SoSuatChieu = 0; // Tránh giảm quá mức
                 if (phim.SoSuatChieu <= 0)
                 {
                     phim.TrangThai = 0; // Chuyển trạng thái phim thành hết phim nếu không còn suất chiếu
                 }
+
+                // Log trạng thái phim sau khi cập nhật
+                Console.WriteLine($"Phim {phim.TenPhim} sau khi cập nhật: Số suất chiếu còn lại: {phim.SoSuatChieu}, Trạng thái: {phim.TrangThai}");
             }
 
             // Trả về danh sách phim đã cập nhật

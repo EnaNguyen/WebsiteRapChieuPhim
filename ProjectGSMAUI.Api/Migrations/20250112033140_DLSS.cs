@@ -8,11 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ProjectGSMAUI.Api.Migrations
 {
     /// <inheritdoc />
-<<<<<<<< HEAD:ProjectGSMAUI.Api/Migrations/20250103150704_DLM.cs
-    public partial class DLM : Migration
-========
     public partial class DLSS : Migration
->>>>>>>> origin/PBH-TaiKhoan3:ProjectGSMAUI.Api/Migrations/20250104143049_DLSS.cs
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -53,6 +49,8 @@ namespace ProjectGSMAUI.Api.Migrations
                     MaGiamGia = table.Column<int>(type: "int", nullable: false),
                     TenGiamGia = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     GiaTri = table.Column<int>(type: "int", nullable: true),
+                    MoTa = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    HinhAnh = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     NgayBatDau = table.Column<DateOnly>(type: "date", nullable: true),
                     NgayKetThuc = table.Column<DateOnly>(type: "date", nullable: true),
                     SoLuong = table.Column<int>(type: "int", nullable: true)
@@ -147,7 +145,7 @@ namespace ProjectGSMAUI.Api.Migrations
                 name: "TheLoaiPhim",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false),
+                    ID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     TenTheLoai = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true)
                 },
                 constraints: table =>
@@ -207,7 +205,7 @@ namespace ProjectGSMAUI.Api.Migrations
                 {
                     ID = table.Column<int>(type: "int", nullable: false),
                     TenPhim = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    TheLoai = table.Column<int>(type: "int", nullable: true),
+                    TheLoai = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     ThoiLuong = table.Column<int>(type: "int", nullable: true),
                     DaoDien = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     GioiHanDoTuoi = table.Column<int>(type: "int", nullable: true),
@@ -215,7 +213,8 @@ namespace ProjectGSMAUI.Api.Migrations
                     NgayKetThuc = table.Column<DateOnly>(type: "date", nullable: true),
                     SoSuatChieu = table.Column<int>(type: "int", nullable: true),
                     TrangThai = table.Column<int>(type: "int", nullable: true),
-                    MoTa = table.Column<string>(type: "text", nullable: true)
+                    MoTa = table.Column<string>(type: "text", nullable: true),
+                    PosterBase64 = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -260,7 +259,8 @@ namespace ProjectGSMAUI.Api.Migrations
                 {
                     ID = table.Column<string>(type: "char(50)", unicode: false, fixedLength: true, maxLength: 50, nullable: false),
                     Phim = table.Column<int>(type: "int", nullable: true),
-                    Link = table.Column<string>(type: "text", nullable: true)
+                    Link = table.Column<string>(type: "text", nullable: true),
+                    HinhAnh1 = table.Column<byte[]>(type: "varbinary(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -327,7 +327,7 @@ namespace ProjectGSMAUI.Api.Migrations
                 name: "Ve",
                 columns: table => new
                 {
-                    MaVe = table.Column<int>(type: "int", nullable: false),
+                    MaVe = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     MaLichChieu = table.Column<int>(type: "int", nullable: true),
                     MaPhong = table.Column<int>(type: "int", nullable: true),
                     MaPhim = table.Column<int>(type: "int", nullable: true),
@@ -354,13 +354,19 @@ namespace ProjectGSMAUI.Api.Migrations
                 columns: table => new
                 {
                     MaChiTietHoaDon = table.Column<int>(type: "int", nullable: false),
-                    MaGhe = table.Column<int>(type: "int", nullable: true),
+                    MaGhe = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     MaHoaDon = table.Column<int>(type: "int", nullable: true),
-                    Gia = table.Column<int>(type: "int", nullable: true)
+                    Gia = table.Column<int>(type: "int", nullable: true),
+                    GheMaGhe = table.Column<string>(type: "char(10)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK__ChiTietH__CFF2C426609D1D0B", x => x.MaChiTietHoaDon);
+                    table.ForeignKey(
+                        name: "FK_ChiTietHoaDon_Ghe_GheMaGhe",
+                        column: x => x.GheMaGhe,
+                        principalTable: "Ghe",
+                        principalColumn: "MaGhe");
                     table.ForeignKey(
                         name: "FK__ChiTietHo__MaGhe__59FA5E80",
                         column: x => x.MaGhe,
@@ -379,7 +385,7 @@ namespace ProjectGSMAUI.Api.Migrations
                 {
                     MaDatVe = table.Column<int>(type: "int", nullable: true),
                     MaKhachHang = table.Column<string>(type: "char(10)", unicode: false, fixedLength: true, maxLength: 10, nullable: true),
-                    MaVe = table.Column<int>(type: "int", nullable: true),
+                    MaVe = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     NgayDat = table.Column<DateOnly>(type: "date", nullable: true),
                     TrangThai = table.Column<int>(type: "int", nullable: true)
                 },
@@ -398,21 +404,220 @@ namespace ProjectGSMAUI.Api.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Ghe",
+                columns: new[] { "MaGhe", "SoCot", "SoHang" },
+                values: new object[,]
+                {
+                    { "A1", 1, "A" },
+                    { "A10", 10, "A" },
+                    { "A11", 11, "A" },
+                    { "A12", 12, "A" },
+                    { "A13", 13, "A" },
+                    { "A14", 14, "A" },
+                    { "A15", 15, "A" },
+                    { "A16", 16, "A" },
+                    { "A2", 2, "A" },
+                    { "A3", 3, "A" },
+                    { "A4", 4, "A" },
+                    { "A5", 5, "A" },
+                    { "A6", 6, "A" },
+                    { "A7", 7, "A" },
+                    { "A8", 8, "A" },
+                    { "A9", 9, "A" },
+                    { "B1", 1, "B" },
+                    { "B10", 10, "B" },
+                    { "B11", 11, "B" },
+                    { "B12", 12, "B" },
+                    { "B13", 13, "B" },
+                    { "B14", 14, "B" },
+                    { "B15", 15, "B" },
+                    { "B16", 16, "B" },
+                    { "B2", 2, "B" },
+                    { "B3", 3, "B" },
+                    { "B4", 4, "B" },
+                    { "B5", 5, "B" },
+                    { "B6", 6, "B" },
+                    { "B7", 7, "B" },
+                    { "B8", 8, "B" },
+                    { "B9", 9, "B" },
+                    { "C1", 1, "C" },
+                    { "C10", 10, "C" },
+                    { "C11", 11, "C" },
+                    { "C12", 12, "C" },
+                    { "C13", 13, "C" },
+                    { "C14", 14, "C" },
+                    { "C15", 15, "C" },
+                    { "C16", 16, "C" },
+                    { "C2", 2, "C" },
+                    { "C3", 3, "C" },
+                    { "C4", 4, "C" },
+                    { "C5", 5, "C" },
+                    { "C6", 6, "C" },
+                    { "C7", 7, "C" },
+                    { "C8", 8, "C" },
+                    { "C9", 9, "C" },
+                    { "D1", 1, "D" },
+                    { "D10", 10, "D" },
+                    { "D11", 11, "D" },
+                    { "D12", 12, "D" },
+                    { "D13", 13, "D" },
+                    { "D14", 14, "D" },
+                    { "D15", 15, "D" },
+                    { "D16", 16, "D" },
+                    { "D2", 2, "D" },
+                    { "D3", 3, "D" },
+                    { "D4", 4, "D" },
+                    { "D5", 5, "D" },
+                    { "D6", 6, "D" },
+                    { "D7", 7, "D" },
+                    { "D8", 8, "D" },
+                    { "D9", 9, "D" },
+                    { "E1", 1, "E" },
+                    { "E10", 10, "E" },
+                    { "E11", 11, "E" },
+                    { "E12", 12, "E" },
+                    { "E13", 13, "E" },
+                    { "E14", 14, "E" },
+                    { "E15", 15, "E" },
+                    { "E16", 16, "E" },
+                    { "E2", 2, "E" },
+                    { "E3", 3, "E" },
+                    { "E4", 4, "E" },
+                    { "E5", 5, "E" },
+                    { "E6", 6, "E" },
+                    { "E7", 7, "E" },
+                    { "E8", 8, "E" },
+                    { "E9", 9, "E" },
+                    { "F1", 1, "F" },
+                    { "F10", 10, "F" },
+                    { "F11", 11, "F" },
+                    { "F12", 12, "F" },
+                    { "F13", 13, "F" },
+                    { "F14", 14, "F" },
+                    { "F15", 15, "F" },
+                    { "F16", 16, "F" },
+                    { "F2", 2, "F" },
+                    { "F3", 3, "F" },
+                    { "F4", 4, "F" },
+                    { "F5", 5, "F" },
+                    { "F6", 6, "F" },
+                    { "F7", 7, "F" },
+                    { "F8", 8, "F" },
+                    { "F9", 9, "F" },
+                    { "G1", 1, "G" },
+                    { "G10", 10, "G" },
+                    { "G11", 11, "G" },
+                    { "G12", 12, "G" },
+                    { "G13", 13, "G" },
+                    { "G14", 14, "G" },
+                    { "G15", 15, "G" },
+                    { "G16", 16, "G" },
+                    { "G2", 2, "G" },
+                    { "G3", 3, "G" },
+                    { "G4", 4, "G" },
+                    { "G5", 5, "G" },
+                    { "G6", 6, "G" },
+                    { "G7", 7, "G" },
+                    { "G8", 8, "G" },
+                    { "G9", 9, "G" },
+                    { "H1", 1, "H" },
+                    { "H10", 10, "H" },
+                    { "H11", 11, "H" },
+                    { "H12", 12, "H" },
+                    { "H13", 13, "H" },
+                    { "H14", 14, "H" },
+                    { "H15", 15, "H" },
+                    { "H16", 16, "H" },
+                    { "H2", 2, "H" },
+                    { "H3", 3, "H" },
+                    { "H4", 4, "H" },
+                    { "H5", 5, "H" },
+                    { "H6", 6, "H" },
+                    { "H7", 7, "H" },
+                    { "H8", 8, "H" },
+                    { "H9", 9, "H" },
+                    { "I1", 1, "I" },
+                    { "I10", 10, "I" },
+                    { "I11", 11, "I" },
+                    { "I12", 12, "I" },
+                    { "I13", 13, "I" },
+                    { "I14", 14, "I" },
+                    { "I15", 15, "I" },
+                    { "I16", 16, "I" },
+                    { "I2", 2, "I" },
+                    { "I3", 3, "I" },
+                    { "I4", 4, "I" },
+                    { "I5", 5, "I" },
+                    { "I6", 6, "I" },
+                    { "I7", 7, "I" },
+                    { "I8", 8, "I" },
+                    { "I9", 9, "I" },
+                    { "J1", 1, "J" },
+                    { "J10", 10, "J" },
+                    { "J11", 11, "J" },
+                    { "J12", 12, "J" },
+                    { "J13", 13, "J" },
+                    { "J14", 14, "J" },
+                    { "J15", 15, "J" },
+                    { "J16", 16, "J" },
+                    { "J2", 2, "J" },
+                    { "J3", 3, "J" },
+                    { "J4", 4, "J" },
+                    { "J5", 5, "J" },
+                    { "J6", 6, "J" },
+                    { "J7", 7, "J" },
+                    { "J8", 8, "J" },
+                    { "J9", 9, "J" },
+                    { "K1", 1, "K" },
+                    { "K10", 10, "K" },
+                    { "K11", 11, "K" },
+                    { "K12", 12, "K" },
+                    { "K13", 13, "K" },
+                    { "K14", 14, "K" },
+                    { "K15", 15, "K" },
+                    { "K16", 16, "K" },
+                    { "K2", 2, "K" },
+                    { "K3", 3, "K" },
+                    { "K4", 4, "K" },
+                    { "K5", 5, "K" },
+                    { "K6", 6, "K" },
+                    { "K7", 7, "K" },
+                    { "K8", 8, "K" },
+                    { "K9", 9, "K" },
+                    { "L1", 1, "L" },
+                    { "L10", 10, "L" },
+                    { "L11", 11, "L" },
+                    { "L12", 12, "L" },
+                    { "L13", 13, "L" },
+                    { "L14", 14, "L" },
+                    { "L15", 15, "L" },
+                    { "L16", 16, "L" },
+                    { "L2", 2, "L" },
+                    { "L3", 3, "L" },
+                    { "L4", 4, "L" },
+                    { "L5", 5, "L" },
+                    { "L6", 6, "L" },
+                    { "L7", 7, "L" },
+                    { "L8", 8, "L" },
+                    { "L9", 9, "L" }
+                });
+
+            migrationBuilder.InsertData(
                 table: "GiamGia",
-                columns: new[] { "MaGiamGia", "GiaTri", "NgayBatDau", "NgayKetThuc", "SoLuong", "TenGiamGia" },
-                values: new object[] { 1, 20, new DateOnly(2025, 1, 1), new DateOnly(2024, 6, 30), 10, "Khuyến mãi nửa đầu 2025" });
+                columns: new[] { "MaGiamGia", "GiaTri", "HinhAnh", "MoTa", "NgayBatDau", "NgayKetThuc", "SoLuong", "TenGiamGia" },
+                values: new object[] { 1, 20, null, "abc", new DateOnly(2025, 1, 1), new DateOnly(2024, 6, 30), 10, "Khuyến mãi nửa đầu 2025" });
 
             migrationBuilder.InsertData(
                 table: "KhungGio",
                 columns: new[] { "ID", "GioBatDau", "GioKetThuc" },
                 values: new object[,]
                 {
-                    { 1, new TimeOnly(9, 0, 0), new TimeOnly(11, 0, 0) },
-                    { 2, new TimeOnly(12, 0, 0), new TimeOnly(14, 0, 0) },
-                    { 3, new TimeOnly(15, 0, 0), new TimeOnly(17, 0, 0) },
-                    { 4, new TimeOnly(18, 0, 0), new TimeOnly(20, 0, 0) },
-                    { 5, new TimeOnly(21, 0, 0), new TimeOnly(23, 0, 0) },
-                    { 6, new TimeOnly(0, 0, 0), new TimeOnly(2, 0, 0) }
+                    { 1, new TimeOnly(9, 15, 0), new TimeOnly(11, 45, 0) },
+                    { 2, new TimeOnly(12, 30, 0), new TimeOnly(14, 15, 0) },
+                    { 3, new TimeOnly(15, 10, 0), new TimeOnly(17, 25, 0) },
+                    { 4, new TimeOnly(18, 5, 0), new TimeOnly(20, 50, 0) },
+                    { 5, new TimeOnly(21, 20, 0), new TimeOnly(23, 35, 0) },
+                    { 6, new TimeOnly(0, 15, 0), new TimeOnly(2, 40, 0) }
                 });
 
             migrationBuilder.InsertData(
@@ -431,22 +636,18 @@ namespace ProjectGSMAUI.Api.Migrations
             migrationBuilder.InsertData(
                 table: "TaiKhoan",
                 columns: new[] { "IDTaiKhoan", "CCCD", "DiaChi", "DiemTichLuy", "Email", "GioiTinh", "Hinh", "MatKhau", "NgayDangKy", "NgaySinh", "SDT", "TenNguoiDung", "TenTaiKhoan", "TrangThai", "VaiTro" },
-<<<<<<<< HEAD:ProjectGSMAUI.Api/Migrations/20250103150704_DLM.cs
-                values: new object[] { "TK001", "123456789012", "123 Đường ABC, Thành phố XYZ", 0, "nguyenquangquyX@gmail.com", true, null, "8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92", new DateOnly(2025, 1, 3), new DateOnly(1999, 5, 19), "0973713274", "Quản trị viên", "Admin", 1, 2 });
-========
-                values: new object[] { "TK001", "123456789012", "123 Đường ABC, Thành phố XYZ", 0, "nguyenquangquyX@gmail.com", true, null, "8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92", new DateOnly(2025, 1, 4), new DateOnly(1999, 5, 19), "0973713274", "Quản trị viên", "Admin", 1, 2 });
->>>>>>>> origin/PBH-TaiKhoan3:ProjectGSMAUI.Api/Migrations/20250104143049_DLSS.cs
+                values: new object[] { "TK001", "123456789012", "123 Đường ABC, Thành phố XYZ", 0, "nguyenquangquyX@gmail.com", true, null, "8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92", new DateOnly(2025, 1, 12), new DateOnly(1999, 5, 19), "0973713274", "Quản trị viên", "Admin", 1, 2 });
 
             migrationBuilder.InsertData(
                 table: "TheLoaiPhim",
                 columns: new[] { "ID", "TenTheLoai" },
                 values: new object[,]
                 {
-                    { 1, "Hành Động" },
-                    { 2, "Lãng Mạn" },
-                    { 3, "Kinh Dị" },
-                    { 4, "Hoạt Hình" },
-                    { 5, "Khoa Học Viễn Tưởng" }
+                    { "TLP001", "Hành Động" },
+                    { "TLP002", "Lãng Mạn" },
+                    { "TLP003", "Kinh Dị" },
+                    { "TLP004", "Hoạt Hình" },
+                    { "TLP005", "Khoa Học Viễn Tưởng" }
                 });
 
             migrationBuilder.InsertData(
@@ -468,14 +669,48 @@ namespace ProjectGSMAUI.Api.Migrations
 
             migrationBuilder.InsertData(
                 table: "Phim",
-                columns: new[] { "ID", "DaoDien", "GioiHanDoTuoi", "MoTa", "NgayKetThuc", "NgayKhoiChieu", "SoSuatChieu", "TenPhim", "TheLoai", "ThoiLuong", "TrangThai" },
+                columns: new[] { "ID", "DaoDien", "GioiHanDoTuoi", "MoTa", "NgayKetThuc", "NgayKhoiChieu", "PosterBase64", "SoSuatChieu", "TenPhim", "TheLoai", "ThoiLuong", "TrangThai" },
                 values: new object[,]
                 {
-                    { 1, "Director A", 13, "Action-packed movie about...", new DateOnly(2024, 2, 28), new DateOnly(2024, 1, 15), 5, "Action Movie 1", 1, 120, 1 },
-                    { 2, "Director B", 16, "A romantic story about...", new DateOnly(2024, 3, 15), new DateOnly(2024, 2, 1), 4, "Romantic Movie 1", 2, 110, 1 },
-                    { 3, "Director C", 18, "A terrifying horror film...", new DateOnly(2024, 3, 31), new DateOnly(2024, 3, 1), 3, "Horror Movie 1", 3, 95, 1 },
-                    { 4, "Director D", 0, "An animated adventure for...", new DateOnly(2024, 4, 15), new DateOnly(2024, 3, 20), 6, "Animated Movie 1", 4, 90, 1 },
-                    { 5, "Director E", 13, "A sci-fi epic about...", new DateOnly(2024, 4, 30), new DateOnly(2024, 4, 10), 5, "Sci-Fi Movie 1", 5, 135, 1 }
+                    { 1, "Director A", 13, "Action-packed movie about...", new DateOnly(2024, 2, 28), new DateOnly(2024, 1, 15), null, 50, "Action Movie 1", "TLP001", 120, 1 },
+                    { 2, "Director B", 16, "A romantic story about...", new DateOnly(2024, 3, 15), new DateOnly(2024, 2, 1), null, 40, "Romantic Movie 1", "TLP002", 110, 1 },
+                    { 3, "Director C", 18, "A terrifying horror film...", new DateOnly(2024, 3, 31), new DateOnly(2024, 3, 1), null, 35, "Horror Movie 1", "TLP003", 95, 1 },
+                    { 4, "Director D", 0, "An animated adventure for...", new DateOnly(2024, 4, 15), new DateOnly(2024, 3, 20), null, 15, "Animated Movie 1", "TLP004", 90, 1 },
+                    { 5, "Director E", 13, "A sci-fi epic about...", new DateOnly(2024, 4, 30), new DateOnly(2024, 4, 10), null, 22, "Sci-Fi Movie 1", "TLP005", 135, 1 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "LichChieu",
+                columns: new[] { "MaLichChieu", "GiaVe", "GioChieu", "MaPhim", "MaPhong", "NgayChieu", "TinhTrang" },
+                values: new object[,]
+                {
+                    { 1, 100000m, 1, 1, 1, new DateOnly(2025, 1, 8), true },
+                    { 2, 100000m, 2, 2, 2, new DateOnly(2025, 1, 9), true },
+                    { 3, 100000m, 3, 3, 3, new DateOnly(2025, 1, 10), true },
+                    { 4, 100000m, 4, 4, 4, new DateOnly(2025, 1, 11), true },
+                    { 5, 100000m, 5, 5, 5, new DateOnly(2025, 1, 12), true },
+                    { 6, 100000m, 6, 1, 6, new DateOnly(2025, 1, 13), true },
+                    { 7, 100000m, 1, 2, 1, new DateOnly(2025, 1, 14), true },
+                    { 8, 100000m, 2, 3, 2, new DateOnly(2025, 1, 15), true },
+                    { 9, 100000m, 3, 4, 3, new DateOnly(2025, 1, 16), true },
+                    { 10, 100000m, 4, 5, 4, new DateOnly(2025, 1, 17), true }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Ve",
+                columns: new[] { "MaVe", "MaGhe", "MaLichChieu", "MaPhim", "MaPhong", "TinhTrang" },
+                values: new object[,]
+                {
+                    { "1", "A1", 1, 1, 1, 1 },
+                    { "10", "A10", 10, 10, 10, 1 },
+                    { "2", "A2", 2, 2, 2, 1 },
+                    { "3", "A3", 3, 3, 3, 1 },
+                    { "4", "A4", 4, 4, 4, 1 },
+                    { "5", "A5", 5, 5, 5, 1 },
+                    { "6", "A6", 6, 6, 6, 1 },
+                    { "7", "A7", 7, 7, 7, 1 },
+                    { "8", "A8", 8, 8, 8, 1 },
+                    { "9", "A9", 9, 9, 9, 1 }
                 });
 
             migrationBuilder.CreateIndex(
@@ -487,6 +722,11 @@ namespace ProjectGSMAUI.Api.Migrations
                 name: "IX_ChiTietCombos_SanPhamId",
                 table: "ChiTietCombos",
                 column: "SanPhamId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ChiTietHoaDon_GheMaGhe",
+                table: "ChiTietHoaDon",
+                column: "GheMaGhe");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ChiTietHoaDon_MaGhe",
