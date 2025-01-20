@@ -20,6 +20,15 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 {
 	options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
 });
+builder.Services.AddDistributedMemoryCache(); // Thêm cache cho session
+
+// Cấu hình Session
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Thời gian timeout của session
+    options.Cookie.HttpOnly = true; // Chỉ cho phép truy cập cookie qua HTTP
+    options.Cookie.IsEssential = true; // Đảm bảo cookie luôn được lưu
+});
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient();
@@ -38,7 +47,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseSession();
 // Áp dụng CORS Policy
 app.UseCors("AllowSpecificOrigin");
 
