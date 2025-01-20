@@ -408,7 +408,6 @@
             formData.append("GioiTinh", $("input[name='GioiTinh']:checked").val());
             formData.append("ImageFile", $("#ImageFile")[0].files[0]);
             console.log(formData);
-            // Gửi AJAX
             $.ajax({
                 url: '/Admin/TaiKhoan/CreateCustomer', 
                 type: 'POST',
