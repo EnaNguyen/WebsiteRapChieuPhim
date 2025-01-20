@@ -42,7 +42,7 @@ namespace ProjectGSMAUI.Api.Container
             existingSanPham.TenSanPham = sanPham.TenSanPham;
             existingSanPham.Gia = sanPham.Gia;
             existingSanPham.MoTa = sanPham.MoTa;
-
+            _context.SanPhams.Update(existingSanPham);
             await _context.SaveChangesAsync();
         }
 

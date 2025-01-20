@@ -10,6 +10,5 @@ namespace ProjectGSMAUI.Api.Services
 		Task<APIResponse> Create(GiamGiaRequest data);
 		Task<APIResponse> Remove(int id);
 		Task<APIResponse> Update(GiamGiaRequest data, int id);
-
     }
 }

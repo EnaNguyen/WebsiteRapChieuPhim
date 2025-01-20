@@ -66,54 +66,6 @@ namespace ProjectGSMAUI.Api.Controllers
             }
         }
         [HttpPost("GenerateRefreshToken")]
-        public async Task<IActionResult> GenerateRefreshToken([FromBody] TokenResponse token)
-        {
-            var _refreshtoken = await _context.RefreshTokens.FirstOrDefaultAsync(item => item.refreshtoken == token.RefreshToken);
-            if (_refreshtoken == null)
-            {
-                return Unauthorized();
-            }
-
-            var tokenhandler = new JwtSecurityTokenHandler();
-            var tokenkey = Encoding.UTF8.GetBytes(this.jwtSettings.securitykey);
-            SecurityToken securityToken;
-
-            var principal = tokenhandler.ValidateToken(token.Token, new TokenValidationParameters
-            {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(tokenkey),
-                ValidateIssuer = false,
-                ValidateAudience = false,
-            }, out securityToken);
-
-            var _token = securityToken as JwtSecurityToken;
-            if (_token != null && _token.Header.Alg.Equals(SecurityAlgorithms.HmacSha256))
-            {
-                string username = principal.Identity?.Name;
-                var _existdata = await _context.RefreshTokens.FirstOrDefaultAsync(item =>
-                    item.UserID == username && item.refreshtoken == token.RefreshToken);
-
-                if (_existdata != null)
-                {
-                    var _newtoken = new JwtSecurityToken(
-                        claims: principal.Claims.ToArray(),
-                        expires: DateTime.Now.AddSeconds(7200),
-                        signingCredentials: new SigningCredentials(
-                            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.jwtSettings.securitykey)),
-                            SecurityAlgorithms.HmacSha256));
-
-                    var _finaltoken = tokenhandler.WriteToken(_newtoken);
-
-                    return Ok(new TokenResponse
-                    {
-                        Token = _finaltoken,
-                        RefreshToken = await this.refresh.GenerateToken(username)
-                    });
-                }
-            }
-
-            return Unauthorized();
-        }
 
         private string HashPassword(string password)
         {

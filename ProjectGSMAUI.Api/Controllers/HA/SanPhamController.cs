@@ -39,9 +39,8 @@ namespace ProjectGSMAUI.Api.Controllers
         }
 
         [HttpPut("UpdateSanPham")]
-        public async Task<IActionResult> UpdateSanPham(int id, SanPham sanPham)
-        {
-            if (id != sanPham.Id) return BadRequest("ID không khớp");
+        public async Task<IActionResult> UpdateSanPham(SanPham sanPham)
+        {           
             await _sanPhamService.UpdateSanPhamAsync(sanPham);
             return NoContent();
         }
