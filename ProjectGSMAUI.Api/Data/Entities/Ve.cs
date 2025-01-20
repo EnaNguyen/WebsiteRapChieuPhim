@@ -17,9 +17,13 @@ public partial class Ve
 
     public string? MaGhe { get; set; }
 
+    public DateTime? ThoiGianTao { get; set; }
+
     public virtual ICollection<ChiTietHoaDon> ChiTietHoaDons { get; set; } = new List<ChiTietHoaDon>();
 
     public virtual Ghe? MaGheNavigation { get; set; }
 
     public virtual LichChieu? MaLichChieuNavigation { get; set; }
+
+    public virtual Phim? MaPhimNavigation { get; set; }
 }

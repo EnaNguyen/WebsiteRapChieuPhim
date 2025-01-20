@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
 using ProjectGSMAUI.Api.Helper;
 using Microsoft.EntityFrameworkCore;
+using ProjectGSMAUI.Api.Data; // Changed from ProjectGSMAUI.Api.Container
 using ProjectGSMAUI.Api.Container;
-using ProjectGSMAUI.Api.Data;
-using ProjectGSMAUI.Api.Data.Entities;
 using ProjectGSMAUI.Api.Services;
 using Serilog;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,22 +12,27 @@ using ProjectGSMAUI.Api.Modal;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using ProjectGSMAUI.Api.Container;
+using System;
+
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ??
-    throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+ throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+
 // Add services to the container.
-builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString)); // Changed to AppDbContext
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IPhimService, PhimService>();
+builder.Services.AddScoped<IPhongService, PhongService>();
+builder.Services.AddScoped<IVeService, VeService>();
 builder.Services.AddScoped<IVoucherServices, VoucherServices>();
 builder.Services.AddScoped<IGiamGiaServices, TaiKhoanServices>();
 builder.Services.AddScoped<ITheLoaiPhimService, TheLoaiPhimService>();
 builder.Services.AddScoped<ILichChieuService, LichChieuService>();
-builder.Services.AddScoped<IVeService, VeService>();
 builder.Services.AddTransient<IRefreshHandler, RefreshHandler>();
 builder.Services.AddTransient<ITaiKhoanService, TaiKhoanService>();
 builder.Services.AddScoped<ISanPham, SanPhamService>();
@@ -58,11 +62,11 @@ IMapper mapper = automapper.CreateMapper();
 //builder.Services.AddCors(p => p.AddPolicy("corspolicy", build =>
 //{
 //    build.WithOrigins("https://domain1.com", "https://domain2.com").AllowAnyMethod().AllowAnyHeader();
-//}));
+// }));
 //builder.Services.AddCors(p => p.AddPolicy("corspolicy1", build =>
 //{
 //    build.WithOrigins("https://domain3.com").AllowAnyMethod().AllowAnyHeader();
-//}));
+// }));
 builder.Services.AddCors();
 
 builder.Services.AddRateLimiter(_ => _.AddFixedWindowLimiter(policyName: "fixedwindow", option =>
@@ -83,13 +87,17 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true; // Đảm bảo cookie luôn được lưu
 });
 
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+});
 string logpath = builder.Configuration.GetSection("Logging:LogPath").Value;
 var _logger = new LoggerConfiguration()
     .MinimumLevel.Information()
     .MinimumLevel.Override("microsoft", Serilog.Events.LogEventLevel.Warning)
     .Enrich.FromLogContext()
-    .WriteTo.File(logpath)
-    .CreateLogger();
+     .WriteTo.File(logpath)
+   .CreateLogger();
 builder.Logging.AddSerilog(_logger);
 
 var _jwtsetting = builder.Configuration.GetSection("JwtSettings");
@@ -105,10 +113,10 @@ if (app.Environment.IsDevelopment())
 
 //app.UseCors("corspolicy");
 app.UseCors(x => x
-                .AllowAnyMethod()
-                .AllowAnyHeader()
-                .SetIsOriginAllowed(origin => true) 
-                .AllowCredentials());
+    .AllowAnyMethod()
+    .AllowAnyHeader()
+   .SetIsOriginAllowed(origin => true)
+    .AllowCredentials());
 app.UseHttpsRedirection();
 app.UseSession();
 app.UseAuthentication();

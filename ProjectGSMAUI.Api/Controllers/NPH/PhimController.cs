@@ -1,63 +1,113 @@
-﻿    using Microsoft.AspNetCore.Mvc;
-    using ProjectGSMAUI.Api.Data.Entities;
-    using ProjectGSMAUI.Api.Services;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Mvc;
+using ProjectGSMAUI.Api.Container;
+using ProjectGSMAUI.Api.Data.Entities;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Linq;
 
-    namespace ProjectGSMAUI.Api.Controllers
+namespace ProjectGSMAUI.Api.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class PhimController : ControllerBase
     {
-        [Route("api/[controller]/[action]")]
-        [ApiController]
-        public class PhimController : ControllerBase
+        private readonly IPhimService _phimService;
+
+        private readonly ILogger<PhimController> _logger;
+        public PhimController(IPhimService phimService, ILogger<PhimController> logger)
         {
-            private readonly IPhimService _phimService;
+            _phimService = phimService;
+            _logger = logger;
+        }
 
-            public PhimController(IPhimService phimService)
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<object>>> GetPhims()
+        {
+            var phims = await _phimService.GetPhimsAsync();
+            var result = phims.Select(p => new
             {
-                _phimService = phimService;
-            }
-
-            [HttpGet]
-            public async Task<ActionResult<IEnumerable<Phim>>> GetAll()
-            {
-                var phims = await _phimService.GetAllAsync();
-                return Ok(phims);
-            }
-
-            [HttpGet("{id}")]
-            public async Task<ActionResult<Phim>> GetById(int id)
-            {
-                var phim = await _phimService.GetByIdAsync(id);
-                if (phim == null)
+                p.Id,
+                p.TenPhim,
+                p.TheLoai,
+                p.ThoiLuong,
+                p.DaoDien,
+                p.GioiHanDoTuoi,
+                p.NgayKhoiChieu,
+                p.NgayKetThuc,
+                p.SoXuatChieu,
+                p.TrangThai,
+                p.MoTa,
+                HinhAnh = p.HinhAnhs.FirstOrDefault() != null ? new
                 {
-                    return NotFound();
-                }
-                return Ok(phim);
-            }
+                    p.HinhAnhs.FirstOrDefault().Id,
+                    p.HinhAnhs.FirstOrDefault().ImageData
+                } : null
+            });
+            return Ok(result);
+        }
 
-            [HttpPost]
-            public async Task<ActionResult<Phim>> Create(Phim phim)
+        [HttpGet("GetById")]
+        public async Task<ActionResult<object>> GetPhim(int id)
+        {
+            var phim = await _phimService.GetPhimByIdAsync(id);
+            if (phim == null) return NotFound("Phim không tồn tại");
+            var result = new
             {
-                await _phimService.CreateAsync(phim);
-                return CreatedAtAction(nameof(GetById), new { id = phim.Id }, phim);
-            }
-
-            [HttpPut("{id}")]
-            public async Task<IActionResult> Update(int id, Phim phim)
-            {
-                if (id != phim.Id)
+                phim.Id,
+                phim.TenPhim,
+                phim.TheLoai,
+                phim.ThoiLuong,
+                phim.DaoDien,
+                phim.GioiHanDoTuoi,
+                phim.NgayKhoiChieu,
+                phim.NgayKetThuc,
+                phim.SoXuatChieu,
+                phim.TrangThai,
+                phim.MoTa,
+                HinhAnhs = phim.HinhAnhs.Select(h => new
                 {
-                    return BadRequest();
-                }
-                await _phimService.UpdateAsync(phim);
-                return NoContent();
+                    h.Id,
+                    h.ImageData
+                }).ToList()
+            };
+
+            return Ok(result);
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> CreatePhim([FromForm] Phim phim)
+        {
+            try
+            {
+                _logger.LogInformation($"Creating a new movie: {phim.TenPhim}");
+                await _phimService.CreatePhimAsync(phim);
+                _logger.LogInformation($"Created Movie: {phim.TenPhim}, id = {phim.Id}");
+                return CreatedAtAction(nameof(GetPhim), new { id = phim.Id }, phim);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while creating movie");
+                return StatusCode(500, new { message = "Đã xảy ra lỗi khi thêm mới phim. Lỗi: " + ex.Message });
             }
 
-            [HttpDelete("{id}")]
-            public async Task<IActionResult> Delete(int id)
-            {
-                await _phimService.DeleteAsync(id);
-                return NoContent();
-            }
+
+        }
+
+        [HttpPut("UpdatePhim")]
+        public async Task<IActionResult> UpdatePhim(int id, [FromForm] Phim phim)
+        {
+            if (id != phim.Id) return BadRequest("ID không khớp");
+            await _phimService.UpdatePhimAsync(phim);
+            return NoContent();
+        }
+
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletePhim(int id)
+        {
+            await _phimService.DeletePhimAsync(id);
+            return NoContent();
         }
     }
+}

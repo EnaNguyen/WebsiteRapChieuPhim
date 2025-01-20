@@ -9,8 +9,7 @@ public partial class HinhAnh
 
     public int? Phim { get; set; }
 
-    public string? Link { get; set; }
+    public byte[]? ImageData { get; set; }
 
     public virtual Phim? PhimNavigation { get; set; }
-    public byte[] HinhAnh1 { get; set; }
 }

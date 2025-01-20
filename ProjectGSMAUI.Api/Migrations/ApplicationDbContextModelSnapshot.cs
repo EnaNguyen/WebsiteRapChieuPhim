@@ -75,43 +75,6 @@ namespace ProjectGSMAUI.Api.Migrations
                     b.HasIndex("MaVe");
 
                     b.ToTable("ChiTietHoaDon", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            MaChiTietHoaDon = 1,
-                            Gia = 250000,
-                            MaHoaDon = 1,
-                            MaVe = "1"
-                        },
-                        new
-                        {
-                            MaChiTietHoaDon = 2,
-                            Gia = 250000,
-                            MaHoaDon = 1,
-                            MaVe = "2"
-                        },
-                        new
-                        {
-                            MaChiTietHoaDon = 3,
-                            Gia = 260000,
-                            MaHoaDon = 2,
-                            MaVe = "3"
-                        },
-                        new
-                        {
-                            MaChiTietHoaDon = 4,
-                            Gia = 260000,
-                            MaHoaDon = 2,
-                            MaVe = "4"
-                        },
-                        new
-                        {
-                            MaChiTietHoaDon = 5,
-                            Gia = 270000,
-                            MaHoaDon = 3,
-                            MaVe = "5"
-                        });
                 });
 
             modelBuilder.Entity("ProjectGSMAUI.Api.Data.Entities.Combo", b =>
@@ -1499,11 +1462,7 @@ namespace ProjectGSMAUI.Api.Migrations
                         .HasColumnName("ID")
                         .IsFixedLength();
 
-                    b.Property<byte[]>("HinhAnh1")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<string>("Link")
+                    b.Property<string>("ImageData")
                         .HasColumnType("text");
 
                     b.Property<int?>("Phim")
@@ -1551,103 +1510,6 @@ namespace ProjectGSMAUI.Api.Migrations
                     b.HasIndex("MaKhachHang");
 
                     b.ToTable("HoaDon", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            MaHoaDon = 1,
-                            MaDatVe = 101,
-                            MaGiamGia = 1,
-                            MaKhachHang = "TK001",
-                            NgayXuat = new DateOnly(2023, 12, 1),
-                            TinhTrang = 1,
-                            TongTien = 500000
-                        },
-                        new
-                        {
-                            MaHoaDon = 2,
-                            MaDatVe = 102,
-                            MaKhachHang = "TK001",
-                            NgayXuat = new DateOnly(2023, 12, 2),
-                            TinhTrang = 0,
-                            TongTien = 520000
-                        },
-                        new
-                        {
-                            MaHoaDon = 3,
-                            MaDatVe = 103,
-                            MaGiamGia = 2,
-                            MaKhachHang = "TK001",
-                            NgayXuat = new DateOnly(2023, 12, 3),
-                            TinhTrang = 1,
-                            TongTien = 530000
-                        },
-                        new
-                        {
-                            MaHoaDon = 4,
-                            MaDatVe = 104,
-                            MaKhachHang = "TK001",
-                            NgayXuat = new DateOnly(2023, 12, 4),
-                            TinhTrang = 0,
-                            TongTien = 540000
-                        },
-                        new
-                        {
-                            MaHoaDon = 5,
-                            MaDatVe = 105,
-                            MaGiamGia = 3,
-                            MaKhachHang = "TK001",
-                            NgayXuat = new DateOnly(2023, 12, 5),
-                            TinhTrang = 1,
-                            TongTien = 550000
-                        },
-                        new
-                        {
-                            MaHoaDon = 6,
-                            MaDatVe = 106,
-                            MaKhachHang = "TK001",
-                            NgayXuat = new DateOnly(2023, 12, 6),
-                            TinhTrang = 0,
-                            TongTien = 560000
-                        },
-                        new
-                        {
-                            MaHoaDon = 7,
-                            MaDatVe = 107,
-                            MaGiamGia = 4,
-                            MaKhachHang = "TK001",
-                            NgayXuat = new DateOnly(2023, 12, 7),
-                            TinhTrang = 1,
-                            TongTien = 570000
-                        },
-                        new
-                        {
-                            MaHoaDon = 8,
-                            MaDatVe = 108,
-                            MaKhachHang = "TK001",
-                            NgayXuat = new DateOnly(2023, 12, 8),
-                            TinhTrang = 0,
-                            TongTien = 580000
-                        },
-                        new
-                        {
-                            MaHoaDon = 9,
-                            MaDatVe = 109,
-                            MaGiamGia = 5,
-                            MaKhachHang = "TK001",
-                            NgayXuat = new DateOnly(2023, 12, 9),
-                            TinhTrang = 1,
-                            TongTien = 590000
-                        },
-                        new
-                        {
-                            MaHoaDon = 10,
-                            MaDatVe = 110,
-                            MaKhachHang = "TK001",
-                            NgayXuat = new DateOnly(2023, 12, 10),
-                            TinhTrang = 0,
-                            TongTien = 600000
-                        });
                 });
 
             modelBuilder.Entity("ProjectGSMAUI.Api.Data.Entities.KhungGio", b =>
@@ -1849,8 +1711,10 @@ namespace ProjectGSMAUI.Api.Migrations
             modelBuilder.Entity("ProjectGSMAUI.Api.Data.Entities.Phim", b =>
                 {
                     b.Property<int>("Id")
-                        .HasColumnType("int")
-                        .HasColumnName("ID");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("DaoDien")
                         .HasMaxLength(50)
@@ -1868,7 +1732,7 @@ namespace ProjectGSMAUI.Api.Migrations
                     b.Property<DateOnly?>("NgayKhoiChieu")
                         .HasColumnType("date");
 
-                    b.Property<int?>("SoSuatChieu")
+                    b.Property<int?>("SoXuatChieu")
                         .HasColumnType("int");
 
                     b.Property<string>("TenPhim")
@@ -1900,7 +1764,7 @@ namespace ProjectGSMAUI.Api.Migrations
                             MoTa = "Action-packed movie about...",
                             NgayKetThuc = new DateOnly(2024, 2, 28),
                             NgayKhoiChieu = new DateOnly(2024, 1, 15),
-                            SoSuatChieu = 50,
+                            SoXuatChieu = 50,
                             TenPhim = "Action Movie 1",
                             TheLoai = "TLP001",
                             ThoiLuong = 120,
@@ -1914,7 +1778,7 @@ namespace ProjectGSMAUI.Api.Migrations
                             MoTa = "A romantic story about...",
                             NgayKetThuc = new DateOnly(2024, 3, 15),
                             NgayKhoiChieu = new DateOnly(2024, 2, 1),
-                            SoSuatChieu = 40,
+                            SoXuatChieu = 40,
                             TenPhim = "Romantic Movie 1",
                             TheLoai = "TLP002",
                             ThoiLuong = 110,
@@ -1928,7 +1792,7 @@ namespace ProjectGSMAUI.Api.Migrations
                             MoTa = "A terrifying horror film...",
                             NgayKetThuc = new DateOnly(2024, 3, 31),
                             NgayKhoiChieu = new DateOnly(2024, 3, 1),
-                            SoSuatChieu = 35,
+                            SoXuatChieu = 35,
                             TenPhim = "Horror Movie 1",
                             TheLoai = "TLP003",
                             ThoiLuong = 95,
@@ -1942,7 +1806,7 @@ namespace ProjectGSMAUI.Api.Migrations
                             MoTa = "An animated adventure for...",
                             NgayKetThuc = new DateOnly(2024, 4, 15),
                             NgayKhoiChieu = new DateOnly(2024, 3, 20),
-                            SoSuatChieu = 15,
+                            SoXuatChieu = 15,
                             TenPhim = "Animated Movie 1",
                             TheLoai = "TLP004",
                             ThoiLuong = 90,
@@ -1956,7 +1820,7 @@ namespace ProjectGSMAUI.Api.Migrations
                             MoTa = "A sci-fi epic about...",
                             NgayKetThuc = new DateOnly(2024, 4, 30),
                             NgayKhoiChieu = new DateOnly(2024, 4, 10),
-                            SoSuatChieu = 22,
+                            SoXuatChieu = 22,
                             TenPhim = "Sci-Fi Movie 1",
                             TheLoai = "TLP005",
                             ThoiLuong = 135,
@@ -2165,7 +2029,7 @@ namespace ProjectGSMAUI.Api.Migrations
                             Email = "nguyenquangquyX@gmail.com",
                             GioiTinh = true,
                             MatKhau = "8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92",
-                            NgayDangKy = new DateOnly(2025, 1, 7),
+                            NgayDangKy = new DateOnly(2025, 1, 17),
                             NgaySinh = new DateOnly(1999, 5, 19),
                             Sdt = "0973713274",
                             TenNguoiDung = "Quản trị viên",
@@ -2235,8 +2099,14 @@ namespace ProjectGSMAUI.Api.Migrations
                     b.Property<int?>("MaPhim")
                         .HasColumnType("int");
 
+                    b.Property<int?>("MaPhimNavigationId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("MaPhong")
                         .HasColumnType("int");
+
+                    b.Property<DateTime?>("ThoiGianTao")
+                        .HasColumnType("datetime2");
 
                     b.Property<int?>("TinhTrang")
                         .HasColumnType("int");
@@ -2248,99 +2118,9 @@ namespace ProjectGSMAUI.Api.Migrations
 
                     b.HasIndex("MaLichChieu");
 
-                    b.ToTable("Ve", (string)null);
+                    b.HasIndex("MaPhimNavigationId");
 
-                    b.HasData(
-                        new
-                        {
-                            MaVe = "1",
-                            MaGhe = "A1",
-                            MaLichChieu = 1,
-                            MaPhim = 1,
-                            MaPhong = 1,
-                            TinhTrang = 1
-                        },
-                        new
-                        {
-                            MaVe = "2",
-                            MaGhe = "A2",
-                            MaLichChieu = 2,
-                            MaPhim = 2,
-                            MaPhong = 2,
-                            TinhTrang = 1
-                        },
-                        new
-                        {
-                            MaVe = "3",
-                            MaGhe = "A3",
-                            MaLichChieu = 3,
-                            MaPhim = 3,
-                            MaPhong = 3,
-                            TinhTrang = 1
-                        },
-                        new
-                        {
-                            MaVe = "4",
-                            MaGhe = "A4",
-                            MaLichChieu = 4,
-                            MaPhim = 4,
-                            MaPhong = 4,
-                            TinhTrang = 1
-                        },
-                        new
-                        {
-                            MaVe = "5",
-                            MaGhe = "A5",
-                            MaLichChieu = 5,
-                            MaPhim = 5,
-                            MaPhong = 5,
-                            TinhTrang = 1
-                        },
-                        new
-                        {
-                            MaVe = "6",
-                            MaGhe = "A6",
-                            MaLichChieu = 6,
-                            MaPhim = 6,
-                            MaPhong = 6,
-                            TinhTrang = 1
-                        },
-                        new
-                        {
-                            MaVe = "7",
-                            MaGhe = "A7",
-                            MaLichChieu = 7,
-                            MaPhim = 7,
-                            MaPhong = 7,
-                            TinhTrang = 1
-                        },
-                        new
-                        {
-                            MaVe = "8",
-                            MaGhe = "A8",
-                            MaLichChieu = 8,
-                            MaPhim = 8,
-                            MaPhong = 8,
-                            TinhTrang = 1
-                        },
-                        new
-                        {
-                            MaVe = "9",
-                            MaGhe = "A9",
-                            MaLichChieu = 9,
-                            MaPhim = 9,
-                            MaPhong = 9,
-                            TinhTrang = 1
-                        },
-                        new
-                        {
-                            MaVe = "10",
-                            MaGhe = "A10",
-                            MaLichChieu = 10,
-                            MaPhim = 10,
-                            MaPhong = 10,
-                            TinhTrang = 1
-                        });
+                    b.ToTable("Ve", (string)null);
                 });
 
             modelBuilder.Entity("ProjectGSMAUI.Api.Data.Entities.Video", b =>
@@ -2399,7 +2179,7 @@ namespace ProjectGSMAUI.Api.Migrations
                     b.HasOne("ProjectGSMAUI.Api.Data.Entities.Ve", "MaVeNavigation")
                         .WithMany("ChiTietHoaDons")
                         .HasForeignKey("MaVe")
-                        .HasConstraintName("FK__ChiTietHo__MaGhe__59FA5E80");
+                        .HasConstraintName("FK__ChiTietHo__MaVe__59FA5E80");
 
                     b.Navigation("MaHoaDonNavigation");
 
@@ -2506,9 +2286,15 @@ namespace ProjectGSMAUI.Api.Migrations
                         .HasForeignKey("MaLichChieu")
                         .HasConstraintName("FK__Ve__MaLichChieu__49C3F6B7");
 
+                    b.HasOne("ProjectGSMAUI.Api.Data.Entities.Phim", "MaPhimNavigation")
+                        .WithMany()
+                        .HasForeignKey("MaPhimNavigationId");
+
                     b.Navigation("MaGheNavigation");
 
                     b.Navigation("MaLichChieuNavigation");
+
+                    b.Navigation("MaPhimNavigation");
                 });
 
             modelBuilder.Entity("ProjectGSMAUI.Api.Data.Entities.Video", b =>
