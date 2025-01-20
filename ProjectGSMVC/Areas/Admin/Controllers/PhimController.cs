@@ -1,129 +1,58 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using System.Text;
-using ProjectGSMVC.Areas.Admin.Models;
 using ProjectGSMAUI.Api.Data.Entities;
-using Microsoft.EntityFrameworkCore;
+using ProjectGSMVC.Areas.Admin.Models;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
+using System.Linq;
+
 
 namespace ProjectGSMVC.Areas.Admin.Controllers
 {
     [Area("Admin")]
     public class PhimController : Controller
     {
-        Uri baseAddress = new Uri("https://localhost:7141/api");
         private readonly HttpClient _httpClient;
-
-        public PhimController()
+        private readonly string _baseApiUrl = "https://localhost:7141/api/Phim";
+        private readonly string _baseTheLoaiApiUrl = "https://localhost:7141/api/TheLoaiPhim";
+        public PhimController(HttpClient httpClient)
         {
-            _httpClient = new HttpClient();
-            _httpClient.BaseAddress = baseAddress;
+            _httpClient = httpClient;
         }
-        private readonly PhimController _context;
-
-        public PhimController(PhimController context) // Inject the DbContext here
-        {
-            _context = context;
-        }
-
-        
-
 
         [HttpGet]
-        public IActionResult Index(string searching = null)
+        public async Task<IActionResult> Index(string searching = null)
         {
-            List<PhimViewModel> phimList = new List<PhimViewModel>();
-            string url = string.IsNullOrEmpty(searching)
-                ? $"{_httpClient.BaseAddress}/Phim/GetAll"
-                : $"{_httpClient.BaseAddress}/Phim/GetAll?Name={Uri.EscapeDataString(searching)}";
-
-            HttpResponseMessage response = _httpClient.GetAsync(url).Result;
-
-            if (response.IsSuccessStatusCode)
-            {
-                string data = response.Content.ReadAsStringAsync().Result;
-                phimList = JsonConvert.DeserializeObject<List<PhimViewModel>>(data);
-            }
-            else
-            {
-                string apiError = response.Content.ToString();
-                return BadRequest(new { message = $"Lỗi từ API: {apiError}" });
-            }
-            ViewData["ListPhim"] = phimList;
-            ViewData["Searching"] = searching;
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Create([FromForm] PhimViewModel data)
-        {
-            var errors = new Dictionary<string, string>();
-
-            // Validation
-            if (string.IsNullOrEmpty(data.TenPhim))
-            {
-                errors["TenPhim"] = "Tên phim không được để trống.";
-            }
-
-            if (string.IsNullOrEmpty(data.TheLoai))
-            {
-                errors["TheLoai"] = "Thể loại không được để trống.";
-            }
-
-            if (data.ThoiLuong <= 0)
-            {
-                errors["ThoiLuong"] = "Thời lượng phải lớn hơn 0 phút.";
-            }
-
-            if (string.IsNullOrEmpty(data.DaoDien))
-            {
-                errors["DaoDien"] = "Đạo diễn không được để trống.";
-            }
-
-            if (data.GioiHanDoTuoi <= 0)
-            {
-                errors["GioiHanDoTuoi"] = "Giới hạn độ tuổi phải lớn hơn 0.";
-            }
-
-            if (data.NgayKhoiChieu == null || data.NgayKhoiChieu < DateOnly.FromDateTime(DateTime.Today))
-            {
-                errors["NgayKhoiChieu"] = "Ngày khởi chiếu không hợp lệ.";
-            }
-
-            if (data.NgayKetThuc == null || data.NgayKhoiChieu > data.NgayKetThuc)
-            {
-                errors["NgayKetThuc"] = "Ngày kết thúc phải sau ngày khởi chiếu.";
-            }
-
-            if (data.ImageFile == null || data.ImageFile.Length == 0)
-            {
-                errors["ImageFile"] = "Poster phim không được để trống.";
-            }
-
-            if (errors.Count > 0)
-            {
-                return BadRequest(errors);
-            }
+            List<PhimModel> danhSachPhim = new List<PhimModel>();
+            List<TheLoaiPhimViewModel> danhSachTheLoai = new List<TheLoaiPhimViewModel>();
 
             try
             {
-                using (var memoryStream = new MemoryStream())
-                {
-                    await data.ImageFile.CopyToAsync(memoryStream);
-                    byte[] imageBytes = memoryStream.ToArray();
-                    data.ImageBase64 = Convert.ToBase64String(imageBytes);
-                }
+                string url = string.IsNullOrEmpty(searching)
+                    ? $"{_baseApiUrl}"
+                    : $"{_baseApiUrl}?Name={Uri.EscapeDataString(searching)}";
 
-                var jsonContent = new StringContent(
-                    JsonConvert.SerializeObject(data),
-                    Encoding.UTF8,
-                    "application/json"
-                );
-
-                var response = await _httpClient.PostAsync("/api/Phim/Create", jsonContent);
+                HttpResponseMessage response = await _httpClient.GetAsync(url);
 
                 if (response.IsSuccessStatusCode)
                 {
-                    return Json(new { success = true });
+                    string data = await response.Content.ReadAsStringAsync();
+                    danhSachPhim = JsonConvert.DeserializeObject<List<PhimModel>>(data);
+                }
+                else
+                {
+                    string apiError = await response.Content.ReadAsStringAsync();
+                    return BadRequest(new { message = $"Lỗi từ API: {apiError}" });
+                }
+                response = await _httpClient.GetAsync($"{_baseTheLoaiApiUrl}");
+                if (response.IsSuccessStatusCode)
+                {
+                    string data = await response.Content.ReadAsStringAsync();
+                    danhSachTheLoai = JsonConvert.DeserializeObject<List<TheLoaiPhimViewModel>>(data);
                 }
                 else
                 {
@@ -133,7 +62,88 @@ namespace ProjectGSMVC.Areas.Admin.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Đã xảy ra lỗi trong quá trình xử lý: {ex.Message}");
+                return BadRequest(new { message = $"Đã xảy ra lỗi: {ex.Message}" });
+            }
+            ViewData["ListTheLoai"] = danhSachTheLoai;
+            ViewData["ListPhim"] = danhSachPhim;
+            ViewData["Searching"] = searching;
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create([FromForm] PhimModel model)
+        {
+            try
+            {
+                var errors = new Dictionary<string, string>();
+                if (string.IsNullOrWhiteSpace(model.TenPhim))
+                {
+                    errors["TenPhim"] = "Tên phim không được để trống.";
+                }
+
+                if (model.ThoiLuong <= 0)
+                {
+                    errors["ThoiLuong"] = "Thời lượng phim phải lớn hơn 0.";
+                }
+                if (model.GioiHanDoTuoi <= 0)
+                {
+                    errors["GioiHanDoTuoi"] = "Giới hạn độ tuổi phải lớn hơn 0.";
+                }
+                if (model.SoXuatChieu <= 0)
+                {
+                    errors["SoXuatChieu"] = "Số xuất chiếu phải lớn hơn 0.";
+                }
+                if (model.ImageFiles == null || model.ImageFiles.Count == 0)
+                {
+                    errors["ImageFiles"] = "Hình ảnh không được để trống.";
+                }
+                if (errors.Count > 0)
+                {
+                    return BadRequest(errors);
+                }
+                var phimMoi = new Phim()
+                {
+                    Id = model.Id,
+                    TenPhim = model.TenPhim,
+                    TheLoai = model.TheLoai,
+                    ThoiLuong = model.ThoiLuong,
+                    DaoDien = model.DaoDien,
+                    GioiHanDoTuoi = model.GioiHanDoTuoi,
+                    NgayKhoiChieu = model.NgayKhoiChieu,
+                    NgayKetThuc = model.NgayKetThuc,
+                    SoXuatChieu = model.SoXuatChieu,
+                    TrangThai = model.TrangThai,
+                    MoTa = model.MoTa,
+
+                };
+                if (model.ImageFiles != null && model.ImageFiles.Any())
+                {
+                    phimMoi.ImageFiles = new List<IFormFile>();
+                    foreach (var file in model.ImageFiles)
+                    {
+                        phimMoi.ImageFiles.Add(file);
+                    }
+                }
+
+
+                var json = JsonConvert.SerializeObject(phimMoi, Formatting.Indented, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await _httpClient.PostAsync(_baseApiUrl, content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return Json(new { success = true });
+                }
+                else
+                {
+                    var error = await response.Content.ReadAsStringAsync();
+                    return Json(new { success = false, message = error });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = $"Đã xảy ra lỗi trong quá trình thêm mới phim. Lỗi: {ex.Message}" });
             }
         }
 
@@ -142,154 +152,111 @@ namespace ProjectGSMVC.Areas.Admin.Controllers
         {
             try
             {
-                var response = await _httpClient.GetAsync($"{_httpClient.BaseAddress}/Phim/GetByID?id={id}");
-
+                var response = await _httpClient.GetAsync($"{_baseApiUrl}/GetById?id={id}");
                 if (!response.IsSuccessStatusCode)
                 {
-                    string apiError = await response.Content.ReadAsStringAsync();
-                    return BadRequest(new { message = $"Lỗi từ API: {apiError}" });
+                    return Json(new { success = false, message = "Không tìm thấy phim." });
                 }
-
-                var jsonResponse = await response.Content.ReadAsStringAsync();
-                var phim = JsonConvert.DeserializeObject<PhimViewModel>(jsonResponse);
-
-                if (phim == null)
-                {
-                    return Json(new { success = false, message = "Không tìm thấy thông tin phim." });
-                }
-
-                return Json(new
-                {
-                    success = true,
-                    data = new
-                    {
-                        phim.Id,
-                        phim.TenPhim,
-                        phim.TheLoai,
-                        phim.ThoiLuong,
-                        phim.DaoDien,
-                        phim.GioiHanDoTuoi,
-                        phim.NgayKhoiChieu,
-                        phim.NgayKetThuc,
-                        phim.SoSuatChieu,
-                        phim.TrangThai,
-                        phim.MoTa,
-                        HinhAnh = phim.ImageBase64,
-                        phim.HinhAnhs,
-                        phim.LichChieus,
-                        phim.Videos
-                    }
-                });
+                var content = await response.Content.ReadAsStringAsync();
+                var phim = JsonConvert.DeserializeObject<Phim>(content);
+                return Json(new { success = true, data = phim });
             }
             catch (Exception ex)
             {
-                return Json(new { success = false, message = $"Lỗi: {ex.Message}" });
+                return Json(new { success = false, message = $"Đã xảy ra lỗi trong quá trình lấy thông tin phim. Lỗi: {ex.Message}" });
             }
         }
 
         [HttpPost]
-        public async Task<IActionResult> Update(int id, [FromForm] PhimViewModel data)
+        public async Task<IActionResult> Update([FromForm] PhimModel model)
         {
             var errors = new Dictionary<string, string>();
-
-            if (string.IsNullOrEmpty(data.TenPhim))
+            if (string.IsNullOrWhiteSpace(model.TenPhim))
             {
                 errors["TenPhim"] = "Tên phim không được để trống.";
             }
 
-            if (string.IsNullOrEmpty(data.TheLoai))
+            if (model.ThoiLuong <= 0)
             {
-                errors["TheLoai"] = "Thể loại không được để trống.";
+                errors["ThoiLuong"] = "Thời lượng phim phải lớn hơn 0.";
             }
-
-            if (data.ThoiLuong <= 0)
-            {
-                errors["ThoiLuong"] = "Thời lượng phải lớn hơn 0 phút.";
-            }
-
-            if (string.IsNullOrEmpty(data.DaoDien))
-            {
-                errors["DaoDien"] = "Đạo diễn không được để trống.";
-            }
-
-            if (data.GioiHanDoTuoi <= 0)
+            if (model.GioiHanDoTuoi <= 0)
             {
                 errors["GioiHanDoTuoi"] = "Giới hạn độ tuổi phải lớn hơn 0.";
             }
-
-            if (data.NgayKhoiChieu == null || data.NgayKhoiChieu < DateOnly.FromDateTime(DateTime.Today))
+            if (model.SoXuatChieu <= 0)
             {
-                errors["NgayKhoiChieu"] = "Ngày khởi chiếu không hợp lệ.";
+                errors["SoXuatChieu"] = "Số xuất chiếu phải lớn hơn 0.";
             }
-
-            if (data.NgayKetThuc == null || data.NgayKhoiChieu > data.NgayKetThuc)
-            {
-                errors["NgayKetThuc"] = "Ngày kết thúc phải sau ngày khởi chiếu.";
-            }
-
             if (errors.Count > 0)
             {
                 return BadRequest(errors);
             }
-
             try
             {
-                if (data.ImageFile != null && data.ImageFile.Length > 0)
+                var phimMoi = new Phim()
                 {
-                    using (var memoryStream = new MemoryStream())
+                    Id = model.Id,
+                    TenPhim = model.TenPhim,
+                    TheLoai = model.TheLoai,
+                    ThoiLuong = model.ThoiLuong,
+                    DaoDien = model.DaoDien,
+                    GioiHanDoTuoi = model.GioiHanDoTuoi,
+                    NgayKhoiChieu = model.NgayKhoiChieu,
+                    NgayKetThuc = model.NgayKetThuc,
+                    SoXuatChieu = model.SoXuatChieu,
+                    TrangThai = model.TrangThai,
+                    MoTa = model.MoTa
+                };
+                if (model.ImageFiles != null && model.ImageFiles.Any())
+                {
+                    phimMoi.ImageFiles = new List<IFormFile>();
+                    foreach (var file in model.ImageFiles)
                     {
-                        await data.ImageFile.CopyToAsync(memoryStream);
-                        byte[] imageBytes = memoryStream.ToArray();
-                        data.ImageBase64 = Convert.ToBase64String(imageBytes);
+                        phimMoi.ImageFiles.Add(file);
                     }
                 }
-                else
-                {
-                    var existingPhim = await _httpClient.GetAsync($"{_httpClient.BaseAddress}/Phim/GetByID?id={id}");
-                    var jsonResponse = await existingPhim.Content.ReadAsStringAsync();
-                    var currentPhim = JsonConvert.DeserializeObject<PhimViewModel>(jsonResponse);
-                    data.ImageBase64 = currentPhim.ImageBase64;
-                }
 
-                data.Id = id;
-                var jsonContent = new StringContent(
-                    JsonConvert.SerializeObject(data),
-                    Encoding.UTF8,
-                    "application/json"
-                );
+                var json = JsonConvert.SerializeObject(phimMoi, Formatting.Indented, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var response = await _httpClient.PutAsync($"/api/Phim/Update", jsonContent);
-
+                var response = await _httpClient.PutAsync(_baseApiUrl + "/UpdatePhim", content);
                 if (response.IsSuccessStatusCode)
                 {
                     return Json(new { success = true });
                 }
                 else
                 {
-                    string apiError = await response.Content.ReadAsStringAsync();
-                    return BadRequest(new { message = $"Lỗi từ API: {apiError}" });
+                    var error = await response.Content.ReadAsStringAsync();
+                    return Json(new { success = false, message = error });
                 }
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Đã xảy ra lỗi trong quá trình xử lý: {ex.Message}");
+                return Json(new { success = false, message = $"Đã xảy ra lỗi trong quá trình cập nhật phim. Lỗi: {ex.Message}" });
             }
         }
+
 
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
-            string url = $"{_httpClient.BaseAddress}/Phim/Remove?ID={Uri.EscapeDataString(id.ToString())}";
-            HttpResponseMessage response = _httpClient.DeleteAsync(url).Result;
-
-            if (response.IsSuccessStatusCode)
+            try
             {
-                return Json(new { success = true, message = "Xóa phim thành công!" });
+                var response = await _httpClient.DeleteAsync($"{_baseApiUrl}/{id}");
+                if (response.IsSuccessStatusCode)
+                {
+                    return Json(new { success = true, message = "Xóa phim thành công." });
+                }
+                else
+                {
+                    var error = await response.Content.ReadAsStringAsync();
+                    return Json(new { success = false, message = error });
+                }
             }
-            else
+            catch (Exception ex)
             {
-                string apiError = await response.Content.ReadAsStringAsync();
-                return BadRequest(new { message = $"Lỗi từ API: {apiError}" });
+                return Json(new { success = false, message = $"Đã xảy ra lỗi trong quá trình xóa phim. Lỗi: {ex.Message}" });
             }
         }
     }

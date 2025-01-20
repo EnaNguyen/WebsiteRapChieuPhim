@@ -1,8 +1,549 @@
-﻿
+﻿@using ProjectGSMAUI.Api.Data.Entities
+@using ProjectGSMAUI.MVC.Models
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    var VeList = ViewData["ListVe"] as List<Ve>;
+    var Searching = ViewData["Searching"] as string;
+    var FilterDate = ViewData["FilterDate"] as DateTime?;
+    int currentPage = (int)ViewData["CurrentPage"];
+    int pageSize = 10;
+    int totalPages = (int)Math.Ceiling((double)(VeList?.Count ?? 0) / pageSize);
+    var phongList = ViewData["PhongList"] as List<Phong>;
+    var phimList = ViewData["PhimList"] as List<Phim>;
 }
 
-<h1>Index</h1>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
 
+<div class="pd-ltr-20 xs-pd-20-10">
+    <div class="min-height-200px">
+        <div class="page-header">
+            <div class="row">
+                <div class="col-md-12 col-sm-12">
+                    <div class="title">
+                        <h4>Quản lý Vé</h4>
+                    </div>
+                    <nav aria-label="breadcrumb" role="navigation">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="/Admin/Home/Index">Trang Chủ</a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">
+                                Quản lý Vé
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <div class="container mt-3" style="margin-top: 40px; margin-bottom: 40px">
+            <div class="container">
+                <div class="row">
+                    <div class="col-4">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal" id="ThemVeModal">
+                            Thêm Vé Mới
+                        </button>
+                    </div>
+                    <div class="col-4" style="text-align:center">
+                        <input type="date" id="FilterDate" value="@(FilterDate?.ToString("yyyy-MM-dd"))" style="height: 40px;  border-radius: 5px; padding-left:20px; padding-right: 20px" />
+                    </div>
+                    <div class="col-4" style="text-align: right">
+                        <input type="text" name="searching" id="Searching" placeholder="Tìm mã vé..." style="height: 40px; width: 200px; border-radius: 5px; padding-left:20px; padding-right: 20px" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="ticket-container" class="row clearfix">
+            @* Ticket cards will be loaded here *@
+        </div>
+        <div class="d-flex justify-content-center mt-4">
+            <nav aria-label="Page navigation">
+                <ul class="pagination" id="pagination-container">
+                    @if (currentPage > 1)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" href="javascript:void(0);" data-page="@(currentPage - 1)" aria-label="Previous">
+                                <span aria-hidden="true">«</span>
+                            </a>
+                        </li>
+                    }
+                    @for (int i = 1; i <= totalPages; i++)
+                    {
+                        <li class="page-item @(i == currentPage ? "active" : "")">
+                            <a class="page-link" href="javascript:void(0);" data-page="@i">@i</a>
+                        </li>
+                    }
+                    @if (currentPage < totalPages)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" href="javascript:void(0);" data-page="@(currentPage + 1)" aria-label="Next">
+                                <span aria-hidden="true">»</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Thêm Vé Mới</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group" style="display:none">
+                            <label for="MaVe">Mã Vé</label>
+                            <input type="text" class="form-control" id="MaVe" placeholder="Nhập mã vé" />
+                            <h6 id="MaVeError" class="text-danger"></h6>
+                        </div>
+                        <div class="form-group">
+                            <label for="MaLichChieu">Mã Lịch Chiếu</label>
+                            <input type="number" class="form-control" id="MaLichChieu" placeholder="Nhập mã lịch chiếu" />
+                            <h6 id="MaLichChieuError" class="text-danger"></h6>
+                        </div>
+                        <div class="form-group">
+                            <label for="MaPhong">Mã Phòng</label>
+                            <select class="form-control" id="MaPhong">
+                                <option value="">--Chọn phòng--</option>
+                            </select>
+                            <h6 id="MaPhongError" class="text-danger"></h6>
+                        </div>
+                        <div class="form-group" style="display:none">
+                            <label for="ThoiGianTao">Thời Gian Tạo</label>
+                            <input type="datetime-local" class="form-control" id="ThoiGianTao" />
+                            <h6 id="ThoiGianTaoError" class="text-danger"></h6>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="MaPhim">Mã Phim</label>
+                            <select class="form-control" id="MaPhim">
+                                <option value="">--Chọn phim--</option>
+                            </select>
+                            <h6 id="MaPhimError" class="text-danger"></h6>
+                        </div>
+                        <div class="form-group">
+                            <label for="MaGhe">Mã Ghế</label>
+                            <input type="text" class="form-control" id="MaGhe" placeholder="Nhập mã ghế" />
+                            <h6 id="MaGheError" class="text-danger"></h6>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnAddVe">Thêm Mới</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="myModal1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Cập Nhật Vé</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="MaVe1">Mã Vé</label>
+                            <input type="text" class="form-control" id="MaVe1" readonly />
+                            <h6 id="MaVe1Error" class="text-danger"></h6>
+                        </div>
+                        <div class="form-group">
+                            <label for="MaLichChieu1">Mã Lịch Chiếu</label>
+                            <input type="number" class="form-control" id="MaLichChieu1" placeholder="Nhập mã lịch chiếu" />
+                            <h6 id="MaLichChieu1Error" class="text-danger"></h6>
+                        </div>
+                        <div class="form-group">
+                            <label for="MaPhong1">Mã Phòng</label>
+                            <select class="form-control" id="MaPhong1">
+                                <option value="">--Chọn phòng--</option>
+                            </select>
+                            <h6 id="MaPhong1Error" class="text-danger"></h6>
+                        </div>
+                        <div class="form-group">
+                            <label for="ThoiGianTao1">Thời Gian Tạo</label>
+                            <input type="datetime-local" class="form-control" id="ThoiGianTao1" readonly />
+                            <h6 id="ThoiGianTao1Error" class="text-danger"></h6>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="MaPhim1">Mã Phim</label>
+                            <select class="form-control" id="MaPhim1">
+                                <option value="">--Chọn phim--</option>
+                            </select>
+                            <h6 id="MaPhim1Error" class="text-danger"></h6>
+                        </div>
+                        <div class="form-group">
+                            <label for="MaGhe1">Mã Ghế</label>
+                            <input type="text" class="form-control" id="MaGhe1" placeholder="Nhập mã ghế" />
+                            <h6 id="MaGhe1Error" class="text-danger"></h6>
+                        </div>
+                        <div class="form-group">
+                            <label for="TinhTrang1">Tình Trạng</label>
+                            <select class="form-control" id="TinhTrang1">
+                                <option value="1">Còn hạn</option>
+                                <option value="0">Hết hạn</option>
+                            </select>
+                            <h6 id="TinhTrang1Error" class="text-danger"></h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnUpdateVe">Cập Nhật</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    $(document).ready(function () {
+
+        function loadPhongList() {
+              $.ajax({
+                    url: '/Admin/Ve/GetPhongList',
+                    type: 'GET',
+                     success: function (data) {
+                         var options = '<option value="">--Chọn phòng--</option>';
+                        $.each(data, function(i, phong) {
+                               options += '<option value="' + phong.id + '">' + phong.tenPhong + '</option>';
+                            });
+                        $('#MaPhong').html(options);
+                        $('#MaPhong1').html(options);
+                    },
+                   error: function () {
+                         Swal.fire({
+                             icon: 'error',
+                            title: 'Lỗi!',
+                           text: 'Failed to load phòng list.',
+                           });
+                     }
+                });
+        }
+        function loadPhimList() {
+            $.ajax({
+                url: '/Admin/Ve/GetPhimList',
+                type: 'GET',
+                 success: function (data) {
+                     var options = '<option value="">--Chọn phim--</option>';
+                     $.each(data, function(i, phim) {
+                       options += '<option value="' + phim.id + '">' + phim.tenPhim + '</option>';
+                    });
+                      $('#MaPhim').html(options);
+                     $('#MaPhim1').html(options);
+                 },
+                 error: function () {
+                   Swal.fire({
+                        icon: 'error',
+                       title: 'Lỗi!',
+                       text: 'Failed to load phim list.',
+                       });
+                }
+           });
+       }
+
+        loadPhongList();
+        loadPhimList();
+
+        // Debounce function
+        function debounce(func, delay) {
+            let timeout;
+            return function (...args) {
+                const context = this;
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(context, args), delay);
+            };
+        }
+
+         function loadTickets(page = 1, searching = null, filterDate = null) {
+            $.ajax({
+                url: '/Admin/Ve/GetFilteredTickets',
+                 type: 'GET',
+                 data: { page: page, searching: searching, filterDate: filterDate },
+                success: function (data) {
+                      var ticketsHtml = '';
+                        if (data && data.tickets) {
+                        data.tickets.forEach(function (ticket) {
+                             var tinhTrangText = ticket.tinhTrang === 1 ? "Còn Hạn" : "Hết Hạn";
+                                  var phong = data.phongList.find(p => p.id === ticket.maPhong);
+                                var phim = data.phimList.find(p => p.id === ticket.maPhim);
+                                  var tenPhong = phong ? phong.tenPhong : 'N/A';
+                                var tenPhim = phim ? phim.tenPhim : 'N/A';
+                            ticketsHtml +=
+                                '<div class="col-lg-3 col-md-6 col-sm-12 mb-30">' +
+                                    '<div class="da-card">' +
+                                        '<div class="da-card-content">' +
+                                            '<h5 class="h5 mb-10">Mã Vé: ' + ticket.maVe + '</h5>' +
+                                           '<p class="mb-0"><strong>Mã Lịch Chiếu: </strong>' + ticket.maLichChieu + '</p>' +
+                                           '<p class="mb-0"><strong>Mã Phòng: </strong>' + tenPhong + '</p>' +
+                                            '<p class="mb-0"><strong>Mã Phim: </strong>' + tenPhim + '</p>' +
+                                            '<p class="mb-0"><strong>Tình Trạng: </strong>' + tinhTrangText + '</p>' +
+                                            '<p class="mb-0"><strong>Mã Ghế: </strong>' + ticket.maGhe + '</p>' +
+                                            '<p class="mb-0"><strong>Thời Gian Tạo: </strong>' + ticket.thoiGianTao + '</p>' +
+                                       '</div>' +
+                                         '<div>' +
+                                             '<ul style="display: flex; justify-content: center; list-style:none;padding-left:0px;">' +
+                                                  '<li style="margin-right: 10px;">' +
+                                                      '<a href="#" class="edit-ve btn btn-sm btn-primary" data-id="' + ticket.maVe + '" data-bs-toggle="modal" data-bs-target="#myModal1">' +
+                                                           '<i class="bi bi-pencil"></i>Sửa' +
+                                                      '</a>' +
+                                                 '</li>' +
+                                                  '<li>' +
+                                                       '<a href="#" class="delete-ve btn btn-sm btn-danger" data-id="' + ticket.maVe + '"><i class="bi bi-x"></i>Xóa</a>' +
+                                                  '</li>' +
+                                             '</ul>' +
+                                         '</div>' +
+                                   '</div>' +
+                                '</div>';
+                        });
+                      }
+                       $('#ticket-container').html(ticketsHtml);
+                         $('#pagination-container').html(data.paginationHtml);
+                  },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                       title: 'Lỗi!',
+                        text: 'Failed to load tickets.',
+                        });
+                }
+            });
+        }
+         //Initial load
+         loadTickets();
+
+        $("#FilterDate").change(debounce(function(){
+             var filterDate = $(this).val();
+             loadTickets(1, $("#Searching").val(), filterDate);
+        }, 500)); // 500ms delay
+
+        $("#Searching").on("input", debounce(function() {
+            var searching = $(this).val();
+            loadTickets(1, searching, $("#FilterDate").val());
+        }, 500)); // 500ms delay
+
+        $(document).on('click', '#pagination-container .page-link', function(e) {
+              e.preventDefault();
+               var page = $(this).data('page');
+              loadTickets(page, $("#Searching").val(), $("#FilterDate").val());
+          });
+          // create mã
+         $("#btnAddVe").click(function () {
+            $(".text-danger").text("");
+              var maPhong = $("#MaPhong").val();
+                var maLichChieu = $("#MaLichChieu").val();
+              var maPhim = $("#MaPhim").val();
+                 var now = new Date();
+                var day = String(now.getDate()).padStart(2, '0');
+                var month = String(now.getMonth() + 1).padStart(2, '0');
+                 var year = now.getFullYear();
+
+                var maVe = 'M' + maPhong + maLichChieu + day + month + year;
+                var thoiGianTao = now.toISOString();
+
+             var veData = {
+                 MaVe: maVe,
+                 MaLichChieu: maLichChieu,
+                 MaPhong: maPhong,
+                 MaPhim: maPhim,
+                   TinhTrang: 1,
+                 MaGhe: $("#MaGhe").val(),
+                  ThoiGianTao: thoiGianTao
+             };
+             // modal create
+             $.ajax({
+                 url: "/Admin/Ve/Create",
+                 type: "POST",
+                 data: JSON.stringify(veData),
+                 contentType: "application/json",
+                 success: function (response) {
+                     if (response.success) {
+                         Swal.fire({
+                            icon: 'success',
+                             title: 'Thành Công!',
+                            text: 'Thêm vé thành công!',
+                            });
+                         loadTickets(1, $("#Searching").val(), $("#FilterDate").val());
+                        $("#myModal").modal("hide");
+                     } else {
+                            Swal.fire({
+                            icon: 'error',
+                             title: 'Lỗi!',
+                            text: response.message || 'Đã xảy ra lỗi khi thêm vé.',
+                        });
+                     }
+                 },
+                error: function (xhr) {
+                    var errors = xhr.responseJSON;
+                    if (errors) {
+                        $("#MaVeError").text(errors.MaVe || "").css("color", "red");
+                         $("#MaLichChieuError").text(errors.MaLichChieu || "").css("color", "red");
+                         $("#MaPhongError").text(errors.MaPhong || "").css("color", "red");
+                        $("#MaPhimError").text(errors.MaPhim || "").css("color", "red");
+                        $("#MaGheError").text(errors.MaGhe || "").css("color", "red");
+                        $("#ThoiGianTaoError").text(errors.ThoiGianTao || "").css("color", "red");
+                     } else {
+                            Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi!',
+                            text: 'Đã xảy ra lỗi!',
+                            });
+                     }
+                 }
+             });
+         });
+         // get id
+         $(document).on("click", ".edit-ve", function () {
+            $(".text-danger").text("");
+             var id = $(this).data("id");
+              $.ajax({
+                 url: "/Admin/Ve/GetVe",
+                 type: "GET",
+                 data: { id: id },
+                 success: function (response) {
+                     if (response.success) {
+                         var ve = response.data;
+                          $("#MaVe1").val(ve.maVe);
+                         $("#MaLichChieu1").val(ve.maLichChieu);
+                           $("#MaPhong1").val(ve.maPhong);
+                          $('#MaPhong1').val(ve.maPhong);
+                          $("#MaPhim1").val(ve.maPhim);
+                          $('#MaPhim1').val(ve.maPhim);
+                           $("#TinhTrang1").val(ve.tinhTrang);
+                         $("#MaGhe1").val(ve.maGhe);
+                         $("#ThoiGianTao1").val(new Date(ve.thoiGianTao).toISOString().slice(0, 16));
+                          $("#MaVe1").data("id", ve.maVe);
+                          $("#myModal1").modal("show");
+                     } else {
+                          Swal.fire({
+                                icon: 'error',
+                               title: 'Lỗi!',
+                               text: 'Không tìm thấy vé.',
+                         });
+                     }
+                 },
+                  error: function () {
+                     Swal.fire({
+                             icon: 'error',
+                             title: 'Lỗi!',
+                             text: 'Đã xảy ra lỗi khi lấy thông tin vé.',
+                         });
+                 }
+             });
+          });
+          //    modal update
+          $("#btnUpdateVe").click(function () {
+              $(".text-danger").text("");
+                 var veData = {
+                     MaVe: $("#MaVe1").data("id"),
+                     MaLichChieu: $("#MaLichChieu1").val(),
+                      MaPhong: $("#MaPhong1").val(),
+                       MaPhim: $("#MaPhim1").val(),
+                     TinhTrang:  $("#TinhTrang1").val(),
+                     MaGhe: $("#MaGhe1").val(),
+                      ThoiGianTao: $("#ThoiGianTao1").val()
+                 };
+                  $.ajax({
+                     url: "/Admin/Ve/Update",
+                     type: "POST",
+                     data: JSON.stringify(veData),
+                      contentType: "application/json",
+                     success: function (response) {
+                         if (response.success) {
+                           Swal.fire({
+                                icon: 'success',
+                               title: 'Thành Công!',
+                               text: 'Cập nhật vé thành công.',
+                            });
+                              loadTickets(1, $("#Searching").val(), $("#FilterDate").val());
+                             $("#myModal1").modal("hide");
+                         } else {
+                             Swal.fire({
+                                 icon: 'error',
+                                title: 'Lỗi!',
+                                 text: 'Cập nhật thất bại: '+ response.message,
+                            });
+                         }
+                     },
+                     error: function (xhr) {
+                           var errors = xhr.responseJSON;
+                    if (errors) {
+                          $("#MaVe1Error").text(errors.MaVe || "").css("color", "red");
+                         $("#MaLichChieu1Error").text(errors.MaLichChieu || "").css("color", "red");
+                         $("#MaPhong1Error").text(errors.MaPhong || "").css("color", "red");
+                        $("#MaPhim1Error").text(errors.MaPhim || "").css("color", "red");
+                        $("#MaGhe1Error").text(errors.MaGhe || "").css("color", "red");
+                        $("#TinhTrang1Error").text(errors.TinhTrang || "").css("color", "red");
+                         $("#ThoiGianTao1Error").text(errors.ThoiGianTao || "").css("color", "red");
+                     } else {
+                       Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi!',
+                            text: 'Đã xảy ra lỗi!',
+                            });
+                     }
+                  }
+                 });
+             });
+
+         $(document).on("click", ".delete-ve", function () {
+             var id = $(this).data("id");
+                 Swal.fire({
+                    title: 'Bạn có chắc chắn muốn xóa vé này?',
+                     icon: 'warning',
+                    showCancelButton: true,
+                     confirmButtonColor: '#3085d6',
+                     cancelButtonColor: '#d33',
+                     confirmButtonText: 'Có',
+                     cancelButtonText:'Không'
+                 }).then((result) => {
+                     if(result.isConfirmed){
+                         $.ajax({
+                            url: "/Admin/Ve/Delete",
+                             type: "POST",
+                             data: { id: id },
+                             success: function (response) {
+                                if (response.success) {
+                                     Swal.fire({
+                                        icon: 'success',
+                                        title: 'Thành Công!',
+                                        text: 'Xóa vé thành công!',
+                                     });
+                                    loadTickets(1, $("#Searching").val(), $("#FilterDate").val());
+                                 } else {
+                                     Swal.fire({
+                                        icon: 'error',
+                                         title: 'Lỗi!',
+                                        text: response.message || 'Không thể xóa vé.',
+                                     });
+                                  }
+                             },
+                             error: function () {
+                                 Swal.fire({
+                                        icon: 'error',
+                                      title: 'Lỗi!',
+                                       text:'Đã xảy ra lỗi khi xóa vé.',
+                                     });
+                             }
+                         });
+                     }
+                  })
+         });
+     });
+</script>

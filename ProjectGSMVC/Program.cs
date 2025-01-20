@@ -1,6 +1,10 @@
+using Microsoft.AspNetCore.Http;
+using ProjectGSMAUI.Api.Container;
+
+using ProjectGSMAUI.Api.Services;
 using ProjectGSMVC.Areas.Admin.Controllers;
 using System.Text.Json.Serialization;
-﻿var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(args);
 
 // Thêm CORS Policy
 builder.Services.AddCors(options =>
@@ -8,21 +12,27 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowSpecificOrigin", policy =>
     {
         policy.WithOrigins("https://localhost:7047") // URL của MVC frontend
-              .AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowCredentials();
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowCredentials();
     });
 });
 builder.Services.AddSingleton(new Uri("https://localhost:7141/api"));
-builder.Services.AddHttpClient<GiamGiaController>();
+builder.Services.AddHttpClient<PhimController>(client =>
+{
+    client.Timeout = TimeSpan.FromMinutes(5);
+});
 
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
-	options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
 });
 // Add services to the container.
+
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient();
+builder.Services.AddRazorPages();
 builder.Services.AddHttpContextAccessor();
 var app = builder.Build();
 
@@ -46,11 +56,11 @@ app.UseAuthorization();
 
 // Định tuyến
 app.MapControllerRoute(
-    name: "areaRoute",
-    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+name: "areaRoute",
+pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
 app.MapControllerRoute(
-    name: "default",
+   name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

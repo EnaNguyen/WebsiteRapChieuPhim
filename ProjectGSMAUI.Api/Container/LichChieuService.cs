@@ -218,7 +218,7 @@ namespace ProjectGSMAUI.Api.Services
                 }
 
                 // Tính tổng số suất chiếu hiện tại và tính toán lại số suất chiếu
-                int tongSuatHienTai = films.Where(f => f.TrangThai == 1).Sum(f => f.SoSuatChieu ?? 0); // Chỉ tính suất chiếu của các phim đang chiếu
+                int tongSuatHienTai = films.Where(f => f.TrangThai == 1).Sum(f => f.SoXuatChieu ?? 0); // Chỉ tính suất chiếu của các phim đang chiếu
                 int tongSuatMoi = tongSuatHienTai + soSuatCanTang;
 
                 if (tongSuatMoi > LichTrinhRapChieuPhim.TongSuat)
@@ -232,7 +232,7 @@ namespace ProjectGSMAUI.Api.Services
                 }
 
                 // Điều chỉnh số suất chiếu của phim cần tăng
-                phimCanTang.SoSuatChieu += soSuatCanTang;
+                phimCanTang.SoXuatChieu += soSuatCanTang;
 
                 // Điều chỉnh số suất chiếu của các phim còn lại
                 int suatGiamMoiPhim = soSuatCanTang / (films.Count(f => f.TrangThai == 1) - 1); // Chỉ giảm suất chiếu của các phim đang chiếu
@@ -240,8 +240,8 @@ namespace ProjectGSMAUI.Api.Services
                 {
                     if (phim.Id != phimCanTangId && phim.TrangThai == 1)
                     {
-                        phim.SoSuatChieu = Math.Max((phim.SoSuatChieu ?? 0) - suatGiamMoiPhim, 0);
-                        if (phim.SoSuatChieu == 0)
+                        phim.SoXuatChieu = Math.Max((phim.SoXuatChieu ?? 0) - suatGiamMoiPhim, 0);
+                        if (phim.SoXuatChieu == 0)
                         {
                             phim.TrangThai = 0;
                         }

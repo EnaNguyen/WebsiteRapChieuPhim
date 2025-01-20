@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ProjectGSMAUI.Api.Migrations
 {
     /// <inheritdoc />
-    public partial class AddDuLieu : Migration
+    public partial class dlss : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -205,7 +205,8 @@ namespace ProjectGSMAUI.Api.Migrations
                 name: "Phim",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     TenPhim = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     TheLoai = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     ThoiLuong = table.Column<int>(type: "int", nullable: true),
@@ -213,13 +214,13 @@ namespace ProjectGSMAUI.Api.Migrations
                     GioiHanDoTuoi = table.Column<int>(type: "int", nullable: true),
                     NgayKhoiChieu = table.Column<DateOnly>(type: "date", nullable: true),
                     NgayKetThuc = table.Column<DateOnly>(type: "date", nullable: true),
-                    SoSuatChieu = table.Column<int>(type: "int", nullable: true),
+                    SoXuatChieu = table.Column<int>(type: "int", nullable: true),
                     TrangThai = table.Column<int>(type: "int", nullable: true),
                     MoTa = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Phim__3214EC27C9B2D53C", x => x.ID);
+                    table.PrimaryKey("PK__Phim__3214EC27C9B2D53C", x => x.Id);
                     table.ForeignKey(
                         name: "FK__Phim__TheLoai__3B75D760",
                         column: x => x.TheLoai,
@@ -260,8 +261,7 @@ namespace ProjectGSMAUI.Api.Migrations
                 {
                     ID = table.Column<string>(type: "char(50)", unicode: false, fixedLength: true, maxLength: 50, nullable: false),
                     Phim = table.Column<int>(type: "int", nullable: true),
-                    Link = table.Column<string>(type: "text", nullable: true),
-                    HinhAnh1 = table.Column<byte[]>(type: "varbinary(max)", nullable: false)
+                    ImageData = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -270,7 +270,7 @@ namespace ProjectGSMAUI.Api.Migrations
                         name: "FK__HinhAnh__Phim__797309D9",
                         column: x => x.Phim,
                         principalTable: "Phim",
-                        principalColumn: "ID");
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -298,7 +298,7 @@ namespace ProjectGSMAUI.Api.Migrations
                         name: "FK__LichChieu__MaPhi__4316F928",
                         column: x => x.MaPhim,
                         principalTable: "Phim",
-                        principalColumn: "ID");
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK__LichChieu__MaPho__4222D4EF",
                         column: x => x.MaPhong,
@@ -321,7 +321,7 @@ namespace ProjectGSMAUI.Api.Migrations
                         name: "FK__Video__Phim__7C4F7684",
                         column: x => x.Phim,
                         principalTable: "Phim",
-                        principalColumn: "ID");
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -333,7 +333,9 @@ namespace ProjectGSMAUI.Api.Migrations
                     MaPhong = table.Column<int>(type: "int", nullable: true),
                     MaPhim = table.Column<int>(type: "int", nullable: true),
                     TinhTrang = table.Column<int>(type: "int", nullable: true),
-                    MaGhe = table.Column<string>(type: "char(10)", unicode: false, fixedLength: true, maxLength: 10, nullable: true)
+                    MaGhe = table.Column<string>(type: "char(10)", unicode: false, fixedLength: true, maxLength: 10, nullable: true),
+                    ThoiGianTao = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    MaPhimNavigationId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -343,6 +345,11 @@ namespace ProjectGSMAUI.Api.Migrations
                         column: x => x.MaGhe,
                         principalTable: "Ghe",
                         principalColumn: "MaGhe");
+                    table.ForeignKey(
+                        name: "FK_Ve_Phim_MaPhimNavigationId",
+                        column: x => x.MaPhimNavigationId,
+                        principalTable: "Phim",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK__Ve__MaLichChieu__49C3F6B7",
                         column: x => x.MaLichChieu,
@@ -369,15 +376,15 @@ namespace ProjectGSMAUI.Api.Migrations
                         principalTable: "Ghe",
                         principalColumn: "MaGhe");
                     table.ForeignKey(
-                        name: "FK__ChiTietHo__MaGhe__59FA5E80",
-                        column: x => x.MaVe,
-                        principalTable: "Ve",
-                        principalColumn: "MaVe");
-                    table.ForeignKey(
                         name: "FK__ChiTietHo__MaHoa__5AEE82B9",
                         column: x => x.MaHoaDon,
                         principalTable: "HoaDon",
                         principalColumn: "MaHoaDon");
+                    table.ForeignKey(
+                        name: "FK__ChiTietHo__MaVe__59FA5E80",
+                        column: x => x.MaVe,
+                        principalTable: "Ve",
+                        principalColumn: "MaVe");
                 });
 
             migrationBuilder.CreateTable(
@@ -637,7 +644,7 @@ namespace ProjectGSMAUI.Api.Migrations
             migrationBuilder.InsertData(
                 table: "TaiKhoan",
                 columns: new[] { "IDTaiKhoan", "CCCD", "DiaChi", "DiemTichLuy", "Email", "GioiTinh", "Hinh", "MatKhau", "NgayDangKy", "NgaySinh", "SDT", "TenNguoiDung", "TenTaiKhoan", "TrangThai", "VaiTro" },
-                values: new object[] { "TK001", "123456789012", "123 Đường ABC, Thành phố XYZ", 0, "nguyenquangquyX@gmail.com", true, null, "8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92", new DateOnly(2025, 1, 13), new DateOnly(1999, 5, 19), "0973713274", "Quản trị viên", "Admin", 1, 2 });
+                values: new object[] { "TK001", "123456789012", "123 Đường ABC, Thành phố XYZ", 0, "nguyenquangquyX@gmail.com", true, null, "8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92", new DateOnly(2025, 1, 17), new DateOnly(1999, 5, 19), "0973713274", "Quản trị viên", "Admin", 1, 2 });
 
             migrationBuilder.InsertData(
                 table: "TheLoaiPhim",
@@ -669,20 +676,8 @@ namespace ProjectGSMAUI.Api.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "HoaDon",
-                columns: new[] { "MaHoaDon", "MaDatVe", "MaGiamGia", "MaKhachHang", "NgayXuat", "TinhTrang", "TongTien" },
-                values: new object[,]
-                {
-                    { 2, 102, null, "TK001", new DateOnly(2023, 12, 2), 0, 520000 },
-                    { 4, 104, null, "TK001", new DateOnly(2023, 12, 4), 0, 540000 },
-                    { 6, 106, null, "TK001", new DateOnly(2023, 12, 6), 0, 560000 },
-                    { 8, 108, null, "TK001", new DateOnly(2023, 12, 8), 0, 580000 },
-                    { 10, 110, null, "TK001", new DateOnly(2023, 12, 10), 0, 600000 }
-                });
-
-            migrationBuilder.InsertData(
                 table: "Phim",
-                columns: new[] { "ID", "DaoDien", "GioiHanDoTuoi", "MoTa", "NgayKetThuc", "NgayKhoiChieu", "SoSuatChieu", "TenPhim", "TheLoai", "ThoiLuong", "TrangThai" },
+                columns: new[] { "Id", "DaoDien", "GioiHanDoTuoi", "MoTa", "NgayKetThuc", "NgayKhoiChieu", "SoXuatChieu", "TenPhim", "TheLoai", "ThoiLuong", "TrangThai" },
                 values: new object[,]
                 {
                     { 1, "Director A", 13, "Action-packed movie about...", new DateOnly(2024, 2, 28), new DateOnly(2024, 1, 15), 50, "Action Movie 1", "TLP001", 120, 1 },
@@ -690,18 +685,6 @@ namespace ProjectGSMAUI.Api.Migrations
                     { 3, "Director C", 18, "A terrifying horror film...", new DateOnly(2024, 3, 31), new DateOnly(2024, 3, 1), 35, "Horror Movie 1", "TLP003", 95, 1 },
                     { 4, "Director D", 0, "An animated adventure for...", new DateOnly(2024, 4, 15), new DateOnly(2024, 3, 20), 15, "Animated Movie 1", "TLP004", 90, 1 },
                     { 5, "Director E", 13, "A sci-fi epic about...", new DateOnly(2024, 4, 30), new DateOnly(2024, 4, 10), 22, "Sci-Fi Movie 1", "TLP005", 135, 1 }
-                });
-
-            migrationBuilder.InsertData(
-                table: "HoaDon",
-                columns: new[] { "MaHoaDon", "MaDatVe", "MaGiamGia", "MaKhachHang", "NgayXuat", "TinhTrang", "TongTien" },
-                values: new object[,]
-                {
-                    { 1, 101, 1, "TK001", new DateOnly(2023, 12, 1), 1, 500000 },
-                    { 3, 103, 2, "TK001", new DateOnly(2023, 12, 3), 1, 530000 },
-                    { 5, 105, 3, "TK001", new DateOnly(2023, 12, 5), 1, 550000 },
-                    { 7, 107, 4, "TK001", new DateOnly(2023, 12, 7), 1, 570000 },
-                    { 9, 109, 5, "TK001", new DateOnly(2023, 12, 9), 1, 590000 }
                 });
 
             migrationBuilder.InsertData(
@@ -719,35 +702,6 @@ namespace ProjectGSMAUI.Api.Migrations
                     { 8, 100000m, 2, 3, 2, new DateOnly(2025, 1, 15), true },
                     { 9, 100000m, 3, 4, 3, new DateOnly(2025, 1, 16), true },
                     { 10, 100000m, 4, 5, 4, new DateOnly(2025, 1, 17), true }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Ve",
-                columns: new[] { "MaVe", "MaGhe", "MaLichChieu", "MaPhim", "MaPhong", "TinhTrang" },
-                values: new object[,]
-                {
-                    { "1", "A1", 1, 1, 1, 1 },
-                    { "10", "A10", 10, 10, 10, 1 },
-                    { "2", "A2", 2, 2, 2, 1 },
-                    { "3", "A3", 3, 3, 3, 1 },
-                    { "4", "A4", 4, 4, 4, 1 },
-                    { "5", "A5", 5, 5, 5, 1 },
-                    { "6", "A6", 6, 6, 6, 1 },
-                    { "7", "A7", 7, 7, 7, 1 },
-                    { "8", "A8", 8, 8, 8, 1 },
-                    { "9", "A9", 9, 9, 9, 1 }
-                });
-
-            migrationBuilder.InsertData(
-                table: "ChiTietHoaDon",
-                columns: new[] { "MaChiTietHoaDon", "GheMaGhe", "Gia", "MaHoaDon", "MaVe" },
-                values: new object[,]
-                {
-                    { 1, null, 250000, 1, "1" },
-                    { 2, null, 250000, 1, "2" },
-                    { 3, null, 260000, 2, "3" },
-                    { 4, null, 260000, 2, "4" },
-                    { 5, null, 270000, 3, "5" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -834,6 +788,11 @@ namespace ProjectGSMAUI.Api.Migrations
                 name: "IX_Ve_MaLichChieu",
                 table: "Ve",
                 column: "MaLichChieu");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Ve_MaPhimNavigationId",
+                table: "Ve",
+                column: "MaPhimNavigationId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Video_Phim",
