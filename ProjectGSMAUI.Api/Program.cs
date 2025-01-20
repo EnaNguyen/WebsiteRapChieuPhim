@@ -73,7 +73,15 @@ builder.Services.AddRateLimiter(_ => _.AddFixedWindowLimiter(policyName: "fixedw
     option.QueueProcessingOrder = System.Threading.RateLimiting.QueueProcessingOrder.OldestFirst;
 }).RejectionStatusCode = 401);
 builder.Services.AddSingleton(mapper);
+builder.Services.AddDistributedMemoryCache(); // Thêm cache cho session
 
+// Cấu hình Session
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Thời gian timeout của session
+    options.Cookie.HttpOnly = true; // Chỉ cho phép truy cập cookie qua HTTP
+    options.Cookie.IsEssential = true; // Đảm bảo cookie luôn được lưu
+});
 
 string logpath = builder.Configuration.GetSection("Logging:LogPath").Value;
 var _logger = new LoggerConfiguration()
@@ -102,6 +110,7 @@ app.UseCors(x => x
                 .SetIsOriginAllowed(origin => true) 
                 .AllowCredentials());
 app.UseHttpsRedirection();
+app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseStaticFiles();

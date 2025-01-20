@@ -199,7 +199,7 @@
 			checkbox.checked = selectAll.checked;
 		});
 	}
-	const apiBaseUrl = "http://localhost:5030/api/LichChieu";
+	const apiBaseUrl = "https://localhost:7141/api/LichChieu";
 
 	// Hàm xử lý xóa các lịch chiếu phim đã chọn
 		async function deleteSelectedSchedules() {
@@ -347,7 +347,7 @@
 
 		$(document).ready(function () {
 		$.ajax({
-			url: "http://localhost:5030/api/Phim",
+			url: "https://localhost:7141/api/Phim",
 			type: "GET",
 			success: function (data) {
 			console.log("Dữ liệu phim nhận được: ", data); // Xem toàn bộ dữ liệu trả về từ API
@@ -385,7 +385,7 @@
 		try {
 			// Gọi API để thêm lịch chiếu
 			const response = await $.ajax({
-				url: "http://localhost:5030/api/LichChieu/Add", // Địa chỉ API
+				url: "https://localhost:7141/api/LichChieu/Add", // Địa chỉ API
 				type: "POST",
 				contentType: "application/json",
 				data: JSON.stringify(scheduleData),

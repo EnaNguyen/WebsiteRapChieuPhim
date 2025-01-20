@@ -416,7 +416,7 @@ namespace ProjectGSMAUI.Api.Data
             modelBuilder.Entity<TaiKhoan>().HasData(
                 new TaiKhoan
                 {
-                    IdtaiKhoan = "TK001",
+                    IdtaiKhoan = "AD001",
                     TenTaiKhoan = "Admin",
                     MatKhau = "8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92",
                     TenNguoiDung = "Quản trị viên",

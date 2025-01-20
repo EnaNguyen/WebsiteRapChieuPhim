@@ -2006,7 +2006,7 @@ var defaults = $.fn.steps.defaults = {
          * @default "Finish"
          * @for defaults
          **/
-        finish: "Finish",
+        finish: "K?t thúc",
 
         /**
          * Label for the next button.
@@ -2016,7 +2016,7 @@ var defaults = $.fn.steps.defaults = {
          * @default "Next"
          * @for defaults
          **/
-        next: "Next",
+        next: "Ti?p t?c",
 
         /**
          * Label for the previous button.
@@ -2026,7 +2026,7 @@ var defaults = $.fn.steps.defaults = {
          * @default "Previous"
          * @for defaults
          **/
-        previous: "Previous",
+        previous: "Quay l?i",
 
         /**
          * Label for the loading animation.
@@ -2036,7 +2036,7 @@ var defaults = $.fn.steps.defaults = {
          * @default "Loading ..."
          * @for defaults
          **/
-        loading: "Loading ..."
+        loading: "?ang t?i l?i trang ..."
     }
 };
 })(jQuery);
