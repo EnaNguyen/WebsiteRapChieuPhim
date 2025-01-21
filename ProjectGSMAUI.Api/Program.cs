@@ -14,6 +14,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using ProjectGSMAUI.Api.Container;
 using System;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ??
@@ -37,6 +38,7 @@ builder.Services.AddTransient<IRefreshHandler, RefreshHandler>();
 builder.Services.AddTransient<ITaiKhoanService, TaiKhoanService>();
 builder.Services.AddScoped<ISanPham, SanPhamService>();
 builder.Services.AddScoped<IBillMServices, BillMServices>();
+builder.Services.AddScoped<IGeminiServices, GeminiServices>();
 //builder.Services.AddAuthentication("BasicAuthentication").AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
 var _authkey = builder.Configuration.GetValue<string>("JwtSettings:securitykey");
 builder.Services.AddAuthentication(item =>
@@ -78,7 +80,11 @@ builder.Services.AddRateLimiter(_ => _.AddFixedWindowLimiter(policyName: "fixedw
 }).RejectionStatusCode = 401);
 builder.Services.AddSingleton(mapper);
 builder.Services.AddDistributedMemoryCache(); // Thêm cache cho session
-
+//Gemini
+builder.Services.AddSingleton(resolver =>
+    resolver.GetRequiredService<IOptions<GeminiSettings>>().Value);
+builder.Services.Configure<GeminiSettings>(
+    builder.Configuration.GetSection("Authentication"));
 // Cấu hình Session
 builder.Services.AddSession(options =>
 {

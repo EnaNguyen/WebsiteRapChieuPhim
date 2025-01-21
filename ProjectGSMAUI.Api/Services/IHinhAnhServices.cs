@@ -11,6 +11,5 @@ namespace ProjectGSMAUI.Api.Services
         Task<APIResponse> Create(HinhAnh data);
         Task<APIResponse> Remove(int id);
         Task<APIResponse> Update(HinhAnh data, int id);
-        Task<APIResponse> Create(HinhAnh data);
     }
 }
