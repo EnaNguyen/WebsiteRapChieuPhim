@@ -35,10 +35,10 @@ namespace ProjectGSMAUI.Api.Data
         public virtual DbSet<Ve> Ves { get; set; }
 
         public virtual DbSet<Video> Videos { get; set; }
-        public DbSet<Combo> Combos { get; set; }
-        public DbSet<SanPham> SanPhams { get; set; }
-        public DbSet<ChiTietCombo> ChiTietCombos { get; set; }
-        public DbSet<RefreshToken> RefreshTokens { get; set; }
+        public virtual DbSet<Combo> Combos { get; set; }
+        public virtual DbSet<SanPham> SanPhams { get; set; }
+        public virtual DbSet<ChiTietCombo> ChiTietCombos { get; set; }
+        public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
         public static List<Ghe> GetSeats()
         {
             var seats = new List<Ghe>();
@@ -54,29 +54,6 @@ namespace ProjectGSMAUI.Api.Data
             }
             return seats;
         }
-        //private static Ve GenerateVeData(int maPhong, int maLichChieu, int maPhim, List<Ghe> seats)
-        //{
-        //    DateTime now = DateTime.Now;
-        //    string maVe = $"M{maPhong}{maLichChieu}{now:dd}{now:MM}{now:yy}";
-
-        //    // Chọn một ghế ngẫu nhiên từ danh sách ghế
-        //    Random random = new Random();
-        //    int randomIndex = random.Next(seats.Count);
-        //    string maGhe = seats[randomIndex].MaGhe;
-
-        //    //Xóa ghế đã chọn khỏi list seats
-        //    seats.RemoveAt(randomIndex);
-        //    return new Ve
-        //    {
-        //        MaVe = maVe,
-        //        MaLichChieu = maLichChieu,
-        //        MaPhong = maPhong,
-        //        MaPhim = maPhim,
-        //        TinhTrang = 1,
-        //        MaGhe = maGhe,
-        //        ThoiGianTao = now
-        //    };
-        //}
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -180,9 +157,6 @@ namespace ProjectGSMAUI.Api.Data
                     .HasColumnName("ID");
                 entity.Property(e => e.ImageData).HasColumnType("text");
 
-                entity.HasOne(d => d.PhimNavigation).WithMany(p => p.HinhAnhs)
-                    .HasForeignKey(d => d.Phim)
-                    .HasConstraintName("FK__HinhAnh__Phim__797309D9");
             });
 
             modelBuilder.Entity<HoaDon>(entity =>
@@ -484,7 +458,7 @@ namespace ProjectGSMAUI.Api.Data
                     MoTa = "Action-packed movie about...",
                     NgayKetThuc = new DateOnly(2024, 2, 28),
                     NgayKhoiChieu = new DateOnly(2024, 1, 15),
-                    SoXuatChieu = 50,
+                    SoSuatChieu = 50,
                     TenPhim = "Action Movie 1",
                     TheLoai = "TLP001", // Action
                     ThoiLuong = 120,
@@ -498,7 +472,7 @@ namespace ProjectGSMAUI.Api.Data
                     MoTa = "A romantic story about...",
                     NgayKetThuc = new DateOnly(2024, 3, 15),
                     NgayKhoiChieu = new DateOnly(2024, 2, 1),
-                    SoXuatChieu = 40,
+                    SoSuatChieu = 40,
                     TenPhim = "Romantic Movie 1",
                     TheLoai = "TLP002", // Romantic
                     ThoiLuong = 110,
@@ -513,7 +487,7 @@ namespace ProjectGSMAUI.Api.Data
                     MoTa = "A terrifying horror film...",
                     NgayKetThuc = new DateOnly(2024, 3, 31),
                     NgayKhoiChieu = new DateOnly(2024, 3, 1),
-                    SoXuatChieu = 35,
+                    SoSuatChieu = 35,
                     TenPhim = "Horror Movie 1",
                     TheLoai = "TLP003", // Horror
                     ThoiLuong = 95,
@@ -527,7 +501,7 @@ namespace ProjectGSMAUI.Api.Data
                     MoTa = "An animated adventure for...",
                     NgayKetThuc = new DateOnly(2024, 4, 15),
                     NgayKhoiChieu = new DateOnly(2024, 3, 20),
-                    SoXuatChieu = 15,
+                    SoSuatChieu = 15,
                     TenPhim = "Animated Movie 1",
                     TheLoai = "TLP004", // Animated
                     ThoiLuong = 90,
@@ -541,7 +515,7 @@ namespace ProjectGSMAUI.Api.Data
                     MoTa = "A sci-fi epic about...",
                     NgayKetThuc = new DateOnly(2024, 4, 30),
                     NgayKhoiChieu = new DateOnly(2024, 4, 10),
-                    SoXuatChieu = 22,
+                    SoSuatChieu = 22,
                     TenPhim = "Sci-Fi Movie 1",
                     TheLoai = "TLP005", // Sci-fi
                     ThoiLuong = 135,
@@ -569,20 +543,6 @@ namespace ProjectGSMAUI.Api.Data
             );
             var seats = GetSeats();
             modelBuilder.Entity<Ghe>().HasData(seats);
-            //M + Mã Phòng + Mã Lịch chiếu + Ngày + Tháng + Năm
-            //var seatsForVe = GetSeats();
-            //var ve1 = GenerateVeData(1, 1, 1, seatsForVe);
-            //var ve2 = GenerateVeData(2, 2, 2, seatsForVe);
-            //var ve3 = GenerateVeData(3, 3, 3, seatsForVe);
-            //var ve4 = GenerateVeData(4, 4, 4, seatsForVe);
-            //var ve5 = GenerateVeData(5, 5, 5, seatsForVe);
-            //modelBuilder.Entity<Ve>().HasData(
-            //    ve1,
-            //     ve2,
-            //     ve3,
-            //     ve4,
-            //    ve5
-            //);
             modelBuilder.Entity<LichChieu>().HasData(
                 new LichChieu { MaLichChieu = 1, NgayChieu = new DateOnly(2025, 1, 8), GioChieu = 1, MaPhim = 1, MaPhong = 1, GiaVe = 100000, TinhTrang = true },
                 new LichChieu { MaLichChieu = 2, NgayChieu = new DateOnly(2025, 1, 9), GioChieu = 2, MaPhim = 2, MaPhong = 2, GiaVe = 100000, TinhTrang = true },
@@ -595,28 +555,6 @@ namespace ProjectGSMAUI.Api.Data
                 new LichChieu { MaLichChieu = 9, NgayChieu = new DateOnly(2025, 1, 16), GioChieu = 3, MaPhim = 4, MaPhong = 3, GiaVe = 100000, TinhTrang = true },
                 new LichChieu { MaLichChieu = 10, NgayChieu = new DateOnly(2025, 1, 17), GioChieu = 4, MaPhim = 5, MaPhong = 4, GiaVe = 100000, TinhTrang = true }
             );
-           
-            //modelBuilder.Entity<HoaDon>().HasData(
-            //    new HoaDon { MaHoaDon = 1, MaDatVe = 101, MaKhachHang = "TK001", TongTien = 500000, MaGiamGia = 1, NgayXuat = new DateOnly(2023, 12, 1), TinhTrang = 1 },
-            //    new HoaDon { MaHoaDon = 2, MaDatVe = 102, MaKhachHang = "TK001", TongTien = 520000, MaGiamGia = null, NgayXuat = new DateOnly(2023, 12, 2), TinhTrang = 0 },
-            //    new HoaDon { MaHoaDon = 3, MaDatVe = 103, MaKhachHang = "TK001", TongTien = 530000, MaGiamGia = 2, NgayXuat = new DateOnly(2023, 12, 3), TinhTrang = 1 },
-            //    new HoaDon { MaHoaDon = 4, MaDatVe = 104, MaKhachHang = "TK001", TongTien = 540000, MaGiamGia = null, NgayXuat = new DateOnly(2023, 12, 4), TinhTrang = 0 },
-            //    new HoaDon { MaHoaDon = 5, MaDatVe = 105, MaKhachHang = "TK001", TongTien = 550000, MaGiamGia = 3, NgayXuat = new DateOnly(2023, 12, 5), TinhTrang = 1 },
-            //    new HoaDon { MaHoaDon = 6, MaDatVe = 106, MaKhachHang = "TK001", TongTien = 560000, MaGiamGia = null, NgayXuat = new DateOnly(2023, 12, 6), TinhTrang = 0 },
-            //    new HoaDon { MaHoaDon = 7, MaDatVe = 107, MaKhachHang = "TK001", TongTien = 570000, MaGiamGia = 4, NgayXuat = new DateOnly(2023, 12, 7), TinhTrang = 1 },
-            //    new HoaDon { MaHoaDon = 8, MaDatVe = 108, MaKhachHang = "TK001", TongTien = 580000, MaGiamGia = null, NgayXuat = new DateOnly(2023, 12, 8), TinhTrang = 0 },
-            //    new HoaDon { MaHoaDon = 9, MaDatVe = 109, MaKhachHang = "TK001", TongTien = 590000, MaGiamGia = 5, NgayXuat = new DateOnly(2023, 12, 9), TinhTrang = 1 },
-            //    new HoaDon { MaHoaDon = 10, MaDatVe = 110, MaKhachHang = "TK001", TongTien = 600000, MaGiamGia = null, NgayXuat = new DarteOnly(2023, 12, 10), TinhTrang = 0 }
-            //);
-            //modelBuilder.Entity<ChiTietHoaDon>().HasData(
-            //   new ChiTietHoaDon { MaChiTietHoaDon = 1, MaVe = "M010127112024", MaHoaDon = 1, Gia = 250000 },
-            //   new ChiTietHoaDon { MaChiTietHoaDon = 2, MaVe = "M010327112024", MaHoaDon = 1, Gia = 250000 },
-            //   new ChiTietHoaDon { MaChiTietHoaDon = 3, MaVe = "M010427112024", MaHoaDon = 3, Gia = 260000 },
-            //    new ChiTietHoaDon { MaChiTietHoaDon = 4, MaVe = "M010227112024", MaHoaDon = 3, Gia = 260000 },
-            //   new ChiTietHoaDon { MaChiTietHoaDon = 5, MaVe = "M010527112024" , MaHoaDon = 3, Gia = 270000 }
-            //);
-
-
         }
     }
 }

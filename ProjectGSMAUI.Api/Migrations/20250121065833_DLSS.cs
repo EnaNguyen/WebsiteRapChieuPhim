@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ProjectGSMAUI.Api.Migrations
 {
     /// <inheritdoc />
-    public partial class dlss : Migration
+    public partial class DLSS : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -214,7 +214,7 @@ namespace ProjectGSMAUI.Api.Migrations
                     GioiHanDoTuoi = table.Column<int>(type: "int", nullable: true),
                     NgayKhoiChieu = table.Column<DateOnly>(type: "date", nullable: true),
                     NgayKetThuc = table.Column<DateOnly>(type: "date", nullable: true),
-                    SoXuatChieu = table.Column<int>(type: "int", nullable: true),
+                    SoSuatChieu = table.Column<int>(type: "int", nullable: true),
                     TrangThai = table.Column<int>(type: "int", nullable: true),
                     MoTa = table.Column<string>(type: "text", nullable: true)
                 },
@@ -261,14 +261,15 @@ namespace ProjectGSMAUI.Api.Migrations
                 {
                     ID = table.Column<string>(type: "char(50)", unicode: false, fixedLength: true, maxLength: 50, nullable: false),
                     Phim = table.Column<int>(type: "int", nullable: true),
-                    ImageData = table.Column<string>(type: "text", nullable: true)
+                    ImageData = table.Column<string>(type: "text", nullable: true),
+                    PhimNavigationId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK__HinhAnh__3214EC272D4B69CB", x => x.ID);
                     table.ForeignKey(
-                        name: "FK__HinhAnh__Phim__797309D9",
-                        column: x => x.Phim,
+                        name: "FK_HinhAnh_Phim_PhimNavigationId",
+                        column: x => x.PhimNavigationId,
                         principalTable: "Phim",
                         principalColumn: "Id");
                 });
@@ -644,7 +645,7 @@ namespace ProjectGSMAUI.Api.Migrations
             migrationBuilder.InsertData(
                 table: "TaiKhoan",
                 columns: new[] { "IDTaiKhoan", "CCCD", "DiaChi", "DiemTichLuy", "Email", "GioiTinh", "Hinh", "MatKhau", "NgayDangKy", "NgaySinh", "SDT", "TenNguoiDung", "TenTaiKhoan", "TrangThai", "VaiTro" },
-                values: new object[] { "TK001", "123456789012", "123 Đường ABC, Thành phố XYZ", 0, "nguyenquangquyX@gmail.com", true, null, "8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92", new DateOnly(2025, 1, 17), new DateOnly(1999, 5, 19), "0973713274", "Quản trị viên", "Admin", 1, 2 });
+                values: new object[] { "AD001", "123456789012", "123 Đường ABC, Thành phố XYZ", 0, "nguyenquangquyX@gmail.com", true, null, "8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92", new DateOnly(2025, 1, 21), new DateOnly(1999, 5, 19), "0973713274", "Quản trị viên", "Admin", 1, 2 });
 
             migrationBuilder.InsertData(
                 table: "TheLoaiPhim",
@@ -677,7 +678,7 @@ namespace ProjectGSMAUI.Api.Migrations
 
             migrationBuilder.InsertData(
                 table: "Phim",
-                columns: new[] { "Id", "DaoDien", "GioiHanDoTuoi", "MoTa", "NgayKetThuc", "NgayKhoiChieu", "SoXuatChieu", "TenPhim", "TheLoai", "ThoiLuong", "TrangThai" },
+                columns: new[] { "Id", "DaoDien", "GioiHanDoTuoi", "MoTa", "NgayKetThuc", "NgayKhoiChieu", "SoSuatChieu", "TenPhim", "TheLoai", "ThoiLuong", "TrangThai" },
                 values: new object[,]
                 {
                     { 1, "Director A", 13, "Action-packed movie about...", new DateOnly(2024, 2, 28), new DateOnly(2024, 1, 15), 50, "Action Movie 1", "TLP001", 120, 1 },
@@ -745,9 +746,9 @@ namespace ProjectGSMAUI.Api.Migrations
                 column: "MaVe");
 
             migrationBuilder.CreateIndex(
-                name: "IX_HinhAnh_Phim",
+                name: "IX_HinhAnh_PhimNavigationId",
                 table: "HinhAnh",
-                column: "Phim");
+                column: "PhimNavigationId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_HoaDon_MaGiamGia",

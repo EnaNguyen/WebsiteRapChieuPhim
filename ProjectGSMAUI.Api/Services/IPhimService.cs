@@ -1,4 +1,6 @@
 ﻿using ProjectGSMAUI.Api.Data.Entities;
+using ProjectGSMAUI.Api.Helper;
+using ProjectGSMAUI.Api.Modal;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -6,13 +8,11 @@ namespace ProjectGSMAUI.Api.Container
 {
     public interface IPhimService
     {
-        Task<IEnumerable<Phim>> GetPhimsAsync();
-        Task<Phim> GetPhimByIdAsync(int id);
-        Task CreatePhimAsync(Phim phim);
-        Task UpdatePhimAsync(Phim phim);
-        Task DeletePhimAsync(int id);
-
-        // New method for fetching all the Loai Phim
-        Task<IEnumerable<TheLoaiPhim>> GetTheLoaisAsync();
+        Task<List<PhimView>> GetAll(string name);
+        Task<DetailMovie> GetByID(int id);
+        Task<APIResponse> Create(CreateMovie data);
+        Task<APIResponse> Remove(int id);
+        Task<APIResponse> Update(int Id, CreateMovie data);
+        Task<APIResponse> CheckSuatChieu(int Id, CheckDate Data);
     }
 }

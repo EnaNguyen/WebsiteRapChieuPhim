@@ -17,6 +17,7 @@ namespace ProjectGSMVC.Areas.Admin.Models
         public int SoXuatChieu { get; set; }
         public int TrangThai { get; set; }
         public string? MoTa { get; set; }
+        public string Avatar { get; set; }
 
         // List of IFormFile for multiple image upload
         public List<IFormFile> ImageFiles { get; set; }

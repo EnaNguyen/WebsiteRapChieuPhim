@@ -4,6 +4,7 @@ using ProjectGSMAUI.Api.Data.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using ProjectGSMAUI.Api.Modal;
 
 namespace ProjectGSMAUI.Api.Controllers
 {
@@ -19,95 +20,33 @@ namespace ProjectGSMAUI.Api.Controllers
             _phimService = phimService;
             _logger = logger;
         }
-
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<object>>> GetPhims()
+        [HttpGet("GetAll")]
+        public async Task<IActionResult> GetAll([FromQuery] string Name = null)
         {
-            var phims = await _phimService.GetPhimsAsync();
-            var result = phims.Select(p => new
-            {
-                p.Id,
-                p.TenPhim,
-                p.TheLoai,
-                p.ThoiLuong,
-                p.DaoDien,
-                p.GioiHanDoTuoi,
-                p.NgayKhoiChieu,
-                p.NgayKetThuc,
-                p.SoXuatChieu,
-                p.TrangThai,
-                p.MoTa,
-                HinhAnh = p.HinhAnhs.FirstOrDefault() != null ? new
-                {
-                    p.HinhAnhs.FirstOrDefault().Id,
-                    p.HinhAnhs.FirstOrDefault().ImageData
-                } : null
-            });
-            return Ok(result);
+            var data = await this._phimService.GetAll(Name);
+            return Ok(data);
         }
-
-        [HttpGet("GetById")]
-        public async Task<ActionResult<object>> GetPhim(int id)
+        [HttpGet("GetByID")]
+        public async Task<IActionResult> GetByID(int Id)
         {
-            var phim = await _phimService.GetPhimByIdAsync(id);
-            if (phim == null) return NotFound("Phim không tồn tại");
-            var result = new
+            var data = await this._phimService.GetByID(Id);
+            if (data == null)
             {
-                phim.Id,
-                phim.TenPhim,
-                phim.TheLoai,
-                phim.ThoiLuong,
-                phim.DaoDien,
-                phim.GioiHanDoTuoi,
-                phim.NgayKhoiChieu,
-                phim.NgayKetThuc,
-                phim.SoXuatChieu,
-                phim.TrangThai,
-                phim.MoTa,
-                HinhAnhs = phim.HinhAnhs.Select(h => new
-                {
-                    h.Id,
-                    h.ImageData
-                }).ToList()
-            };
-
-            return Ok(result);
-        }
-
-
-        [HttpPost]
-        public async Task<ActionResult> CreatePhim([FromForm] Phim phim)
-        {
-            try
-            {
-                _logger.LogInformation($"Creating a new movie: {phim.TenPhim}");
-                await _phimService.CreatePhimAsync(phim);
-                _logger.LogInformation($"Created Movie: {phim.TenPhim}, id = {phim.Id}");
-                return CreatedAtAction(nameof(GetPhim), new { id = phim.Id }, phim);
+                return NotFound();
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while creating movie");
-                return StatusCode(500, new { message = "Đã xảy ra lỗi khi thêm mới phim. Lỗi: " + ex.Message });
-            }
-
-
+            return Ok(data);
         }
-
-        [HttpPut("UpdatePhim")]
-        public async Task<IActionResult> UpdatePhim(int id, [FromForm] Phim phim)
+        [HttpPost("CreateLichChieu")]
+        public async Task<IActionResult> CheckSuatChieu(int Id, CheckDate Data)
         {
-            if (id != phim.Id) return BadRequest("ID không khớp");
-            await _phimService.UpdatePhimAsync(phim);
-            return NoContent();
+            var data = await this._phimService.CheckSuatChieu(Id,Data);
+            return Ok(data);
         }
-
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePhim(int id)
+        [HttpPost("CreatePhim")]
+        public async Task<IActionResult> Create(CreateMovie Data)
         {
-            await _phimService.DeletePhimAsync(id);
-            return NoContent();
+            var data = await this._phimService.Create(Data);
+            return Ok(data);
         }
     }
 }

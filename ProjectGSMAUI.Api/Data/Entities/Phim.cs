@@ -24,16 +24,11 @@ public partial class Phim
 
     public DateOnly? NgayKetThuc { get; set; }
 
-    public int? SoXuatChieu { get; set; }
+    public int? SoSuatChieu { get; set; }
 
     public int? TrangThai { get; set; }
 
-    public string? MoTa { get; set; }
-
-    public List<HinhAnh> HinhAnhs { get; set; } = new List<HinhAnh>(); // Navigation property
-
-    [NotMapped] // Not mapped to a database column
-    public List<IFormFile>? ImageFiles { get; set; }
+    public string? MoTa { get; set; }   
 
     [ForeignKey("TheLoai")]
     public virtual TheLoaiPhim? TheLoaiNavigation { get; set; }

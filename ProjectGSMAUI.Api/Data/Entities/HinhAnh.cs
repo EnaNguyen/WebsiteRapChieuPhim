@@ -10,6 +10,7 @@ public partial class HinhAnh
     public int? Phim { get; set; }
 
     public byte[]? ImageData { get; set; }
+    public bool Avatar { get; set; }
 
     public virtual Phim? PhimNavigation { get; set; }
 }

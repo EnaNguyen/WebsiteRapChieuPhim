@@ -12,8 +12,8 @@ using ProjectGSMAUI.Api.Data;
 namespace ProjectGSMAUI.Api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250117062142_dlss")]
-    partial class dlss
+    [Migration("20250121065833_DLSS")]
+    partial class DLSS
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1471,10 +1471,13 @@ namespace ProjectGSMAUI.Api.Migrations
                     b.Property<int?>("Phim")
                         .HasColumnType("int");
 
+                    b.Property<int?>("PhimNavigationId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id")
                         .HasName("PK__HinhAnh__3214EC272D4B69CB");
 
-                    b.HasIndex("Phim");
+                    b.HasIndex("PhimNavigationId");
 
                     b.ToTable("HinhAnh", (string)null);
                 });
@@ -1735,7 +1738,7 @@ namespace ProjectGSMAUI.Api.Migrations
                     b.Property<DateOnly?>("NgayKhoiChieu")
                         .HasColumnType("date");
 
-                    b.Property<int?>("SoXuatChieu")
+                    b.Property<int?>("SoSuatChieu")
                         .HasColumnType("int");
 
                     b.Property<string>("TenPhim")
@@ -1767,7 +1770,7 @@ namespace ProjectGSMAUI.Api.Migrations
                             MoTa = "Action-packed movie about...",
                             NgayKetThuc = new DateOnly(2024, 2, 28),
                             NgayKhoiChieu = new DateOnly(2024, 1, 15),
-                            SoXuatChieu = 50,
+                            SoSuatChieu = 50,
                             TenPhim = "Action Movie 1",
                             TheLoai = "TLP001",
                             ThoiLuong = 120,
@@ -1781,7 +1784,7 @@ namespace ProjectGSMAUI.Api.Migrations
                             MoTa = "A romantic story about...",
                             NgayKetThuc = new DateOnly(2024, 3, 15),
                             NgayKhoiChieu = new DateOnly(2024, 2, 1),
-                            SoXuatChieu = 40,
+                            SoSuatChieu = 40,
                             TenPhim = "Romantic Movie 1",
                             TheLoai = "TLP002",
                             ThoiLuong = 110,
@@ -1795,7 +1798,7 @@ namespace ProjectGSMAUI.Api.Migrations
                             MoTa = "A terrifying horror film...",
                             NgayKetThuc = new DateOnly(2024, 3, 31),
                             NgayKhoiChieu = new DateOnly(2024, 3, 1),
-                            SoXuatChieu = 35,
+                            SoSuatChieu = 35,
                             TenPhim = "Horror Movie 1",
                             TheLoai = "TLP003",
                             ThoiLuong = 95,
@@ -1809,7 +1812,7 @@ namespace ProjectGSMAUI.Api.Migrations
                             MoTa = "An animated adventure for...",
                             NgayKetThuc = new DateOnly(2024, 4, 15),
                             NgayKhoiChieu = new DateOnly(2024, 3, 20),
-                            SoXuatChieu = 15,
+                            SoSuatChieu = 15,
                             TenPhim = "Animated Movie 1",
                             TheLoai = "TLP004",
                             ThoiLuong = 90,
@@ -1823,7 +1826,7 @@ namespace ProjectGSMAUI.Api.Migrations
                             MoTa = "A sci-fi epic about...",
                             NgayKetThuc = new DateOnly(2024, 4, 30),
                             NgayKhoiChieu = new DateOnly(2024, 4, 10),
-                            SoXuatChieu = 22,
+                            SoSuatChieu = 22,
                             TenPhim = "Sci-Fi Movie 1",
                             TheLoai = "TLP005",
                             ThoiLuong = 135,
@@ -2025,14 +2028,14 @@ namespace ProjectGSMAUI.Api.Migrations
                     b.HasData(
                         new
                         {
-                            IdtaiKhoan = "TK001",
+                            IdtaiKhoan = "AD001",
                             Cccd = "123456789012",
                             DiaChi = "123 Đường ABC, Thành phố XYZ",
                             DiemTichLuy = 0,
                             Email = "nguyenquangquyX@gmail.com",
                             GioiTinh = true,
                             MatKhau = "8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92",
-                            NgayDangKy = new DateOnly(2025, 1, 17),
+                            NgayDangKy = new DateOnly(2025, 1, 21),
                             NgaySinh = new DateOnly(1999, 5, 19),
                             Sdt = "0973713274",
                             TenNguoiDung = "Quản trị viên",
@@ -2219,9 +2222,8 @@ namespace ProjectGSMAUI.Api.Migrations
             modelBuilder.Entity("ProjectGSMAUI.Api.Data.Entities.HinhAnh", b =>
                 {
                     b.HasOne("ProjectGSMAUI.Api.Data.Entities.Phim", "PhimNavigation")
-                        .WithMany("HinhAnhs")
-                        .HasForeignKey("Phim")
-                        .HasConstraintName("FK__HinhAnh__Phim__797309D9");
+                        .WithMany()
+                        .HasForeignKey("PhimNavigationId");
 
                     b.Navigation("PhimNavigation");
                 });
@@ -2349,8 +2351,6 @@ namespace ProjectGSMAUI.Api.Migrations
 
             modelBuilder.Entity("ProjectGSMAUI.Api.Data.Entities.Phim", b =>
                 {
-                    b.Navigation("HinhAnhs");
-
                     b.Navigation("LichChieus");
 
                     b.Navigation("Videos");

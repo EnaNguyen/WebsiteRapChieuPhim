@@ -31,14 +31,14 @@ namespace ProjectGSMAUI.Api.Helper
             // Duyệt qua tất cả các phim
             foreach (var phim in danhSachPhim)
             {
-                int soLuongSuatChieu = phim.SoXuatChieu ?? 0;
+                int soLuongSuatChieu = phim.SoSuatChieu ?? 0;
 
                 // Kiểm tra và giới hạn số suất chiếu của phim không vượt quá TongSuat
                 if (soLuongSuatChieu > TongSuat)
                 {
                     Console.WriteLine($"Số suất chiếu của phim {phim.TenPhim} vượt quá giới hạn {TongSuat}! Đang điều chỉnh...");
                     soLuongSuatChieu = TongSuat;
-                    phim.SoXuatChieu = TongSuat; // Cập nhật lại thông tin phim
+                    phim.SoSuatChieu = TongSuat; // Cập nhật lại thông tin phim
                 }
 
                 int khoangCach = TongSuat / soLuongSuatChieu; // Khoảng cách giữa các suất chiếu
@@ -87,15 +87,15 @@ namespace ProjectGSMAUI.Api.Helper
                 }
 
                 // Giảm số suất chiếu của phim sau khi lập lịch
-                phim.SoXuatChieu -= dem;
-                if (phim.SoXuatChieu < 0) phim.SoXuatChieu = 0; // Tránh giảm quá mức
-                if (phim.SoXuatChieu <= 0)
+                phim.SoSuatChieu -= dem;
+                if (phim.SoSuatChieu < 0) phim.SoSuatChieu = 0; // Tránh giảm quá mức
+                if (phim.SoSuatChieu <= 0)
                 {
                     phim.TrangThai = 0; // Chuyển trạng thái phim thành hết phim nếu không còn suất chiếu
                 }
 
                 // Log trạng thái phim sau khi cập nhật
-                Console.WriteLine($"Phim {phim.TenPhim} sau khi cập nhật: Số suất chiếu còn lại: {phim.SoXuatChieu}, Trạng thái: {phim.TrangThai}");
+                Console.WriteLine($"Phim {phim.TenPhim} sau khi cập nhật: Số suất chiếu còn lại: {phim.SoSuatChieu}, Trạng thái: {phim.TrangThai}");
             }
 
             // Trả về danh sách phim đã cập nhật

@@ -16,7 +16,7 @@ namespace ProjectGSMVC.Areas.Admin.Controllers
 
 {
 	[Area("Admin")]
-	public class GiamGiaController : Controller
+	public class GiamGiaController  : Controller
 	{
         private static int LoadPageTime =0;
 		Uri baseAddress = new Uri("https://localhost:7141/api");
