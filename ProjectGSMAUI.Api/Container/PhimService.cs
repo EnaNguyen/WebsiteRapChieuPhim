@@ -244,7 +244,7 @@ namespace ProjectGSMAUI.Api.Container
                     TrangThai = item.TrangThai,
                     MoTa = item.MoTa,
                     HinhAnh = _context.HinhAnhs
-                        .Where(g => g.Phim == item.Id)
+                        .Where(g => g.Phim == item.Id && g.Avatar==true)
                         .Select(g => g.ImageData)
                         .FirstOrDefault() 
                 })

@@ -39,7 +39,7 @@ namespace ProjectGSMAUI.Api.Controllers
         [HttpPost("CreateLichChieu")]
         public async Task<IActionResult> CheckSuatChieu(int Id, CheckDate Data)
         {
-            var data = await this._phimService.CheckSuatChieu(Id,Data);
+            var data = await this._phimService.CheckSuatChieu(Id, Data);
             return Ok(data);
         }
         [HttpPost("CreatePhim")]
@@ -48,5 +48,12 @@ namespace ProjectGSMAUI.Api.Controllers
             var data = await this._phimService.Create(Data);
             return Ok(data);
         }
+        [HttpPost("Update")]
+        public async Task<IActionResult> Update(int Id, CreateMovie Data)
+        {
+            var data = await this._phimService.Update(Id, Data);
+            return Ok(data);
+        }
+
     }
 }

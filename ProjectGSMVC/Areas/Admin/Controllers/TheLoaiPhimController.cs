@@ -9,7 +9,7 @@ namespace ProjectGSMVC.Areas.Admin.Controllers
     [Area("Admin")]
     public class TheLoaiPhimController : Controller
     {
-        Uri baseAddress = new Uri("http://localhost:5030/api");
+        Uri baseAddress = new Uri("https://localhost:7141/api");
         private readonly HttpClient _client;
 
         public TheLoaiPhimController()
@@ -38,7 +38,7 @@ namespace ProjectGSMVC.Areas.Admin.Controllers
 
 
             return View(theLoaiPhimList);
-        }
+         }
 
 
         //Thêm thể loại phim mới

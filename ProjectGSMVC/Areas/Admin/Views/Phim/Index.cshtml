@@ -5,14 +5,12 @@
     ViewData["Title"] = "Index";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
     var ListPhim = ViewData["ListPhim"] as List<PhimView>;
+    var ListTheLoai = ViewData["ListTheLoai"] as List<TheLoaiPhim>;
 }
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 <!-- Dropzone CSS -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.css">
 
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
-    Open modal
-</button>
 <div class="pd-ltr-20 xs-pd-20-10">
     <div class="min-height-200px">
         <div class="page-header">
@@ -44,7 +42,7 @@
                         </button>
                     </div>
                     <div class="col-6" style="text-align: right">
-                        <input type="text" name="searching" id="Searching" placeholder="Gõ Tên Giảm Giá" style="height: 40px; width: 200px; border-radius: 5px; padding-left:20px; padding-right: 20px" />
+                        <input type="text" name="searching" id="Searching" placeholder="Phim Cần Tìm" style="height: 40px; width: 200px; border-radius: 5px; padding-left:20px; padding-right: 20px" />
                         <button type="submit" class="btn btn-secondary" id="ClickSearch">Tìm kiếm</button>
                     </div>
                 </div>
@@ -59,31 +57,31 @@
                     <div class="col-lg-3 col-md-6 col-sm-12 mb-30">
                         <div class="da-card">
                             <div class="da-card-photo">
-                                <div style="height:400px; border-bottom: 1px solid grey; width: 300px">
+                                <div style="height:400px; border-bottom: 1px solid grey; width: 367.75px">
                                     @if(item.HinhAnh!=null)
                                     {
-                                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(item.HinhAnh)" alt="" style="width:300px; height:100%" />
+                                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(item.HinhAnh)" alt="" style="width:367.75px; height:100%" />
                                     }
                                     else
                                     {
-                                        <img src="https://bcp.cdnchinhphu.vn/334894974524682240/2023/4/19/nguyen-tac-phan-loai-phim-1681809768732597109738-113-0-762-1038-crop-16818097747631607022540-1681869948152579212044.jpg" alt="" style="width:300px; height:100%" />
+                                        <img src="https://bcp.cdnchinhphu.vn/334894974524682240/2023/4/19/nguyen-tac-phan-loai-phim-1681809768732597109738-113-0-762-1038-crop-16818097747631607022540-1681869948152579212044.jpg" alt="" style="width:367.75px; height:100%" />
                                     }
                                 </div>
                                 <div class="da-overlay da-slide-top">
                                     <div class="da-social">
                                         <ul class="clearfix" style="margin-left: -25px">
                                             <li>
-                                                <a href="#" class="detail-discount" data-id="@item.Id" data-bs-toggle="modal" data-bs-target="#myModal2">
+                                                <a href="#" class="detail-movie" data-id="@item.Id" data-bs-toggle="modal" data-bs-target="#myModal2">
                                                     <i class="bi bi-info-circle"></i>
                                                 </a>
                                             </li>
                                             <li>
-                                                <a href="#" class="edit-discount" data-id="@item.Id" data-bs-toggle="modal" data-bs-target="#myModal1">
+                                                <a href="#" class="edit-movie" data-id="@item.Id" data-bs-toggle="modal" data-bs-target="#myModal1">
                                                     <i class="bi bi-pencil"></i>
                                                 </a>
                                             </li>
                                             <li>
-                                                <a href="#" class="delete-discount" data-id="@item.Id"><i class="bi bi-x"></i></a>
+                                                <a href="#" class="delete-movie" data-id="@item.Id"><i class="bi bi-x"></i></a>
                                             </li>
                                         </ul>
                                     </div>
@@ -107,6 +105,7 @@
         </div>
     </div>
 </div>
+@*Model Để thêm Phim*@
 <div class="modal" id="myModal">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
@@ -117,98 +116,240 @@
 
             <div class="modal-body">
                 <div class="container">
-                    <div class ="row">
-                        <div class="col-md-6">
-                            <div id="InfoPhim" class="double-border">
-                                <h3>Thông Tin Phim</h3>
-                                <form id="phimForm">
+                    <div id="phimForm">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div id="InfoPhim" class="double-border">
+
+                                    <h3>Thông Tin Phim</h3>
                                     <div class="mb-3">
                                         <label class="form-label">Tên Phim</label>
-                                        <input type="text" class="form-control" name="TenPhim" required>
+                                        <input type="text" class="form-control" name="TenPhim" id="TenPhim1">
+                                        <h6 id="TenPhim1error"></h6>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">Thể Loại</label>
-                                        <input type="text" class="form-control" name="TheLoai" required>
+                                        <select class="form-control" name="TheLoai1" id="TheLoai1">
+                                            @if (ListTheLoai != null)
+                                            {
+                                                @foreach (var item in ListTheLoai)
+                                                {
+                                                    <option value="@item.Id">@item.TenTheLoai</option>
+                                                }
+                                            }
+                                        </select>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">Thời Lượng (phút)</label>
-                                        <input type="number" class="form-control" name="ThoiLuong" required>
+                                        <input type="number" class="form-control" name="ThoiLuong" id="ThoiLuong1">
+                                        <h6 id="ThoiLuong1error"></h6>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">Đạo Diễn</label>
-                                        <input type="text" class="form-control" name="DaoDien" required>
+                                        <input type="text" class="form-control" name="DaoDien" id="DaoDien1">
+                                        <h6 id="DaoDien1error"></h6>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">Giới Hạn Độ Tuổi</label>
-                                        <input type="number" class="form-control" name="GioiHanDoTuoi" min="0" required>
+                                        <select class="form-control" name="GioiHanDoTuoi" id="GioiHanDoTuoi1">
+                                            <option value="0">Không giới hạn độ tuổi</option>
+                                            <option value="3">Theo sự hướng dẫn của cha mẹ</option>
+                                            <option value="12">12+</option>
+                                            <option value="16">16+</option>
+                                            <option value="18">18+</option>
+                                        </select>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">Ngày Khởi Chiếu</label>
-                                        <input type="date" class="form-control" name="NgayKhoiChieu" required>
+                                        <input type="date" class="form-control" name="NgayKhoiChieu" id="NgayKhoiChieu1">
+                                        <h6 id="NgayKhoiChieu1error"></h6>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">Ngày Kết Thúc</label>
-                                        <input type="date" class="form-control" name="NgayKetThuc" required>
+                                        <input type="date" class="form-control" name="NgayKetThuc" id="NgayKetThuc1">
+                                        <h6 id="NgayKetThuc1error"></h6>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">Số Suất Chiếu / Tuần</label>
-                                        <input type="number" class="form-control" name="SoSuatChieu" id="SoSuatChieu" min="1" max="36" required>
-                                        <div class="invalid-feedback">Số suất chiếu phải từ 1 đến 36!</div>
+                                        <input type="number" class="form-control" name="SoSuatChieu" id="SoSuatChieu1" min="1" max="42">
+                                        <h6 id="SoSuatChieu1error"></h6>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">Trạng Thái</label>
-                                        <select class="form-control" name="TrangThai">
+                                        <select class="form-control" name="TrangThai" id="TrangThai1">
                                             <option value="1">Hoạt động</option>
                                             <option value="0">Ngừng chiếu</option>
                                         </select>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">Mô Tả</label>
-                                        <textarea class="form-control" name="MoTa" rows="4"></textarea>
+                                        <textarea class="form-control" name="MoTa" id="MoTa1" rows="4"></textarea>
+                                        <h6 id="MoTa1error"></h6>
                                     </div>
-                                    <button type="submit" class="btn btn-primary">Lưu Phim</button>
-                                </form>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div id="AvaDiv" class="double-border">
-                                <h3>Ảnh Bìa của bộ phim</h3>
-                                <input type="file" id="UploadAnhBia" accept="image/*" class="form-control mb-2">
-                                <img id="AnhBiaPreview" src="" class="img-fluid" style="max-height: 300px; display: none; border-radius: 10px;">
-                            </div>
-
-                            <div id="MorePic" class="double-border">
-                                <h3 class="text-center mb-4">Drag & Drop để tải thêm các hình ảnh khác của phim</h3>
-                                <form action="Phim/UploadFiles" class="dropzone custom-dropzone" id="myDropzone">
-                                    <div class="dz-message">
-                                        <i class="fas fa-cloud-upload-alt fa-3x"></i>
-                                        <p>Kéo & thả hoặc nhấp để chọn ảnh</p>
-                                    </div>
-                                    <div id="preview-container"></div>
-                                </form>
-                            </div>
-
-                            <div id="TrailerDiv" class="double-border">
-                                <h3>Trailer của bộ phim</h3>
-                                <div class="d-flex">
-                                    <input type="text" id="TrailerInput" class="form-control me-2" placeholder="Dán link YouTube...">
-                                    <button id="LoadVideo" class="btn btn-primary">Load Video</button>
                                 </div>
-                                <div id="TrailerPhim" class="mt-3"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <div id="AvaDiv" class="double-border">
+                                    <h3>Ảnh Bìa của bộ phim</h3>
+                                    <input type="file" id="UploadAnhBia" accept="image/*" class="form-control mb-2">
+                                    <img id="AnhBiaPreview" src="" class="img-fluid" style="max-height: 300px; display: none; border-radius: 10px;">
+                                </div>
+
+                                <div id="MorePic" class="double-border">
+                                    <h3 class="text-center mb-4">Drag & Drop để tải thêm các hình ảnh khác của phim</h3>
+                                    <form action="Phim/UploadFiles" class="dropzone custom-dropzone" id="myDropzone">
+                                        <div class="dz-message">
+                                            <i class="fas fa-cloud-upload-alt fa-3x"></i>
+                                            <p>Kéo & thả hoặc nhấp để chọn ảnh</p>
+                                        </div>
+                                        <div id="preview-container"></div>
+                                    </form>
+                                </div>
+                                <h6 id="HinhAnh1error"></h6>
+                                <div id="TrailerDiv" class="double-border">
+                                    <h3>Trailer của bộ phim</h3>
+                                    <div class="d-flex">
+                                        <input type="text" id="TrailerInput" class="form-control me-2" placeholder="Dán link YouTube...">
+                                        <button id="LoadVideo" class="btn btn-primary">Load Video</button>
+                                    </div>
+                                    <div id="TrailerPhim" class="mt-3"></div>
+                                </div>
+                                <h6 id="Video1error"></h6>
                             </div>
                         </div>
-                    </div>                              
-                <button type="button" id="uploadButton" class="btn btn-success mt-3">Tải lên</button>
+                    </div>
+                </div>
             </div>
-
             <div class="modal-footer">
+                <button type="button" id="uploadButton" class="btn btn-primary">Tải lên</button>
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Đóng</button>
             </div>
         </div>
-        </div>
     </div>
 </div>
+
+@*Model Để Sửa Phim*@
+<div class="modal" id="myModal1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header" style="text-align: center">
+                <h3>Chỉnh Sửa Thông Tin Phim</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="container">
+                    <div id="phimForm">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div id="InfoPhim" class="double-border">
+
+                                    <h3>Thông Tin Phim</h3>
+                                    <div class="mb-3">
+                                        <label class="form-label">Tên Phim</label>
+                                        <input type="text" class="form-control" name="TenPhim" id="TenPhim2">
+                                        <h6 id="TenPhim1error"></h6>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Thể Loại</label>
+                                        <select class="form-control" name="TheLoai1" id="TheLoai2">
+                                            @if (ListTheLoai != null)
+                                            {
+                                                @foreach (var item in ListTheLoai)
+                                                {
+                                                    <option value="@item.Id">@item.TenTheLoai</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Thời Lượng (phút)</label>
+                                        <input type="number" class="form-control" name="ThoiLuong" id="ThoiLuong2">
+                                        <h6 id="ThoiLuong2error"></h6>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Đạo Diễn</label>
+                                        <input type="text" class="form-control" name="DaoDien" id="DaoDien2">
+                                        <h6 id="DaoDien2error"></h6>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Giới Hạn Độ Tuổi</label>
+                                        <select class="form-control" name="GioiHanDoTuoi" id="GioiHanDoTuoi2">
+                                            <option value="0">Không giới hạn độ tuổi</option>
+                                            <option value="3">Theo sự hướng dẫn của cha mẹ</option>
+                                            <option value="12">12+</option>
+                                            <option value="16">16+</option>
+                                            <option value="18">18+</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Ngày Khởi Chiếu</label>
+                                        <input type="date" class="form-control" name="NgayKhoiChieu" id="NgayKhoiChieu2">
+                                        <h6 id="NgayKhoiChieu2error"></h6>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Ngày Kết Thúc</label>
+                                        <input type="date" class="form-control" name="NgayKetThuc" id="NgayKetThuc2">
+                                        <h6 id="NgayKetThuc2error"></h6>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Số Suất Chiếu / Tuần</label>
+                                        <input type="number" class="form-control" name="SoSuatChieu" id="SoSuatChieu2" min="1" max="42" disabled>
+                                        <h6 id="SoSuatChieu2error"></h6>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Trạng Thái</label>
+                                        <select class="form-control" name="TrangThai" id="TrangThai2">
+                                            <option value="1">Hoạt động</option>
+                                            <option value="0">Ngừng chiếu</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Mô Tả</label>
+                                        <textarea class="form-control" name="MoTa" id="MoTa2" rows="4"></textarea>
+                                        <h6 id="MoTa2error"></h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div id="AvaDiv" class="double-border">
+                                    <h3>Ảnh Bìa của bộ phim</h3>
+                                    <input type="file" id="UploadAnhBia" accept="image/*" class="form-control mb-2">
+                                    <img id="AnhBiaPreview1" src="" class="img-fluid" style="max-height: 300px; display: none; border-radius: 10px;">
+                                </div>
+
+                                <div id="MorePic" class="double-border">
+                                    <h3 class="text-center mb-4">Drag & Drop để tải thêm các hình ảnh khác của phim</h3>
+                                    <form action="Phim/UploadFiles" class="dropzone custom-dropzone" id="myDropzone1">
+                                        <div class="dz-message">
+                                            <i class="fas fa-cloud-upload-alt fa-3x"></i>
+                                            <p>Kéo & thả hoặc nhấp để chọn ảnh</p>
+                                        </div>
+                                        <div id="preview-container1"></div>
+                                    </form>
+                                </div>
+                                <h6 id="HinhAnh2error"></h6>
+                                <div id="TrailerDiv" class="double-border">
+                                    <h3>Trailer của bộ phim</h3>
+                                    <div class="d-flex">
+                                        <input type="text" id="TrailerInput1" class="form-control me-2" placeholder="Dán link YouTube...">
+                                        <button id="LoadVideo1" class="btn btn-primary">Load Video</button>
+                                    </div>
+                                    <div id="TrailerPhim1" class="mt-3"></div>
+                                </div>
+                                <h6 id="Video1error"></h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="uploadButton" class="btn btn-primary">Tải lên</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div> 
 
 <!-- FontAwesome & Dropzone JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
@@ -381,20 +522,9 @@
     });
 
 </script>
+
 @* Validate suất chiếu nhỏ hơn 36 *@
-<script>
-    $(document).ready(function () {
-        $("#phimForm").submit(function (event) {
-            let soSuatChieu = $("#SoSuatChieu").val();
-            if (soSuatChieu < 1 || soSuatChieu > 36) {
-                $("#SoSuatChieu").addClass("is-invalid");
-                event.preventDefault();
-            } else {
-                $("#SoSuatChieu").removeClass("is-invalid");
-            }
-        });
-    });
-</script>
+
 @* Load Ảnh và Video  *@
 <script>
     // Hiển thị ảnh bìa sau khi chọn
@@ -431,99 +561,137 @@
                     frameborder="0" allowfullscreen></iframe>`;
     });
 </script>
+
 @*Tạo Phim gửi dữ liệu tới Controller*@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
     $(document).ready(function () {
-        $("#phimForm").submit(function (e) {
+        $("#uploadButton").click(function (e) {
             e.preventDefault(); // Ngăn form load lại trang
-
+            console.log("Hello?")
             // Lấy dữ liệu từ form
             let phimData = {
-                TenPhim: $("input[name='TenPhim']").val(),
-                TheLoai: $("input[name='TheLoai']").val(),
-                ThoiLuong: $("input[name='ThoiLuong']").val(),
-                DaoDien: $("input[name='DaoDien']").val(),
-                GioiHanDoTuoi: $("input[name='GioiHanDoTuoi']").val(),
-                NgayKhoiChieu: $("input[name='NgayKhoiChieu']").val(),
-                NgayKetThuc: $("input[name='NgayKetThuc']").val(),
-                SoSuatChieu: $("input[name='SoSuatChieu']").val(),
-                TrangThai: $("select[name='TrangThai']").val(),
-                MoTa: $("textarea[name='MoTa']").val()
+                TenPhim: $("#TenPhim1").val(),
+                TheLoai: $("#TheLoai1").val(),
+                ThoiLuong: $("#ThoiLuong1").val(),
+                DaoDien: $("#DaoDien1").val(),
+                GioiHanDoTuoi: $("#GioiHanDoTuoi1").val(),
+                NgayKhoiChieu: $("#NgayKhoiChieu1").val(),
+                NgayKetThuc: $("#NgayKetThuc1").val(),
+                SoSuatChieu: $("#SoSuatChieu1").val(),
+                TrangThai: $("#TrangThai1").val(),
+                MoTa: $("#MoTa1").val()
             };
-
-            // Lấy ảnh bìa (ava) nếu có
             let avaFile = $("#UploadAnhBia")[0].files[0];
-
+            console.log(avaFile);
+            console.log(phimData);
             if (avaFile) {
                 let reader = new FileReader();
                 reader.onloadend = function () {
+                    console.log("if");
                     let avaImageData = reader.result.split(',')[1]; // Lấy dữ liệu base64
                     collectDropzoneImages(phimData, avaImageData);
                 };
                 reader.readAsDataURL(avaFile);
             } else {
+                console.log("else");
                 collectDropzoneImages(phimData, null);
+            }
+            function collectDropzoneImages(phimData, avaImageData) {
+                let hinhAnhs = [];
+                let videoLink = $("#TrailerInput").val();
+
+                if (avaImageData) {
+                    hinhAnhs.push({ Phim: null, ImageData: avaImageData });
+                }
+                let files = myDropzone.files;
+                let dropzoneImages = [];
+
+                if (files.length > 0) {
+                    let dropzoneImages = []; // Đảm bảo biến này được khai báo
+                    let loadedImages = 0;
+
+                    files.forEach((file, index) => {
+                        let reader = new FileReader();
+                        reader.onloadend = function () {
+                            dropzoneImages.push({ Phim: null, ImageData: reader.result.split(',')[1] });
+
+                            loadedImages++;
+                            if (loadedImages === files.length) {
+                                console.log("Lỗi 508")
+                                if (!avaFile && dropzoneImages.length > 0) {
+                                    Swal.fire({
+                                        title: "Chọn ảnh làm Avatar?",
+                                        text: "Bạn Chưa Chọn Ảnh Avatar cho bộ phim, bạn có muốn lấy ảnh đầu tiên trong số những bức ảnh khác của bạn làm avatar không?",
+                                        icon: "warning",
+                                        showCancelButton: true,
+                                        confirmButtonColor: "#3085d6",
+                                        cancelButtonColor: "#d33",
+                                        confirmButtonText: "Có!",
+                                        cancelButtonText: "Hủy"
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            sendData(phimData, hinhAnhs.concat(dropzoneImages), videoLink);
+                                        }
+                                    });
+                                } else {
+                                    sendData(phimData, hinhAnhs.concat(dropzoneImages), videoLink);
+                                }
+                            }
+                        };
+                        reader.readAsDataURL(file);
+                    });
+                } else {
+                    // Nếu không có ảnh Dropzone và cũng không có ảnh Avatar => Hiển thị cảnh báo
+                    if (!avaFile) {
+                        Swal.fire({
+                            title: "Lỗi",
+                            text: "Bạn cần tải lên ít nhất một ảnh!",
+                            icon: "error"
+                        });
+                    } else {
+                        sendData(phimData, hinhAnhs, videoLink);
+                    }
+                }
+            }
+            // Gửi dữ liệu AJAX
+            function sendData(phimData, hinhAnhs, videoLink) {
+                let dataToSend = {
+                    PhimDatas: phimData,
+                    HinhAnhs: hinhAnhs,
+                    Videos: videoLink ? [{ Phim: null, Link: videoLink }] : []
+                };
+
+                $.ajax({
+                    url: "/Admin/Phim/CreateMovie",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(dataToSend),
+                    success: function (response) {
+                        alert("Thêm phim thành công!");
+                        $("#myModal").modal("hide");
+                        location.reload();
+                    },
+                    error: function (xhr) {
+                        var errors = xhr.responseJSON;
+                        console.log(errors)
+                        $("h6").text("").css("color", "");
+                        if (errors.TenPhim) $("#TenPhim1error").text(errors.TenPhim).css("color", "red");
+                        if (errors.ThoiLuong) $("#ThoiLuong1error").text(errors.ThoiLuong).css("color", "red");
+                        if (errors.DaoDien) $("#DaoDien1error").text(errors.DaoDien).css("color", "red");
+                        if (errors.GioiHanDoTuoi) $("#GioiHanDoTuoi1").text(errors.GioiHanDoTuoi).css("color", "red");
+                        if (errors.NgayKhoiChieu) $("#NgayKhoiChieu1error").text(errors.NgayKhoiChieu).css("color", "red");
+                        if (errors.NgayKetThuc) $("#NgayKetThuc1error").text(errors.NgayKetThuc).css("color", "red");
+                        if (errors.SoSuatChieu) $("#SoSuatChieu1error").text(errors.SoSuatChieu).css("color", "red");
+                        console.log(errors.MoTa)
+                        if (errors.MoTa) $("#MoTa1error").text(errors.MoTa).css("color", "red");
+                        console.log(errors.Videos)
+                        if (errors.Videos) $("#Video1error").text(errors.Videos).css("color", "red");
+                    }
+                });
             }
         });
 
-        // Lấy ảnh từ Dropzone
-        function collectDropzoneImages(phimData, avaImageData) {
-            let hinhAnhs = [];
-            let videoLink = $("#TrailerInput").val();
-
-            // Đưa ảnh bìa (ava) vào đầu danh sách (nếu có)
-            if (avaImageData) {
-                hinhAnhs.push({ Phim: null, ImageData: avaImageData });
-            }
-
-            // Lấy danh sách ảnh từ Dropzone
-            let files = myDropzone.files;
-            let dropzoneImages = [];
-
-            if (files.length > 0) {
-                let loadedImages = 0;
-                files.forEach((file, index) => {
-                    let reader = new FileReader();
-                    reader.onloadend = function () {
-                        dropzoneImages.push({ Phim: null, ImageData: reader.result.split(',')[1] });
-
-                        loadedImages++;
-                        if (loadedImages === files.length) {
-                            // Kết hợp ảnh bìa với ảnh từ Dropzone
-                            sendData(phimData, hinhAnhs.concat(dropzoneImages), videoLink);
-                        }
-                    };
-                    reader.readAsDataURL(file);
-                });
-            } else {
-                sendData(phimData, hinhAnhs, videoLink);
-            }
-        }
-
-        // Gửi dữ liệu AJAX
-        function sendData(phimData, hinhAnhs, videoLink) {
-            let dataToSend = {
-                PhimDatas: phimData,
-                HinhAnhs: hinhAnhs,
-                Videos: videoLink ? [{ Phim: null, Link: videoLink }] : []
-            };
-
-            $.ajax({
-                url: "/Admin/Phim/CreateMovie",
-                type: "POST",
-                contentType: "application/json",
-                data: JSON.stringify(dataToSend),
-                success: function (response) {
-                    alert("Thêm phim thành công!");
-                    $("#myModal").modal("hide");
-                    location.reload();
-                },
-                error: function (xhr) {
-                    alert("Lỗi: " + xhr.responseText);
-                }
-            });
-        }
     });
 
     // Cấu hình Dropzone
@@ -534,6 +702,157 @@
         acceptedFiles: "image/*",
         addRemoveLinks: true,
         dictDefaultMessage: "Kéo & thả hoặc nhấp để chọn ảnh"
+    });
+</script>
+
+@*Load dữ liệu lên Modal*@
+<script>
+    $(document).ready(function () {
+        $(".edit-movie").on("click", function (e) {
+            e.preventDefault();
+
+            var movieId = $(this).data("id");
+
+            $.ajax({
+                url: "/Admin/Phim/GetPhim",
+                type: "GET",
+                data: { id: movieId },
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                    if (response.success) {
+                        var phim = response.data;
+                        var hinhAnhs = response.data.hinhAnhs;
+
+                        var avatar = phim.hinhAnhs.find(img => img.avatar === true);
+                        if (avatar) {
+                            $("#AnhBiaPreview1").attr("src", "data:image/png;base64," + avatar.imageData).show();
+                        }
+                        $("#TenPhim2").val(phim.movies.tenPhim);
+                        $("#ThoiLuong2").val(phim.movies.thoiLuong);
+                        $("#DaoDien2").val(phim.movies.daoDien);
+                        $("#GioiHanDoTuoi2").val(phim.movies.gioiHanDoTuoi);
+                        $("#NgayKhoiChieu2").val(phim.movies.ngayKhoiChieu);
+                        $("#NgayKetThuc2").val(phim.movies.ngayKetThuc);
+                        $("#SoSuatChieu2").val(phim.movies.soSuatChieu);
+                        $("#TrangThai2").val(phim.movies.trangThai);
+                        $("#MoTa2").val(phim.movies.moTa);
+
+                        // Set giá trị cho select thể loại
+                        $("#TheLoai2 option").each(function () {
+                            if ($(this).val() == phim.movies.theLoaiId) {
+                                $(this).prop("selected", true);
+                            } else {
+                                $(this).prop("selected", false);
+                            }
+                        });
+                        var myDropzone = Dropzone.forElement("#myDropzone1");
+                        hinhAnhs.forEach(img => {
+                            if (!img.avatar) {
+                                let mockFile = { name: img.id, size: 12345 }; // Fake file metadata
+                                myDropzone.emit("addedfile", mockFile);
+                                myDropzone.emit("thumbnail", mockFile, "data:image/png;base64," + img.imageData);
+                                myDropzone.emit("complete", mockFile);
+                            }
+                        });
+
+                        if (phim.videos && phim.videos[0].link) {
+                            let Hehe = phim.videos[0].link;
+                            $("#TrailerInput1").val(phim.videos[0].link);
+                            $("#TrailerPhim1").html(`<iframe width="100%" height="315" src="${HeHe}" frameborder="0" allowfullscreen></iframe>`);
+                        } else {
+                            console.log("Huhu")
+                            $("#TrailerInput1").val(""); 
+                            $("#TrailerPhim1").empty(); 
+                        }
+
+                        // Hiển thị modal
+                        $("#myModal1").modal("show");
+
+                    } else {
+                        console.log("Lỗi:", response.message);
+                    }
+                },
+
+                error: function (xhr, status, error) {
+                    console.log("Có lỗi xảy ra:", error);
+                }
+            });
+        });
+    });
+    $("#myModal1").on("hidden.bs.modal", function () {
+        $(this).removeData("bs.modal");
+    });
+    // Khởi tạo Dropzone
+    var myDropzone1 = new Dropzone("#myDropzone1", {
+        url: "/Admin/Phim/UploadFiles",
+        paramName: "files",
+        maxFilesize: 5,
+        acceptedFiles: "image/*",
+        addRemoveLinks: false, // Không dùng link mặc định
+        autoProcessQueue: true,
+        previewsContainer: "#preview-container1", // Hiển thị file tại container riêng
+        thumbnailWidth: 120,
+        thumbnailHeight: 120,
+
+        init: function () {
+            var dz = this;
+
+            dz.on("addedfile", function (file) {
+                console.log("File đã thêm:", file.name);
+
+                var removeButton = document.createElement("div");
+                removeButton.className = "dz-remove-btn";
+                removeButton.innerHTML = "&times;"; 
+
+                console.log(removeButton); 
+
+                removeButton.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    Swal.fire({
+                        title: "Bạn có chắc chắn?",
+                        text: "Bạn có muốn xóa ảnh này khỏi danh sách?",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Có, xóa ảnh!",
+                        cancelButtonText: "Hủy"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            dz.removeFile(file); 
+                            Swal.fire("Đã xóa!", "Ảnh đã được xóa khỏi danh sách.", "success");
+                        }
+                    });
+                });
+
+                var previewElement = file.previewElement;
+                if (previewElement) {
+                    previewElement.appendChild(removeButton);
+                } else {
+                    console.error("Không tìm thấy previewElement cho file:", file.name);
+                }
+            });
+        }
+    });
+    document.getElementById("LoadVideo1").addEventListener("click", function () {
+        let url = document.getElementById("TrailerInput1").value;
+        let embedUrl = "";
+
+        let youtubeMatch = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|v\/)|youtu\.be\/)([^&?]+)/);
+        if (youtubeMatch) {
+            embedUrl = `https://www.youtube.com/embed/${youtubeMatch[1]}`;
+        } else {
+            alert("Vui lòng nhập đường dẫn YouTube hợp lệ!");
+            return;
+        }
+
+        // Gắn video vào div TrailerPhim
+        document.getElementById("TrailerPhim1").innerHTML = `
+                    <iframe width="100%" height="315" src="${embedUrl}"
+                        frameborder="0" allowfullscreen></iframe>`;
     });
 </script>
 
