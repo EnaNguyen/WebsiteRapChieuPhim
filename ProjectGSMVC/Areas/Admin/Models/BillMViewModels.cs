@@ -1,4 +1,6 @@
-﻿namespace ProjectGSMVC.Areas.Admin.Models
+﻿using Newtonsoft.Json;
+
+namespace ProjectGSMVC.Areas.Admin.Models
 
 {
     public class BillMViewModels
@@ -18,6 +20,8 @@
         public string? TinhTrangDisplay { get; set; }
 
         // Thêm thuộc tính này để chứa danh sách chi tiết hóa đơn
+
+        [JsonProperty("detailBills")] // Ánh xạ với thuộc tính "detailBills" trong JSON
         public List<DetailBillViewModel> DetailBillItems { get; set; }
     }
 }

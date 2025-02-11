@@ -27,19 +27,6 @@ namespace ProjectGSMAUI.Api.Container
             _logger = logger;
         }
 
-        // Phương thức lấy tất cả hóa đơn
-        //public async Task<List<Billmodal>> GetAll()
-        //{
-
-        //        List<Billmodal> _response = new List<Billmodal>();
-        //    var _data = await this._context.HoaDons.ToListAsync();
-        //    if (_data != null)
-        //    {
-        //        _response = this._mapper.Map<List<HoaDon>, List<Billmodal>>(_data);
-        //    }
-        //    return await Task.FromResult(_response);
-
-        //}
         public async Task<List<Billmodal>> GetAll()
         {
             List<Billmodal> _response = new List<Billmodal>();
@@ -194,7 +181,7 @@ namespace ProjectGSMAUI.Api.Container
             {
                 // Lấy hóa đơn theo ID và bao gồm cả chi tiết hóa đơn
                 var hoaDon = await _context.HoaDons
-                    .Include(h => h.ChiTietHoaDons) // Bao gồm chi tiết hóa đơn
+                    .Include(h => h.ChiTietHoaDons) 
                     .FirstOrDefaultAsync(h => h.MaHoaDon == id);
 
                 if (hoaDon == null)

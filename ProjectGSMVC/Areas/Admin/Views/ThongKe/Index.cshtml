@@ -1,91 +1,92 @@
 ﻿@{
-    ViewData["Title"] = "Index";
-    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+	ViewData["Title"] = "Thống Kê Hóa Đơn";
+	Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <link rel="stylesheet" href="vendors/styles/core.css" />
-    <link rel="stylesheet" href="vendors/styles/icon-font.min.css" />
-    <link rel="stylesheet" href="vendors/styles/style.css" />
+	<!-- CSS -->
+	<link rel="stylesheet" type="text/css" href="~/admin/vendors/styles/core.css" />
+	<link rel="stylesheet" type="text/css" href="~/admin/vendors/styles/style.css" />
 </head>
 
 <body>
-    <div class="main-container">
-        <div class="pd-ltr-20 xs-pd-20-10">
-            <div class="min-height-200px">
-                <div class="page-header">
-                    <div class="row">
-                        <div class="col-md-6 col-sm-12">
-                            <div class="title">
-                                <h4>Thống Kê Hóa Đơn</h4>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+	<div class="pd-ltr-20 xs-pd-20-10">
+		<div class="page-header">
+			<div class="row">
+				<div class="col-md-6 col-sm-12">
+					<div class="title">
+						<h4>Thống Kê Hóa Đơn</h4>
+					</div>
+					<nav aria-label="breadcrumb" role="navigation">
+						<ol class="breadcrumb">
+							<li class="breadcrumb-item"><a href="#">Home</a></li>
+							<li class="breadcrumb-item active" aria-current="page">Thống Kê</li>
+						</ol>
+					</nav>
+				</div>
+			</div>
+		</div>
 
-                <div class="row">
-                    <div class="col-md-6 mb-30">
-                        <div class="pd-20 card-box height-100-p">
-                            <h4 class="h4 text-blue">Biểu Đồ Bánh</h4>
-                            <div id="chart8"></div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 mb-30">
-                        <div class="pd-20 card-box height-100-p">
-                            <h4 class="h4 text-blue">Biểu Đồ Radial</h4>
-                            <div id="chart9"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+		<!-- Biểu đồ -->
+		<div class="row">
+			<div class="col-md-6 mb-30">
+				<div class="pd-20 card-box height-100-p">
+					<h4 class="h4 text-blue">Biểu Đồ Bánh</h4>
+					<div id="chart8"></div>
+				</div>
+			</div>
+		</div>
+	</div>
 
-    <script src="vendors/scripts/core.js"></script>
-    <script src="vendors/scripts/script.min.js"></script>
-    <script src="vendors/scripts/process.js"></script>
-    <script src="vendors/scripts/layout-settings.js"></script>
-    <script src="src/plugins/apexcharts/apexcharts.min.js"></script>
-    <script src="~/vendors/scripts/apexcharts-setting.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<!-- JS -->
+	<script src="~/admin/vendors/scripts/core.js"></script>
+	<script src="~/admin/src/plugins/apexcharts/apexcharts.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
 
-    <script>
-        $(document).ready(function() {
-    // Gọi Ajax khi trang được tải xong
-    $.ajax({
-        url: '@Url.Action("Index", "ThongKe", new { area = "Admin" })', // URL đến action controller
-        type: 'GET',
-        dataType: 'json',
-        success: function(response) {
-            if (response.success) {
-                // Cập nhật dữ liệu cho biểu đồ Bánh
-                var chart8 = new ApexCharts(document.querySelector("#chart8"), {
-                    series: response.data.map(item => item.someProperty), // Adjust this to your data
-                    chart: {
-                        type: 'donut'
-                    }
-                });
-                chart8.render();
+	<script>
+		$(document).ready(function () {
+			$.ajax({
+				url: "/Admin/ThongKe/GetBillStatistics",
+				method: "GET",
+				dataType: "json",
+				success: function (response) {
+					if (response.error) {
+						console.log("Lỗi: ", response.error);
+						return;
+					}
 
-                // Cập nhật dữ liệu cho biểu đồ Radial
-                var chart9 = new ApexCharts(document.querySelector("#chart9"), {
-                    series: response.data.map(item => item.someOtherProperty), // Adjust this to your data
-                    chart: {
-                        height: 390,
-                        type: 'radialBar'
-                    }
-                });
-                chart9.render();
-            } else {
-                alert('Lỗi: ' + response.message);
-            }
-        },
-        error: function() {
-            alert('Có lỗi xảy ra khi tải dữ liệu.');
-        }
-    });
-});
+					// Chuyển đổi dữ liệu cho biểu đồ
+					var labels = response.map(item => "Trạng thái: " + item.TrangThai);
+					var series = response.map(item => item.SoLuong);
 
-    </script>
+					// Cấu hình biểu đồ
+					var options8 = {
+						series: series,
+						chart: {
+							type: 'donut',
+						},
+						labels: labels,
+						responsive: [{
+							breakpoint: 480,
+							options: {
+								chart: {
+									width: 200
+								},
+								legend: {
+									position: 'bottom'
+								}
+							}
+						}]
+					};
+
+					// Render biểu đồ
+					var chart = new ApexCharts(document.querySelector("#chart8"), options8);
+					chart.render();
+				},
+				error: function (err) {
+					console.log("Lỗi khi lấy dữ liệu:", err);
+				}
+			});
+		});
+	</script>
 </body>

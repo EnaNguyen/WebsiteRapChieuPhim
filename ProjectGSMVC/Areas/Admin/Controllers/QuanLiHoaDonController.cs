@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 namespace ProjectGSMVC.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class VhBillMController : Controller
+    public class QuanLiHoaDonController : Controller
     {
-        private readonly Uri baseAddress = new Uri("http://localhost:5030/api");
+        private readonly Uri baseAddress = new Uri("https://localhost:7141/api");
         private readonly HttpClient _client;
 
-        public VhBillMController()
+        public QuanLiHoaDonController()
         {
             _client = new HttpClient { BaseAddress = baseAddress };
         }
@@ -105,23 +105,35 @@ namespace ProjectGSMVC.Areas.Admin.Controllers
             }
         }
 
-        // Lấy chi tiết hóa đơn
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
-            // Gọi API để lấy chi tiết hóa đơn
+            ////// Gọi API để lấy chi tiết hóa đơn
             HttpResponseMessage response = await _client.GetAsync($"{_client.BaseAddress}/Bill_Management/GetDetailsByID?id={id}");
+
             if (response.IsSuccessStatusCode)
             {
                 var data = await response.Content.ReadAsStringAsync();
-                var bill = JsonConvert.DeserializeObject<BillMViewModels>(data);
-                return PartialView("Details", bill); 
+
+            var bill = JsonConvert.DeserializeObject<BillMViewModels>(data); // Deserialize dữ liệu vào đối tượng
+
+                // Kiểm tra xem BillMViewModels có dữ liệu chi tiết hóa đơn không
+                if (bill.DetailBillItems != null && bill.DetailBillItems.Any())
+                {
+                    return PartialView("Details", bill);
+                }
+                else
+                {
+                    return NotFound(); // Không có chi tiết hóa đơn
+                }
             }
             else
             {
-                return NotFound(); 
+              return NotFound(); // Nếu API không thành công
             }
         }
+
+
 
 
     }

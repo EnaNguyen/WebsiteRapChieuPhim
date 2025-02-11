@@ -7,48 +7,47 @@ using System.Threading.Tasks;
 
 namespace ProjectGSMVC.Areas.Admin.Controllers
 {
-    [Area("Admin")]
-    public class ThongKeController : Controller
-    {
+	[Area("Admin")] 
+	public class ThongKeController : Controller
+	{
+		private readonly Uri baseAddress = new Uri("http://localhost:5030/api");
+		private readonly HttpClient _client;
 
-        private readonly Uri baseAddress = new Uri("http://localhost:5030/api");
-        private readonly HttpClient _client;
+		public ThongKeController()
+		{
+			_client = new HttpClient { BaseAddress = baseAddress };
+		}
 
-        public ThongKeController()
-        {
-            _client = new HttpClient { BaseAddress = baseAddress };
-        }
-        // Lấy danh sách thống kê
-        [HttpGet]
-        public async Task<IActionResult> Index()
-        {
-            List<BillMViewModels> billList = new List<BillMViewModels>();
+		[HttpGet]
+		public async Task<IActionResult> Index()
+		{
+			return View(); 
+		}
 
-            try
-            {
-               
-                HttpResponseMessage response = _client.GetAsync(_client.BaseAddress + "/Bill_Management/GetAll").Result;
-                if (response.IsSuccessStatusCode)
-                {
-                    string data = await response.Content.ReadAsStringAsync();
-                    billList = JsonConvert.DeserializeObject<List<BillMViewModels>>(data);
+		[HttpGet]
+		public async Task<IActionResult> GetBillStatistics()
+		{
+			try
+			{
+				HttpResponseMessage response = await _client.GetAsync("/Bill_Management/GetAll");
 
-                    // Return data as JSON
-                    return Json(new { success = true, data = billList });
-                }
-                else
-                {
-                    string errorMessage = await response.Content.ReadAsStringAsync();
-                    return Json(new { success = false, message = $"Không thể lấy dữ liệu: {errorMessage}" });
-                }
-            }
-            catch (Exception ex)
-            {
-                // Log exception (optional) and return error message
-                return Json(new { success = false, message = $"Lỗi xảy ra: {ex.Message}" });
-            }
-        }
+				if (response.IsSuccessStatusCode)
+				{
+					string data = await response.Content.ReadAsStringAsync();
+					var billList = JsonConvert.DeserializeObject<List<BillMViewModels>>(data);
 
+					var statistics = billList.GroupBy(b => b.TinhTrangDisplay)
+						.Select(g => new { TrangThai = g.Key, SoLuong = g.Count() })
+						.ToList();
 
-    }
+					return Json(statistics);
+				}
+			}
+			catch (Exception ex)
+			{
+				return Json(new { error = "Lỗi khi lấy dữ liệu" });
+			}
+			return Json(new List<object>());
+		}
+	}
 }

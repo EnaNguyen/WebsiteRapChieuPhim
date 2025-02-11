@@ -1,0 +1,173 @@
+﻿@model IEnumerable<ProjectGSMVC.Areas.Admin.Models.BillMViewModels>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<div class="page-header">
+    <div class="row">
+        <div class="col-md-6 col-sm-12">
+            <div class="title">
+                <h4>Quản lý hóa đơn</h4>
+            </div>
+            <nav aria-label="breadcrumb" role="navigation">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="@Url.Action("Index", "Home")">Trang chủ</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                        Quản lý hóa đơn
+                    </li>
+                </ol>
+            </nav>
+        </div>
+        
+    </div>
+</div>
+
+<!-- Bảng hiển thị danh sách hóa đơn -->
+<div class="pd-20 card-box mb-30">
+    <div class="clearfix mb-20">
+        <div class="pull-left">
+            <h4 class="text-blue h4">Danh sách hóa đơn</h4>
+        </div>
+    </div>
+    <table class="table table-bordered table text-center">
+        <thead class="table-dark">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Mã hóa đơn</th>
+            <th scope="col">Mã đặt vé</th>
+            <th scope="col">Mã khách hàng</th>
+            <th scope="col">Tổng tiền</th>
+            <th scope="col">Mã giảm giá</th>
+            <th scope="col">Tình trạng</th>
+            <th scope="col">Hành động</th>
+        </tr>
+        </thead>
+        <tbody>
+        @if (Model != null && Model.Any())
+        {
+            int index = 1;
+            foreach (var item in Model)
+            {
+                <tr>
+                    <th scope="row">@index</th>
+                    <td>@item.MaHoaDon</td>
+                    <td>@item.MaDatVe</td>
+                    <td>@item.MaKhachHang</td>
+                    <td>@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C}", item.TongTien)</td>
+                    <td>@item.MaGiamGia</td>
+                    <td>@item.TinhTrangDisplay</td>
+                    <td>
+                        <!-- Thay thế form bằng nút để gửi Ajax -->
+                        <button class="btn btn-primary btn-sm btn-status" data-id="@item.MaHoaDon" data-status="@item.TinhTrangDisplay">
+                            @if (item.TinhTrangDisplay == "Chưa thanh toán")
+                            {
+                                <text>Chuyển thành Đã thanh toán</text>
+                            }
+                            else
+                            {
+                                <text>Chuyển thành Chưa thanh toán</text>
+                            }
+                        </button>
+                        <!-- Nút mở form chi tiết -->
+                        <button class="btn btn-info btn-sm btn-view-detail" data-id="@item.MaHoaDon">
+                            Xem chi tiết
+                        </button>
+                    </td>
+                </tr>
+                index++;
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="8" class="text-danger">Không có dữ liệu để hiển thị.</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+<div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detailModalLabel">Chi tiết hóa đơn</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="modalContent">Đang tải...</div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        // Khi nhấn nút "Chuyển thành Đã thanh toán" hoặc "Chuyển thành Chưa thanh toán"
+        $('.btn-status').click(function (e) {
+            e.preventDefault();
+
+            var maHoaDon = $(this).data('id');
+            var tinhTrang = $(this).data('status');
+            var currentButton = $(this);
+
+            $.ajax({
+                url: "/Admin/QuanLiHoaDon/UpdateStatus",
+                type: 'POST',
+                data: { id: maHoaDon, tinhTrang: tinhTrang },
+                success: function (response) {
+                    if (response.success) {
+                        var newStatus = response.tinhTrang;
+                        var newButtonText = newStatus === "Chưa thanh toán" ? "Chuyển thành Đã thanh toán" : "Chuyển thành Chưa thanh toán";
+
+                        currentButton.text(newButtonText);
+                        currentButton.data('status', newStatus);
+
+                        currentButton.closest('tr').find('td:nth-child(7)').text(newStatus);
+                    } else {
+                        alert('Đã xảy ra lỗi khi thay đổi trạng thái.');
+                    }
+                },
+                error: function () {
+                    alert('Lỗi kết nối với server.');
+                }
+            });
+        });
+
+        // Khi nhấn nút "Xem chi tiết"
+        $(document).ready(function () {
+            // Khi nhấn nút "Xem chi tiết"
+            $('.btn-view-detail').click(function (e) {
+                e.preventDefault();
+
+                var maHoaDon = $(this).data('id'); // Lấy mã hóa đơn từ thuộc tính data-id
+
+                // Hiển thị modal và đặt nội dung ban đầu
+                $('#detailModal').modal('show');
+                $('#modalContent').html('<p>Đang tải chi tiết hóa đơn...</p>');
+
+                // Gửi yêu cầu tới server để lấy thông tin chi tiết
+                $.ajax({
+                    url: "/Admin/QuanLiHoaDon/Details", // API lấy thông tin chi tiết
+                    type: 'GET',
+                    data: { id: maHoaDon },
+                    success: function (response) {
+                        $('#modalContent').html(response); // Hiển thị nội dung chi tiết trong modal
+                    },
+                    error: function () {
+                        $('#modalContent').html('<p class="text-danger">Không thể tải dữ liệu chi tiết.</p>');
+                    }
+                });
+            });
+        });
+    });
+</script>
+
