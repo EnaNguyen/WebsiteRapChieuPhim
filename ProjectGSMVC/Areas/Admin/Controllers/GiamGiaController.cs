@@ -72,7 +72,7 @@ namespace ProjectGSMVC.Areas.Admin.Controllers
         public async Task<IActionResult> Create([FromForm] GiamGiaModel data)
         {
             var errors = new Dictionary<string, string>();
-
+            string descrip = "Không có mô tả";
             // Kiểm tra các trường dữ liệu
             if (string.IsNullOrEmpty(data.TenGiamGia))
             {
@@ -108,7 +108,10 @@ namespace ProjectGSMVC.Areas.Admin.Controllers
             {
                 return BadRequest(errors);
             }
-
+            if(string.IsNullOrEmpty(data.MoTa))
+            {
+                descrip = data.MoTa;
+            }    
             try
             {
                 using (var memoryStream = new MemoryStream())
@@ -123,7 +126,7 @@ namespace ProjectGSMVC.Areas.Admin.Controllers
                     TenGiamGia = data.TenGiamGia,
                     NgayBatDau = data.NgayBatDau,
                     NgayKetThuc = data.NgayKetThuc,
-                    MoTa = data.MoTa,
+                    MoTa = descrip,
                     GiaTri = data.GiaTri,
                     SoLuong = data.SoLuong,
                     ImageFile = data.ImageBase64

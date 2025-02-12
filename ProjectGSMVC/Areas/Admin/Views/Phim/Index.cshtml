@@ -314,7 +314,7 @@
                             <div class="col-md-6">
                                 <div id="AvaDiv" class="double-border">
                                     <h3>Ảnh Bìa của bộ phim</h3>
-                                    <input type="file" id="UploadAnhBia" accept="image/*" class="form-control mb-2">
+                                    <input type="file" id="UploadAnhBia1" accept="image/*" class="form-control mb-2">
                                     <img id="AnhBiaPreview1" src="" class="img-fluid" style="max-height: 300px; display: none; border-radius: 10px;">
                                 </div>
 
@@ -344,7 +344,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" id="uploadButton" class="btn btn-primary">Tải lên</button>
+                <button type="button" id="uploadButton1" class="btn btn-primary">Tải lên</button>
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Đóng</button>
             </div>
         </div>
@@ -468,9 +468,9 @@
         paramName: "files",
         maxFilesize: 5,
         acceptedFiles: "image/*",
-        addRemoveLinks: false, // Không dùng link mặc định
+        addRemoveLinks: false, 
         autoProcessQueue: true,
-        previewsContainer: "#preview-container", // Hiển thị file tại container riêng
+        previewsContainer: "#preview-container", 
         thumbnailWidth: 120,
         thumbnailHeight: 120,
 
@@ -523,8 +523,6 @@
 
 </script>
 
-@* Validate suất chiếu nhỏ hơn 36 *@
-
 @* Load Ảnh và Video  *@
 <script>
     // Hiển thị ảnh bìa sau khi chọn
@@ -567,29 +565,33 @@
 <script>
     $(document).ready(function () {
         $("#uploadButton").click(function (e) {
-            e.preventDefault(); // Ngăn form load lại trang
-            console.log("Hello?")
-            // Lấy dữ liệu từ form
+            e.preventDefault();
+            console.log("Hello?");
+
+            // Tạo đối tượng phimData với đầy đủ các key, nếu trường nào không có dữ liệu thì gán null
             let phimData = {
-                TenPhim: $("#TenPhim1").val(),
-                TheLoai: $("#TheLoai1").val(),
-                ThoiLuong: $("#ThoiLuong1").val(),
-                DaoDien: $("#DaoDien1").val(),
-                GioiHanDoTuoi: $("#GioiHanDoTuoi1").val(),
-                NgayKhoiChieu: $("#NgayKhoiChieu1").val(),
-                NgayKetThuc: $("#NgayKetThuc1").val(),
-                SoSuatChieu: $("#SoSuatChieu1").val(),
-                TrangThai: $("#TrangThai1").val(),
-                MoTa: $("#MoTa1").val()
+                TenPhim: $("#TenPhim1").val() || null,
+                TheLoai: $("#TheLoai1").val() || null,
+                ThoiLuong: $("#ThoiLuong1").val() ? parseInt($("#ThoiLuong1").val()) : null,
+                DaoDien: $("#DaoDien1").val() || null,
+                GioiHanDoTuoi: $("#GioiHanDoTuoi1").val() ? parseInt($("#GioiHanDoTuoi1").val()) : null,
+                NgayKhoiChieu: $("#NgayKhoiChieu1").val() || null,
+                NgayKetThuc: $("#NgayKetThuc1").val() || null,
+                SoSuatChieu: $("#SoSuatChieu1").val() ? parseInt($("#SoSuatChieu1").val()) : null,
+                TrangThai: $("#TrangThai1").val() ? parseInt($("#TrangThai1").val()) : null,
+                MoTa: $("#MoTa1").val() || null
             };
+
+            // Lấy file ảnh bìa
             let avaFile = $("#UploadAnhBia")[0].files[0];
             console.log(avaFile);
             console.log(phimData);
+
             if (avaFile) {
                 let reader = new FileReader();
                 reader.onloadend = function () {
                     console.log("if");
-                    let avaImageData = reader.result.split(',')[1]; // Lấy dữ liệu base64
+                    let avaImageData = reader.result.split(',')[1];
                     collectDropzoneImages(phimData, avaImageData);
                 };
                 reader.readAsDataURL(avaFile);
@@ -597,32 +599,35 @@
                 console.log("else");
                 collectDropzoneImages(phimData, null);
             }
+
             function collectDropzoneImages(phimData, avaImageData) {
                 let hinhAnhs = [];
-                let videoLink = $("#TrailerInput").val();
+                // Lấy giá trị của video (nếu có); nếu không có thì gán null
+                let videoLink = $("#TrailerInput").val() || null;
 
+                // Nếu có file avatar thì đưa vào mảng
                 if (avaImageData) {
                     hinhAnhs.push({ Phim: null, ImageData: avaImageData });
                 }
-                let files = myDropzone.files;
-                let dropzoneImages = [];
+                // Lấy danh sách file từ Dropzone
+                let myDropzone = Dropzone.forElement("#myDropzone");
+                let files = myDropzone.files || [];
 
                 if (files.length > 0) {
-                    let dropzoneImages = []; // Đảm bảo biến này được khai báo
+                    let dropzoneImages = [];
                     let loadedImages = 0;
 
                     files.forEach((file, index) => {
                         let reader = new FileReader();
                         reader.onloadend = function () {
                             dropzoneImages.push({ Phim: null, ImageData: reader.result.split(',')[1] });
-
                             loadedImages++;
                             if (loadedImages === files.length) {
-                                console.log("Lỗi 508")
+                                // Nếu chưa chọn ảnh avatar (avaFile == null) và có ảnh trong dropzone, hỏi người dùng
                                 if (!avaFile && dropzoneImages.length > 0) {
                                     Swal.fire({
                                         title: "Chọn ảnh làm Avatar?",
-                                        text: "Bạn Chưa Chọn Ảnh Avatar cho bộ phim, bạn có muốn lấy ảnh đầu tiên trong số những bức ảnh khác của bạn làm avatar không?",
+                                        text: "Bạn chưa chọn ảnh Avatar cho bộ phim, bạn có muốn lấy ảnh đầu tiên trong số những bức ảnh khác của bạn làm avatar không?",
                                         icon: "warning",
                                         showCancelButton: true,
                                         confirmButtonColor: "#3085d6",
@@ -642,7 +647,6 @@
                         reader.readAsDataURL(file);
                     });
                 } else {
-                    // Nếu không có ảnh Dropzone và cũng không có ảnh Avatar => Hiển thị cảnh báo
                     if (!avaFile) {
                         Swal.fire({
                             title: "Lỗi",
@@ -654,14 +658,16 @@
                     }
                 }
             }
-            // Gửi dữ liệu AJAX
+
+            // Hàm gửi dữ liệu AJAX
             function sendData(phimData, hinhAnhs, videoLink) {
+                // Đảm bảo rằng nếu không có hình ảnh hoặc video thì gán mảng rỗng
                 let dataToSend = {
                     PhimDatas: phimData,
-                    HinhAnhs: hinhAnhs,
+                    HinhAnhs: hinhAnhs || [],
                     Videos: videoLink ? [{ Phim: null, Link: videoLink }] : []
                 };
-
+                console.log("Data to send:", dataToSend);
                 $.ajax({
                     url: "/Admin/Phim/CreateMovie",
                     type: "POST",
@@ -674,45 +680,44 @@
                     },
                     error: function (xhr) {
                         var errors = xhr.responseJSON;
-                        console.log(errors)
+                        console.log(errors);
                         $("h6").text("").css("color", "");
                         if (errors.TenPhim) $("#TenPhim1error").text(errors.TenPhim).css("color", "red");
                         if (errors.ThoiLuong) $("#ThoiLuong1error").text(errors.ThoiLuong).css("color", "red");
                         if (errors.DaoDien) $("#DaoDien1error").text(errors.DaoDien).css("color", "red");
-                        if (errors.GioiHanDoTuoi) $("#GioiHanDoTuoi1").text(errors.GioiHanDoTuoi).css("color", "red");
+                        if (errors.GioiHanDoTuoi) $("#GioiHanDoTuoi1error").text(errors.GioiHanDoTuoi).css("color", "red");
                         if (errors.NgayKhoiChieu) $("#NgayKhoiChieu1error").text(errors.NgayKhoiChieu).css("color", "red");
                         if (errors.NgayKetThuc) $("#NgayKetThuc1error").text(errors.NgayKetThuc).css("color", "red");
                         if (errors.SoSuatChieu) $("#SoSuatChieu1error").text(errors.SoSuatChieu).css("color", "red");
-                        console.log(errors.MoTa)
                         if (errors.MoTa) $("#MoTa1error").text(errors.MoTa).css("color", "red");
-                        console.log(errors.Videos)
                         if (errors.Videos) $("#Video1error").text(errors.Videos).css("color", "red");
                     }
                 });
             }
         });
-
-    });
-
-    // Cấu hình Dropzone
-    Dropzone.autoDiscover = false;
-    var myDropzone = new Dropzone("#myDropzone", {
-        url: "#",
-        autoProcessQueue: false,
-        acceptedFiles: "image/*",
-        addRemoveLinks: true,
-        dictDefaultMessage: "Kéo & thả hoặc nhấp để chọn ảnh"
     });
 </script>
 
 @*Load dữ liệu lên Modal*@
 <script>
+    let oldImages = [];
+    let Edited = 0;
+    let AvatarEdit = [];
     $(document).ready(function () {
+        AvatarEdit = [];
+        oldImages = [];
         $(".edit-movie").on("click", function (e) {
+            $("#preview-container1").empty();
+            if (Dropzone.forElement("#myDropzone1")) {
+                Dropzone.forElement("#myDropzone1").removeAllFiles(true);
+            }
+            $("TrailerInput1").val("");
+            $("#AnhBiaPreview1").attr("src", "").show();
             e.preventDefault();
-
+            document.getElementById("TrailerPhim1").innerHTML = ``;
             var movieId = $(this).data("id");
-
+            Edited = parseInt(movieId);
+            console.log(Edited);
             $.ajax({
                 url: "/Admin/Phim/GetPhim",
                 type: "GET",
@@ -723,11 +728,15 @@
                     if (response.success) {
                         var phim = response.data;
                         var hinhAnhs = response.data.hinhAnhs;
+                        oldImages = [...hinhAnhs]; // Copy dữ liệu cũ
 
-                        var avatar = phim.hinhAnhs.find(img => img.avatar === true);
+                        var avatar = hinhAnhs.find(img => img.avatar === true);
                         if (avatar) {
                             $("#AnhBiaPreview1").attr("src", "data:image/png;base64," + avatar.imageData).show();
+                            AvatarEdit = oldImages[0];
+                            console.log(AvatarEdit)
                         }
+
                         $("#TenPhim2").val(phim.movies.tenPhim);
                         $("#ThoiLuong2").val(phim.movies.thoiLuong);
                         $("#DaoDien2").val(phim.movies.daoDien);
@@ -738,75 +747,74 @@
                         $("#TrangThai2").val(phim.movies.trangThai);
                         $("#MoTa2").val(phim.movies.moTa);
 
-                        // Set giá trị cho select thể loại
-                        $("#TheLoai2 option").each(function () {
-                            if ($(this).val() == phim.movies.theLoaiId) {
-                                $(this).prop("selected", true);
-                            } else {
-                                $(this).prop("selected", false);
-                            }
-                        });
-                        var myDropzone = Dropzone.forElement("#myDropzone1");
-                        hinhAnhs.forEach(img => {
+                        $("#TheLoai2").val(phim.movies.theLoai).trigger("change");
+
+                        var myDropzone2 = Dropzone.forElement("#myDropzone1");
+                        myDropzone2.removeAllFiles(true);
+
+                        oldImages.forEach(img => {
                             if (!img.avatar) {
-                                let mockFile = { name: img.id, size: 12345 }; // Fake file metadata
-                                myDropzone.emit("addedfile", mockFile);
-                                myDropzone.emit("thumbnail", mockFile, "data:image/png;base64," + img.imageData);
-                                myDropzone.emit("complete", mockFile);
+                                let mockFile = { name: img.id, size: 12345 };
+                                myDropzone2.emit("addedfile", mockFile);
+                                myDropzone2.emit("thumbnail", mockFile, "data:image/png;base64," + img.imageData);
+                                myDropzone2.emit("complete", mockFile);
                             }
                         });
+                        console.log(phim.vidoes)
+                        if (phim.videos && Array.isArray(phim.videos) && phim.videos.length > 0 && phim.videos[0].link) {
+                            let videoLink = phim.videos[0].link;
+                            let embedUrl = `https://www.youtube.com/embed/${videoLink}`;
 
-                        if (phim.videos && phim.videos[0].link) {
-                            let Hehe = phim.videos[0].link;
-                            $("#TrailerInput1").val(phim.videos[0].link);
-                            $("#TrailerPhim1").html(`<iframe width="100%" height="315" src="${HeHe}" frameborder="0" allowfullscreen></iframe>`);
+                            $("#TrailerInput1").val(videoLink);
+                            $("#TrailerPhim1").html(`<iframe width="100%" height="315" src="${embedUrl}" frameborder="0" allowfullscreen></iframe>`);
+                            console.log("Lỗi ở if");
                         } else {
-                            console.log("Huhu")
-                            $("#TrailerInput1").val(""); 
-                            $("#TrailerPhim1").empty(); 
+                            $("#TrailerInput1").val("");
+                            $("#TrailerPhim1").empty();
+                            console.log("Lỗi ở else: phim.videos không hợp lệ hoặc không có video nào.");
                         }
-
-                        // Hiển thị modal
                         $("#myModal1").modal("show");
-
                     } else {
                         console.log("Lỗi:", response.message);
                     }
                 },
-
                 error: function (xhr, status, error) {
                     console.log("Có lỗi xảy ra:", error);
                 }
             });
         });
     });
+
     $("#myModal1").on("hidden.bs.modal", function () {
-        $(this).removeData("bs.modal");
+        console.log("Modal đóng, dữ liệu vẫn giữ nguyên");
     });
+
     // Khởi tạo Dropzone
     var myDropzone1 = new Dropzone("#myDropzone1", {
         url: "/Admin/Phim/UploadFiles",
         paramName: "files",
         maxFilesize: 5,
         acceptedFiles: "image/*",
-        addRemoveLinks: false, // Không dùng link mặc định
+        addRemoveLinks: false,
         autoProcessQueue: true,
-        previewsContainer: "#preview-container1", // Hiển thị file tại container riêng
+        previewsContainer: "#preview-container1",
         thumbnailWidth: 120,
         thumbnailHeight: 120,
 
         init: function () {
             var dz = this;
 
-            dz.on("addedfile", function (file) {
-                console.log("File đã thêm:", file.name);
+            dz.on("success", function (file, response) {
+                console.log("File đã tải lên thành công:", file.name);
+                let previewImg = $(file.previewElement).find("img").attr("src");
+                oldImages.push({ id: file.name, imageData: previewImg, avatar: false });
+                console.log(oldImages);
+            });
 
+            dz.on("addedfile", function (file) {
                 var removeButton = document.createElement("div");
                 removeButton.className = "dz-remove-btn";
-                removeButton.innerHTML = "&times;"; 
-
-                console.log(removeButton); 
-
+                removeButton.innerHTML = "&times;";
                 removeButton.addEventListener("click", function (e) {
                     e.preventDefault();
                     e.stopPropagation();
@@ -822,8 +830,12 @@
                         cancelButtonText: "Hủy"
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            dz.removeFile(file); 
+                            dz.removeFile(file);
+                            oldImages = oldImages.filter(img => img.id !== file.name && img.id);
+                            oldImages = oldImages.filter(img => img.id !== file.name && img.id);
+                            oldImages = JSON.parse(JSON.stringify(oldImages));
                             Swal.fire("Đã xóa!", "Ảnh đã được xóa khỏi danh sách.", "success");
+                            console.log(oldImages);
                         }
                     });
                 });
@@ -837,6 +849,8 @@
             });
         }
     });
+
+    // Xử lý video YouTube
     document.getElementById("LoadVideo1").addEventListener("click", function () {
         let url = document.getElementById("TrailerInput1").value;
         let embedUrl = "";
@@ -849,10 +863,139 @@
             return;
         }
 
-        // Gắn video vào div TrailerPhim
         document.getElementById("TrailerPhim1").innerHTML = `
-                    <iframe width="100%" height="315" src="${embedUrl}"
-                        frameborder="0" allowfullscreen></iframe>`;
+            <iframe width="100%" height="315" src="${embedUrl}" frameborder="0" allowfullscreen></iframe>`;
+    });
+</script>
+@*Thay đổi dữ liệu của phim*@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#uploadButton1").click(function (e) {
+            e.preventDefault(); 
+            let phimData = {
+                TenPhim: $("#TenPhim2").val(),
+                TheLoai: $("#TheLoai2").val(),
+                ThoiLuong: $("#ThoiLuong2").val(),
+                DaoDien: $("#DaoDien2").val(),
+                GioiHanDoTuoi: $("#GioiHanDoTuoi2").val(),
+                NgayKhoiChieu: $("#NgayKhoiChieu2").val(),
+                NgayKetThuc: $("#NgayKetThuc2").val(),
+                SoSuatChieu: $("#SoSuatChieu2").val(),
+                TrangThai: $("#TrangThai2").val(),
+                MoTa: $("#MoTa2").val()
+            };
+            let avaFile = $("#UploadAnhBia1")[0].files[0];
+            console.log(phimData);
+            if (avaFile) {
+                let reader = new FileReader();
+                reader.onloadend = function () {
+                    console.log("if");
+                    let avaImageData = reader.result.split(',')[1];
+                    collectDropzoneImages1(phimData, avaImageData);
+                };
+                reader.readAsDataURL(avaFile);
+            } else {
+                collectDropzoneImages1(phimData, null);
+            }
+            function collectDropzoneImages1(phimData, avaImageData) {
+                let hinhAnhs = [];
+                let videoLink = $("#TrailerInput1").val();
+
+                if (avaImageData) {
+                    hinhAnhs.push({ Phim: null, ImageData: avaImageData });
+                }
+
+                let myDropzoneInstance = Dropzone.forElement("#myDropzone1");
+                let files = myDropzoneInstance.files || [];
+
+                if (files.length === 0) {
+                    if (oldImages && oldImages.length > 0) {
+                        let formattedOldImages = oldImages.map(img => ({ Phim: null, ImageData: img.imageData }));
+                        sendData1(phimData, formattedOldImages, videoLink);
+                    } else {
+                        Swal.fire({
+                            title: "Lỗi",
+                            text: "Bạn cần tải lên ít nhất một ảnh!",
+                            icon: "error"
+                        });
+                    }
+                    return; 
+                }
+                let dropzoneImages = [];
+                let loadedImages = 0;
+                files.forEach((file, index) => {
+                    let reader = new FileReader();
+                    reader.onloadend = function () {
+                        dropzoneImages.push({ Phim: null, ImageData: reader.result.split(',')[1] });
+                        loadedImages++;
+                        if (loadedImages === files.length) {
+                            if (!avaFile && !AvatarEdit && oldImages > 0) {
+                                Swal.fire({
+                                    title: "Chọn ảnh làm Avatar?",
+                                    text: "Bạn chưa chọn ảnh Avatar cho bộ phim, bạn có muốn lấy ảnh đầu tiên trong số những bức ảnh khác của bạn làm avatar không?",
+                                    icon: "warning",
+                                    showCancelButton: true,
+                                    confirmButtonColor: "#3085d6",
+                                    cancelButtonColor: "#d33",
+                                    confirmButtonText: "Có!",
+                                    cancelButtonText: "Hủy"
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        sendData1(phimData, hinhAnhs.concat(oldImages), videoLink);
+                                    }
+                                });
+                            } else {
+                                sendData1(phimData, hinhAnhs.concat(oldImages), videoLink);
+                            }
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            // Gửi dữ liệu AJAX
+            function sendData1(phimData, hinhAnhs, videoLink) {
+                let DuLieuPhim = {
+                    PhimDatas: phimData,
+                    HinhAnhs: hinhAnhs,
+                    Videos: videoLink ? [{ Phim: null, Link: videoLink }] : []
+                };
+                let dataToSend =
+                    {
+                        model : DuLieuPhim,
+                        idPhim : Edited,
+                    }
+                console.log(dataToSend);
+                $.ajax({
+                    url: "/Admin/Phim/Update",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(dataToSend),
+                    success: function (response) {
+                        alert("Thêm phim thành công!");
+                        $("#myModal1").modal("hide");
+                        location.reload();
+                    },
+                    error: function (xhr) {
+                        var errors = xhr.responseJSON;
+                        console.log(errors)
+                        $("h6").text("").css("color", "");
+                        if (errors.TenPhim) $("#TenPhim2error").text(errors.TenPhim).css("color", "red");
+                        if (errors.ThoiLuong) $("#ThoiLuong2error").text(errors.ThoiLuong).css("color", "red");
+                        if (errors.DaoDien) $("#DaoDien2error").text(errors.DaoDien).css("color", "red");
+                        if (errors.GioiHanDoTuoi) $("#GioiHanDoTuoi2error").text(errors.GioiHanDoTuoi).css("color", "red");
+                        if (errors.NgayKhoiChieu) $("#NgayKhoiChieu2error").text(errors.NgayKhoiChieu).css("color", "red");
+                        if (errors.NgayKetThuc) $("#NgayKetThuc2error").text(errors.NgayKetThuc).css("color", "red");
+                        if (errors.SoSuatChieu) $("#SoSuatChieu2error").text(errors.SoSuatChieu).css("color", "red");
+                        console.log(errors.MoTa)
+                        if (errors.MoTa) $("#MoTa2error").text(errors.MoTa).css("color", "red");
+                        console.log(errors.Videos)
+                        if (errors.Videos) $("#Video2error").text(errors.Videos).css("color", "red");
+                    }
+                });
+            }
+        });
     });
 </script>
 

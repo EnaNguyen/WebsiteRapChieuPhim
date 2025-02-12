@@ -11,6 +11,7 @@ using System;
 using System.Linq;
 using ProjectGSMAUI.Api.Modal;
 using static System.Net.WebRequestMethods;
+using System.Drawing;
 
 namespace ProjectGSMVC.Areas.Admin.Controllers
 {
@@ -65,6 +66,7 @@ namespace ProjectGSMVC.Areas.Admin.Controllers
             }
             return View();
         }
+        [HttpPost]
         public async Task<IActionResult> UploadFiles(IFormFile files)
         {
             return RedirectToAction("Index");
@@ -72,8 +74,6 @@ namespace ProjectGSMVC.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateMovie([FromBody] CreateMovie model)
         {
-            if (model == null)
-                return BadRequest("Dữ liệu không hợp lệ!");
             var errors = new Dictionary<string, string>();
             if (string.IsNullOrWhiteSpace(model.PhimDatas.TenPhim))
             {
@@ -273,77 +273,84 @@ namespace ProjectGSMVC.Areas.Admin.Controllers
             }
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> Update([FromForm] PhimModel model)
-        //{
-        //    var errors = new Dictionary<string, string>();
-        //    if (string.IsNullOrWhiteSpace(model.TenPhim))
-        //    {
-        //        errors["TenPhim"] = "Tên phim không được để trống.";
-        //    }
+        [HttpPost]
+        public async Task<IActionResult> Update([FromBody] UpdateMovieRequest Abc)
+        {
+            var errors = new Dictionary<string, string>();
+            var model = Abc.Model;
+            if (string.IsNullOrWhiteSpace(model.PhimDatas.TenPhim))
+            {
+                errors["TenPhim"] = "Tên phim không được để trống.";
+            }
 
-        //    if (model.ThoiLuong <= 0)
-        //    {
-        //        errors["ThoiLuong"] = "Thời lượng phim phải lớn hơn 0.";
-        //    }
-        //    if (model.GioiHanDoTuoi <= 0)
-        //    {
-        //        errors["GioiHanDoTuoi"] = "Giới hạn độ tuổi phải lớn hơn 0.";
-        //    }
-        //    if (model.SoXuatChieu <= 0)
-        //    {
-        //        errors["SoXuatChieu"] = "Số xuất chiếu phải lớn hơn 0.";
-        //    }
-        //    if (errors.Count > 0)
-        //    {
-        //        return BadRequest(errors);
-        //    }
-        //    try
-        //    {
-        //        var phimMoi = new Phim()
-        //        {
-        //            Id = model.Id,
-        //            TenPhim = model.TenPhim,
-        //            TheLoai = model.TheLoai,
-        //            ThoiLuong = model.ThoiLuong,
-        //            DaoDien = model.DaoDien,
-        //            GioiHanDoTuoi = model.GioiHanDoTuoi,
-        //            NgayKhoiChieu = model.NgayKhoiChieu,
-        //            NgayKetThuc = model.NgayKetThuc,
-        //            SoSuatChieu = model.SoXuatChieu,
-        //            TrangThai = model.TrangThai,
-        //            MoTa = model.MoTa
-        //        };
-        //        if (model.ImageFiles != null && model.ImageFiles.Any())
-        //        {
-        //            phimMoi.ImageFiles = new List<IFormFile>();
-        //            foreach (var file in model.ImageFiles)
-        //            {
-        //                phimMoi.ImageFiles.Add(file);
-        //            }
-        //        }
+            if (model.PhimDatas.ThoiLuong == null || model.PhimDatas.ThoiLuong <= 0)
+            {
+                errors["ThoiLuong"] = "Thời lượng phim phải lớn hơn 0.";
+            }
+            if (string.IsNullOrWhiteSpace(model.PhimDatas.DaoDien))
+            {
+                errors["DaoDien"] = "Đạo diễn không được để trống";
+            }
+            if (model.PhimDatas.SoSuatChieu == null || model.PhimDatas.SoSuatChieu < 0 || model.PhimDatas.SoSuatChieu > 42)
+            {
+                errors["SoSuatChieu"] = "Số xuất chiếu phải lớn hơn 0 và nhỏ hơn 42 trong 1 tuần";
+            }
+            if (model.PhimDatas.NgayKhoiChieu == null || model.PhimDatas.NgayKhoiChieu < DateOnly.FromDateTime(DateTime.Now))
+            {
+                errors["NgayKhoiChieu"] = "Ngày khởi chiếu phải bắt đầu sau hôm nay";
+            }
+            if (model.PhimDatas.NgayKetThuc == null || model.PhimDatas.NgayKetThuc < model.PhimDatas.NgayKhoiChieu)
+            {
+                errors["NgayKetThuc"] = "Phim phải chiếu được ít nhất 1 ngày";
+            }
+            if (model.Videos.Count < 1)
+            {
+                errors["Videos"] = "Video không được để trống";
+            }
+            if (string.IsNullOrWhiteSpace(model.PhimDatas.MoTa))
+            {
+                errors["MoTa"] = "Đạo diễn không được để trống";
+            }           
+            if (errors.Count > 0)
+            {
+                return BadRequest(errors);
+            }
+            if (model.HinhAnhs.Count>0)
+            {
+                foreach (var image in model.HinhAnhs)
+                {
+                    if(image.ImageData.StartsWith("data:"))
+                    {
+                        int commaIndex = image.ImageData.IndexOf(",");
+                        if (commaIndex >= 0)
+                        {
+                            string result = image.ImageData.Substring(commaIndex + 1);
+                            image.ImageData = result;
+                        }
+                    }    
+                }
+            }            
+            var json = JsonConvert.SerializeObject(model);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-        //        var json = JsonConvert.SerializeObject(phimMoi, Formatting.Indented, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
-        //        var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await _httpClient.PostAsync($"https://localhost:7141/api/Phim/Update?Id={Abc.IdPhim}", content);
 
-        //        var response = await _httpClient.PutAsync(_baseApiUrl + "/UpdatePhim", content);
-        //        if (response.IsSuccessStatusCode)
-        //        {
-        //            return Json(new { success = true });
-        //        }
-        //        else
-        //        {
-        //            var error = await response.Content.ReadAsStringAsync();
-        //            return Json(new { success = false, message = error });
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Json(new { success = false, message = $"Đã xảy ra lỗi trong quá trình cập nhật phim. Lỗi: {ex.Message}" });
-        //    }
-        //}
+            if (response.IsSuccessStatusCode)
+            {
+                return Ok("Thêm phim thành công!");
+            }
+            else
+            {
+                var errorResponse = await response.Content.ReadAsStringAsync();
+                return BadRequest($"Lỗi API: {errorResponse}");
+            }
+        }
 
-
+        public class UpdateMovieRequest
+        {
+            public CreateMovie Model { get; set; }
+            public int IdPhim { get; set; }
+        }
         //[HttpPost]
         //public async Task<IActionResult> Delete(int id)
         //{

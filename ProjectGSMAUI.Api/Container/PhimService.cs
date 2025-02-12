@@ -297,14 +297,14 @@ namespace ProjectGSMAUI.Api.Container
                 var OldVideo = _context.Videos.Where(g => g.Phim == Id).ToList();
                 _context.Videos.RemoveRange(OldVideo);
                 await _context.SaveChangesAsync();
-                foreach (var image in data.HinhAnhs)
+                for (int i = 0; i < data.HinhAnhs.Count; i++)
                 {
-                    if (!string.IsNullOrEmpty(image.ImageData))
+                    if (!string.IsNullOrEmpty(data.HinhAnhs[i].ImageData))
                     {
                         byte[] imageBytes;
                         try
                         {
-                            imageBytes = Convert.FromBase64String(image.ImageData);
+                            imageBytes = Convert.FromBase64String(data.HinhAnhs[i].ImageData);
                         }
                         catch (FormatException)
                         {
@@ -315,7 +315,7 @@ namespace ProjectGSMAUI.Api.Container
                         }
 
                         string ID = Guid.NewGuid().ToString();
-                        _context.HinhAnhs.Add(new HinhAnh { Id = ID, Phim = Id, ImageData = imageBytes });
+                        _context.HinhAnhs.Add(new HinhAnh { Id = ID, Phim = Id, ImageData = imageBytes , Avatar = (i==0)});
                     }
                 }
                 foreach (var video in data.Videos)
