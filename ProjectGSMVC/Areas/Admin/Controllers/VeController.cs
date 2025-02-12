@@ -61,7 +61,7 @@ namespace ProjectGSMAUI.MVC.Areas.Admin.Controllers
                     throw new Exception($"Lỗi khi lấy danh sách phòng từ API: {await phongResponse.Content.ReadAsStringAsync()}");
                 }
 
-                HttpResponseMessage phimResponse = await _httpClient.GetAsync(_basePhimApiUrl);
+                HttpResponseMessage phimResponse = await _httpClient.GetAsync(_basePhimApiUrl + "/GetAll");
                 if (phimResponse.IsSuccessStatusCode)
                 {
                     string phimData = await phimResponse.Content.ReadAsStringAsync();
