@@ -525,12 +525,12 @@ namespace ProjectGSMAUI.Api.Data
             );
 
             modelBuilder.Entity<Phong>().HasData(
-                new Phong { Id = 1, TenPhong = "Phòng 1", SoLuongGhe = 112, TinhTrang = 1 },
-                new Phong { Id = 2, TenPhong = "Phòng 2", SoLuongGhe = 112, TinhTrang = 1 },
-                new Phong { Id = 3, TenPhong = "Phòng 3", SoLuongGhe = 112, TinhTrang = 1 },
-                new Phong { Id = 4, TenPhong = "Phòng 4", SoLuongGhe = 112, TinhTrang = 1 },
-                new Phong { Id = 5, TenPhong = "Phòng 5", SoLuongGhe = 112, TinhTrang = 1 },
-                new Phong { Id = 6, TenPhong = "Phòng 6", SoLuongGhe = 112, TinhTrang = 1 }
+                new Phong { Id = 1, TenPhong = "Phòng 1", SoLuongGhe = 192, TinhTrang = 1 },
+                new Phong { Id = 2, TenPhong = "Phòng 2", SoLuongGhe = 192, TinhTrang = 1 },
+                new Phong { Id = 3, TenPhong = "Phòng 3", SoLuongGhe = 192, TinhTrang = 1 },
+                new Phong { Id = 4, TenPhong = "Phòng 4", SoLuongGhe = 192, TinhTrang = 1 },
+                new Phong { Id = 5, TenPhong = "Phòng 5", SoLuongGhe = 192, TinhTrang = 1 },
+                new Phong { Id = 6, TenPhong = "Phòng 6", SoLuongGhe = 192, TinhTrang = 1 }
 
             );//16 cột
             modelBuilder.Entity<KhungGio>().HasData(

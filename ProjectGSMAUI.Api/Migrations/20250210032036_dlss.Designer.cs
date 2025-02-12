@@ -12,8 +12,8 @@ using ProjectGSMAUI.Api.Data;
 namespace ProjectGSMAUI.Api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250121065833_DLSS")]
-    partial class DLSS
+    [Migration("20250210032036_dlss")]
+    partial class dlss
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1465,6 +1465,9 @@ namespace ProjectGSMAUI.Api.Migrations
                         .HasColumnName("ID")
                         .IsFixedLength();
 
+                    b.Property<bool>("Avatar")
+                        .HasColumnType("bit");
+
                     b.Property<string>("ImageData")
                         .HasColumnType("text");
 
@@ -2035,7 +2038,7 @@ namespace ProjectGSMAUI.Api.Migrations
                             Email = "nguyenquangquyX@gmail.com",
                             GioiTinh = true,
                             MatKhau = "8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92",
-                            NgayDangKy = new DateOnly(2025, 1, 21),
+                            NgayDangKy = new DateOnly(2025, 2, 10),
                             NgaySinh = new DateOnly(1999, 5, 19),
                             Sdt = "0973713274",
                             TenNguoiDung = "Quản trị viên",

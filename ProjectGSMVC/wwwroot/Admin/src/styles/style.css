@@ -121,14 +121,14 @@ p {
 	max-width: 200px;
 	margin: 0 auto;
 	display: block;
-	background: #ecf0f4;
+	background: #ad4417;
 	overflow: hidden;
 }
-.pre-loader .bar{
+.pre-loader .bar {
 	width: 0%;
 	height: 8px;
 	display: block;
-	background: #1b00ff;
+	background: #ad4417;
 }
 .pre-loader .percent{
 	text-align: center;
