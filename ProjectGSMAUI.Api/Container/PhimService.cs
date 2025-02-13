@@ -219,7 +219,11 @@ namespace ProjectGSMAUI.Api.Container
                 HinhAnh = _context.HinhAnhs
                     .Where(g => (g.Phim == item.Id&&g.Avatar==true))
                     .Select(g => g.ImageData)
-                    .FirstOrDefault()??null
+                    .FirstOrDefault()??null,
+                Video = _context.Videos
+                .Where(v => v.Phim == item.Id)
+                .Select(v => v.Link)
+                .FirstOrDefault()??null,
             })
             .ToListAsync();
             return data;
