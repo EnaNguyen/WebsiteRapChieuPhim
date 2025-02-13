@@ -710,3 +710,50 @@
         });
     });
 </script>
+<script>
+    const itemsPerPage = 5;
+    const $listAdmin = $('#ListAdmin tbody');
+    const $paginationControls = $('<div class="pagination-controls text-center mt-3"></div>');
+    let currentPage = 1;
+    let totalItems = $listAdmin.find('tr').length;
+    let totalPages = Math.ceil(totalItems / itemsPerPage);
+
+    function showPage(page) {
+        currentPage = page;
+        const start = (currentPage - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+
+        $listAdmin.find('tr').hide().slice(start, end).show();
+        updatePaginationControls();
+    }
+
+    function updatePaginationControls() {
+        $paginationControls.empty();
+
+        let prevButton = $('<button class="btn btn-outline-primary prev">&laquo;</button>');
+        prevButton.prop('disabled', currentPage === 1);
+        prevButton.click(() => showPage(currentPage - 1));
+
+        $paginationControls.append(prevButton);
+
+        for (let i = 1; i <= totalPages; i++) {
+            let pageButton = $('<button class="btn btn-outline-primary mx-1"></button>').text(i);
+            if (i === currentPage) {
+                pageButton.addClass('active');
+            }
+            pageButton.click(() => showPage(i));
+            $paginationControls.append(pageButton);
+        }
+
+        let nextButton = $('<button class="btn btn-outline-primary next">&raquo;</button>');
+        nextButton.prop('disabled', currentPage === totalPages);
+        nextButton.click(() => showPage(currentPage + 1));
+
+        $paginationControls.append(nextButton);
+    }
+
+    $('#ListAdmin').after($paginationControls);
+    showPage(currentPage);
+
+</script>
+

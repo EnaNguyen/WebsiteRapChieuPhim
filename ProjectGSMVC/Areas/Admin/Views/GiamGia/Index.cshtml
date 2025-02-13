@@ -51,7 +51,7 @@
             {
                 @foreach (var item in GiamGiaList)
                 {
-                    <div class="col-lg-3 col-md-6 col-sm-12 mb-30">
+                    <div class="col-lg-3 col-md-6 col-sm-12 mb-30 discount-item">
                         <div class="da-card">
                             <div class="da-card-photo">
                                 <div style="height:200px; border-bottom: 1px solid grey">
@@ -93,6 +93,9 @@
                 </div>
             }
         </div>
+
+        
+
     </div>
 </div>
 
@@ -148,6 +151,7 @@
                             </div>
                             <h6 id="ImageFileError"></h6>
                         </div>
+                        
                     </div>
                 </div>
             </div>
@@ -344,11 +348,12 @@
 
             var imageFile = $("#ImageFile")[0].files[0];
             if (imageFile) {
-                formData.append("HinhAnh", imageFile);
+                formData.append("ImageFile", imageFile);
             } else {
                 alert("Vui lòng chọn tệp hình ảnh.");
                 return;
             }
+            console.log(imageFile);
             $.ajax({
                 url: "/Admin/GiamGia/Create",
                 type: "POST",
@@ -625,6 +630,73 @@
             });
         });
    </script>
+<!-- Phân trang -->
+<div class="blog-pagination mb-30">
+    <div class="btn-toolbar justify-content-center mb-15">
+        <div class="btn-group" id="paginationControls">
+            <a href="#" class="btn btn-outline-primary prev">
+                <i class="fa fa-angle-double-left"></i>
+            </a>
+            <!-- Các nút trang sẽ được thêm vào đây bằng JavaScript -->
+            <a href="#" class="btn btn-outline-primary next">
+                <i class="fa fa-angle-double-right"></i>
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const itemsPerPage = 6; // Số chương trình giảm giá trên mỗi trang
+        const $discountList = $('#ListGiamGiaTable');
+        const $paginationControls = $('#paginationControls');
+        let currentPage = 1;
+        const totalItems = $discountList.find('.discount-item').length;
+        const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+        function showPage(page) {
+            currentPage = page;
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            $discountList.find('.discount-item').hide().slice(start, end).show();
+
+            // Cập nhật các nút phân trang
+            $paginationControls.find('a.page-number').remove();
+            for (let i = 1; i <= totalPages; i++) {
+                const $pageButton = $('<a href="#" class="btn btn-outline-primary page-number"></a>').text(i);
+                if (i === currentPage) {
+                    $pageButton.addClass('current');
+                }
+                $pageButton.insertBefore($paginationControls.find('.next'));
+            }
+        }
+
+        // Hiển thị trang đầu tiên
+        showPage(currentPage);
+
+        // Xử lý khi bấm nút trang
+        $paginationControls.on('click', 'a.page-number', function (e) {
+            e.preventDefault();
+            const page = parseInt($(this).text());
+            showPage(page);
+        });
+
+        // Xử lý khi bấm nút Previous và Next
+        $paginationControls.find('.prev').click(function (e) {
+            e.preventDefault();
+            if (currentPage > 1) {
+                showPage(currentPage - 1);
+            }
+        });
+
+        $paginationControls.find('.next').click(function (e) {
+            e.preventDefault();
+            if (currentPage < totalPages) {
+                showPage(currentPage + 1);
+            }
+        });
+    });
+</script>
 
 
 

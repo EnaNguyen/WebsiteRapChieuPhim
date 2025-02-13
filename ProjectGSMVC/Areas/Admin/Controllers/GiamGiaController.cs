@@ -215,10 +215,10 @@ namespace ProjectGSMVC.Areas.Admin.Controllers
                 errors["TenGiamGia"] = "Tên giảm giá không được để trống.";
             }
 
-            if (data.NgayBatDau == default || data.NgayBatDau < DateOnly.FromDateTime(DateTime.Today))
-            {
-                errors["NgayBatDau"] = "Ngày bắt đầu không được nhỏ hơn ngày hiện tại.";
-            }
+            //if (data.NgayBatDau == default || data.NgayBatDau < DateOnly.FromDateTime(DateTime.Today))
+            //{
+            //    errors["NgayBatDau"] = "Ngày bắt đầu không được nhỏ hơn ngày hiện tại.";
+            //}
 
             if (data.NgayKetThuc == default || data.NgayBatDau > data.NgayKetThuc)
             {
