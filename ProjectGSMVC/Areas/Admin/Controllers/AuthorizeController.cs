@@ -40,7 +40,8 @@ namespace ProjectGSMVC.Areas.Admin.Controllers
             var loginData = new
             {
                 Username = username,
-                Password = password
+                Password = password,
+                VaiTro = "Admin",
             };
 
             try

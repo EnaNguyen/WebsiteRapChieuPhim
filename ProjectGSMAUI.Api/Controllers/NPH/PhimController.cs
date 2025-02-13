@@ -48,5 +48,11 @@ namespace ProjectGSMAUI.Api.Controllers
             var data = await this._phimService.Create(Data);
             return Ok(data);
         }
+        [HttpPost("Update")]
+        public async Task<IActionResult> Update(int Id, CreateMovie Data)
+        {
+            var data = await this._phimService.Update(Id, Data);
+            return Ok(data);
+        }
     }
 }

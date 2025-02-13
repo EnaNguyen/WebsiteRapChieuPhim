@@ -1,6 +1,8 @@
-﻿namespace ProjectGSMAUI.Api.Modal
+﻿using ProjectGSMAUI.Api.Data.Entities;
+
+namespace ProjectGSMVC.Models
 {
-    public class PhimView
+    public class PhimVM
     {
         public int Id { get; set; }
 
@@ -23,6 +25,9 @@
 
         public string? MoTa { get; set; }
         public byte[]? HinhAnh { get; set; }
+
         public string? Video { get;set; }
+        public List<HinhAnh> HinhAnhs { get; set; }
+        
     }
 }
