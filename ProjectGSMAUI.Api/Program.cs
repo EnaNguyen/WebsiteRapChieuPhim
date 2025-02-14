@@ -29,7 +29,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IPhimService, PhimService>();
 builder.Services.AddScoped<IPhongService, PhongService>();
-builder.Services.AddScoped<IVeService, VeService>();
 builder.Services.AddScoped<IVoucherServices, VoucherServices>();
 builder.Services.AddScoped<IGiamGiaServices, TaiKhoanServices>();
 builder.Services.AddScoped<ITheLoaiPhimService, TheLoaiPhimService>();
