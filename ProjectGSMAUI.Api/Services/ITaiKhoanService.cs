@@ -29,6 +29,7 @@ namespace ProjectGSMAUI.Api.Container
         Task<List<TaiKhoan>> TaiKhoanCustomer(string Name);
         Task<APIResponse> CreateCustomer(TaiKhoanRequest data);
         Task<APIResponse> UpdateCustomer(string id, TaiKhoanRequest data);
+        Task<TaiKhoan> GetTaiKhoanByTenTaiKhoanAsync(string tenTaiKhoan);
     }
 }
 

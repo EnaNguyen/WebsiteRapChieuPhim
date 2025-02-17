@@ -177,7 +177,7 @@ namespace ProjectGSMAUI.MVC.Areas.Admin.Controllers
         {
             try
             {
-                HttpResponseMessage response = await _httpClient.GetAsync(_basePhimApiUrl);
+                HttpResponseMessage response = await _httpClient.GetAsync(_basePhimApiUrl + "/GetAll");
                 if (response.IsSuccessStatusCode)
                 {
                     string data = await response.Content.ReadAsStringAsync();

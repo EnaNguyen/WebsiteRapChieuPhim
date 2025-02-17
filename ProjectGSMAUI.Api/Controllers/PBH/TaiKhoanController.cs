@@ -6,6 +6,7 @@ using ProjectGSMAUI.Api.Data;
 using ProjectGSMAUI.Api.Data.Entities;
 using ProjectGSMAUI.Api.Helper;
 using ProjectGSMAUI.Api.Modal;
+using ProjectGSMAUI.Api.Utilities;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -240,11 +241,80 @@ namespace ProjectGSMAUI.Api.Controllers.PBH
             var data = await this._taiKhoanService.TaiKhoanCustomer(Name);
             return Ok(data);
         }
-        [HttpPost("CreateCustomer")]
-        public async Task<IActionResult> CreateCustomer(TaiKhoanRequest _data)
+
+        [HttpPost("CreateCustomer")] 
+        public async Task<IActionResult> CreateCustomer(TaiKhoanRequest _data) 
         {
-            var data = await _taiKhoanService.CreateCustomer(_data);
-            return Ok(data);
+            var data = _data; 
+
+            APIResponse response = new APIResponse();
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                
+                var existingAccount = await _taiKhoanService.GetTaiKhoanByTenTaiKhoanAsync(data.TenTaiKhoan);
+                if (existingAccount != null)
+                {
+                    response.ResponseCode = 400;
+                    response.ErrorMessage = "Tên tài khoản đã tồn tại. Vui lòng chọn tên tài khoản khác.";
+                    return Ok(response); 
+                }
+
+                byte[] imageBytes = null;
+                if (!string.IsNullOrEmpty(data.Hinh))
+                {
+                    try
+                    {
+                        imageBytes = Convert.FromBase64String(data.Hinh);
+                    }
+                    catch (FormatException)
+                    {
+                        response.ResponseCode = 400;
+                        response.ErrorMessage = "Dữ liệu hình ảnh không hợp lệ.";
+                        return Ok(response);
+                    }
+                }
+                int maxMaAdmin = _context.TaiKhoans.Where(t => t.VaiTro == 1)
+                    .AsNoTracking()
+                    .AsEnumerable()
+                    .OrderByDescending(g => int.Parse(g.IdtaiKhoan.Substring(2)))
+                    .Select(g => int.Parse(g.IdtaiKhoan.Substring(2)))
+                    .FirstOrDefault();
+
+                maxMaAdmin += 1;
+
+
+                var Tk = new TaiKhoan
+                {
+                    IdtaiKhoan = "TK" + maxMaAdmin.ToString("000"),
+                    TenNguoiDung = data.TenNguoiDung,
+                    MatKhau = PasswordHasher.HashPassword(data.MatKhau),
+                    TenTaiKhoan = data.TenTaiKhoan,
+                    Email = data.Email,
+                    Sdt = data.Sdt,
+                    VaiTro = 1,
+                    NgaySinh = data.NgaySinh,
+                    NgayDangKy = DateOnly.FromDateTime(DateTime.Today),
+                    TrangThai = 1,
+                    DiemTichLuy = 0,
+                    Hinh = imageBytes,
+                    Cccd = data.Cccd,
+                    GioiTinh = data.GioiTinh,
+                    DiaChi = data.DiaChi,
+                };
+
+                await this._context.TaiKhoans.AddAsync(Tk);
+                await this._context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                response.ResponseCode = 201;
+                return Ok(response); // Return Ok(response) for success
+            }
+            catch (Exception ex)
+            {
+                response.ResponseCode = 400;
+                response.ErrorMessage = ex.Message;
+                return Ok(response); // Return Ok(response) in case of exception as well, for consistent APIResponse format
+            }
         }
         [HttpPut("UpdateCustomer")]
         public async Task<IActionResult> UpdateCustomer([FromBody] TaiKhoanEdit request)
