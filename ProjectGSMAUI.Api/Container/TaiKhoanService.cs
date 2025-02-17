@@ -351,6 +351,7 @@ namespace ProjectGSMAUI.Api.Container
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
+                
 
                 byte[] imageBytes = null;
                 if (!string.IsNullOrEmpty(data.Hinh))
@@ -463,6 +464,11 @@ namespace ProjectGSMAUI.Api.Container
                 response.ErrorMessage = ex.Message;
             }
             return response;
+        }
+        public async Task<TaiKhoan> GetTaiKhoanByTenTaiKhoanAsync(string tenTaiKhoan)
+        {
+            return await _context.TaiKhoans
+                .FirstOrDefaultAsync(t => t.TenTaiKhoan == tenTaiKhoan); // Search by TenTaiKhoan
         }
     }
 }

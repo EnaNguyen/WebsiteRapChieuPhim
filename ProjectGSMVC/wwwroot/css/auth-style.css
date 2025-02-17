@@ -1,0 +1,221 @@
+﻿/* auth-style.css */
+
+/* --- General Auth Container and Layout --- */
+.auth-container {
+    display: flex;
+    min-height: 100vh; /* Ensure full height */
+    background-color: #ff7f50; /* Coral - Orange background */
+    color: #333; /* Dark text color */
+}
+
+.auth-left-panel, .auth-right-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Vertically center content */
+    align-items: center; /* Horizontally center content */
+    padding: 20px;
+}
+
+.auth-left-panel {
+    flex: 0.5; /* Takes up half the width */
+    background-color: #ff7f50; /* Orange background for left panel */
+    color: white; /* White text for left panel */
+    text-align: center;
+}
+
+.auth-right-panel {
+    flex: 0.5; /* Takes up half the width */
+    background-color: white; /* White background for right panel (form area) */
+    padding: 40px; /* More padding for the form area */
+}
+
+.auth-form-box {
+    width: 100%;
+    max-width: 450px; /* Limit form width */
+}
+
+/* --- Logo and Welcome Text (Left Panel) --- */
+.logo-area {
+    margin-bottom: 30px;
+}
+
+.auth-logo {
+    max-width: 200px; /* Adjust logo size */
+    height: auto;
+}
+
+.welcome-text {
+    font-size: 1.2em;
+    line-height: 1.6;
+}
+
+
+/* --- Form Styling (Right Panel) --- */
+.auth-form h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333; /* Dark heading color */
+}
+
+.auth-form .form-group {
+    margin-bottom: 20px;
+}
+
+.auth-input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    color: #000; /* Changed to black */
+    /* or you can use color: black; */
+}
+
+    .auth-input::placeholder {
+        color: #777; /* Placeholder text color */
+    }
+
+.form-row {
+    display: flex;
+    gap: 20px; /* Spacing between columns in form-row */
+    margin-bottom: 10px; /* Spacing between form-rows */
+}
+
+    .form-row .form-group {
+        flex: 1; /* Equal width columns in form-row */
+        margin-bottom: 0; /* Remove bottom margin for form-groups in form-row */
+    }
+
+
+/* --- Buttons --- */
+.auth-button {
+    background-color: #ff7f50; /* Orange button background */
+    color: white; /* White button text */
+    border: none;
+    padding: 12px 25px;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    width: 100%; /* Full width button */
+    transition: background-color 0.3s ease; /* Smooth hover effect */
+}
+
+    .auth-button:hover {
+        background-color: #f06433; /* Darker orange on hover */
+    }
+
+/* --- Links and Separators --- */
+.forgot-register-links, .social-login-separator, .register-login-link {
+    text-align: center;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+}
+
+    .forgot-register-links a, .register-login-link a {
+        color: #007bff; /* Example link color */
+        text-decoration: none;
+    }
+
+.social-login-separator {
+    position: relative;
+    margin: 20px 0;
+    text-align: center;
+    color: #777;
+}
+
+    .social-login-separator span {
+        background-color: white; /* Match form background */
+        padding: 0 15px;
+        position: relative;
+        z-index: 1; /* Ensure text is above the line */
+    }
+
+    .social-login-separator:before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background-color: #ccc; /* Line color */
+        transform: translateY(-50%); /* Vertically center the line */
+        z-index: 0; /* Line behind the text */
+    }
+
+
+/* --- Social Login Buttons --- */
+.social-login-buttons {
+    display: flex;
+    justify-content: center; /* Center social buttons */
+    gap: 20px; /* Spacing between buttons */
+    margin-top: 20px;
+}
+
+.social-button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%; /* Circular buttons */
+    color: white;
+    text-decoration: none;
+    font-size: 1.2rem;
+    transition: transform 0.2s ease; /* Button hover effect */
+}
+
+    .social-button:hover {
+        transform: scale(1.1); /* Slightly scale up on hover */
+    }
+
+.facebook-button {
+    background-color: #1877f2; /* Facebook blue */
+}
+
+.google-button {
+    background-color: #db4437; /* Google red */
+}
+
+
+/* --- Responsive Adjustments (Optional) --- */
+@media (max-width: 768px) {
+    .auth-container {
+        flex-direction: column; /* Stack panels on smaller screens */
+    }
+
+    .auth-left-panel, .auth-right-panel {
+        flex: 1; /* Each panel takes full width on smaller screens */
+    }
+
+    .auth-left-panel {
+        padding: 30px; /* More padding for left panel on smaller screens */
+    }
+
+    .auth-right-panel {
+        padding: 30px; /* More padding for right panel on smaller screens */
+    }
+
+    .auth-form-box {
+        max-width: 100%; /* Full width form on smaller screens */
+    }
+}
+
+/* --- Custom Styling for Register Form --- */
+.register-container .auth-right-panel {
+    padding: 30px; /* Adjust padding for register form right panel if needed */
+}
+
+.register-form .hidden-upload {
+    margin-top: 20px; /* Add space for hidden upload in register form */
+}
+
+.gender-radio {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Spacing between radio buttons */
+}
+
+.gender-label {
+    margin-right: 10px; /* Space after gender label */
+}
