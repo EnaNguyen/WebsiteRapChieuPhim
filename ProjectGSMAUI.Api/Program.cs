@@ -87,9 +87,9 @@ builder.Services.Configure<GeminiSettings>(
 // Cấu hình Session
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(30); // Thời gian timeout của session
-    options.Cookie.HttpOnly = true; // Chỉ cho phép truy cập cookie qua HTTP
-    options.Cookie.IsEssential = true; // Đảm bảo cookie luôn được lưu
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Session timeout after 30 minutes of inactivity
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
 });
 
 builder.Services.AddControllers().AddJsonOptions(options =>
