@@ -6,13 +6,14 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
-    <title>Tenguu Cinema - Movie Theater Template</title>
+    <title>Giang Sơn Cinema</title>
     <meta name="keywords" content="HTML5,CSS3,HTML,Template,Themeton">
-    <meta name="description" content="Tenguu Cinema - Movie Theater Template">
+    <meta name="description" content="Giang Sơn Cinema">
     <meta name="author" content="Themeton">
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="~/User/images/favicon.png" />
-
+    <link rel="apple-touch-icon"
+          sizes="180x180"
+          href="~/Admin/vendors/images/Untitled-1.webp" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="~/css/auth-style.css" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
@@ -30,16 +31,16 @@
     </div>
     
     <!-- Overlay Search -->
-    <div id="overlay-search">
+    <div id="overlay-search" style="font-family: 'Arial', 'Roboto', sans-serif;">
         <form method="get" action="./">
-            <input type="text" name="s" placeholder="Search..." autocomplete="off">
+            <input type="text" name="s" placeholder="Tìm kiếm..." autocomplete="off">
             <button type="submit">
                 <i class="fa fa-search"></i>
             </button>
         </form>
         <a href="~/User/javascript:;" class="close-window"></a>
     </div>
-    <div class="wrapper">
+    <div class="wrapper" style="font-family: 'Arial', 'Roboto', sans-serif;">
 
 
         <header id="header" class="menu-top-left">
@@ -61,10 +62,10 @@
                             {
                                 <a asp-controller="User" asp-action="Login">Đăng nhập</a>
                                 <a asp-controller="User" asp-action="Register" class="ml-3">Đăng ký</a>
-                            }
+                            }                          
                         </div>
                         <div class="header_ticket">
-                            <a href="#order" class="order_btn">My tickets</a>
+                            <a href="#order" class="order_btn">Vé của tôi</a>
                             <span>3</span>
                         </div>
                         <a href="javascript:;" id="header-search"></a>
@@ -77,10 +78,10 @@
                             <a href="javascript:;" class="close-window"></a>
                             <nav class="overlay-menu">
                                 <ul>
-                                    <li><a href="./">Home</a></li>
+                                    <li><a href="./">Trang chủ</a></li>
                                     <li><a href="~/User/blog.html">Blog</a></li>
-                                    <li><a href="~/User/single.html">Single</a></li>
-                                    <li><a href="#order" class="order_btn">Order</a></li>
+                                    <li><a href="~/User/single.html">Chi tiết</a></li>
+                                    <li><a href="#order" class="order_btn">Đặt vé</a></li>
                                 </ul>
                             </nav>
                         </div>
@@ -88,6 +89,7 @@
                 </div>
             </div>
         </header>
+
         @RenderBody()
         <footer id="footer">
             <div class="container footer-container">
@@ -96,11 +98,11 @@
                         <div class="widget">
                             <h5 class="widget-title">Menu</h5>
                             <ul class="menu">
-                                <li><a href="#">Home</a></li>
-                                <li><a href="#">Coming soon</a></li>
-                                <li><a href="#">Order</a></li>
-                                <li><a href="#">Terms of service</a></li>
-                                <li><a href="#">Pricing</a></li>
+                                <li><a href="#">Trang chủ</a></li>
+                                <li><a href="#">Sắp ra mắt</a></li>
+                                <li><a href="#">Đặt vé</a></li>
+                                <li><a href="#">Điều khoản dịch vụ</a></li>
+                                <li><a href="#">Bảng giá</a></li>
                             </ul>
                         </div>
                         <div class="widget">
@@ -113,13 +115,13 @@
                     </div>
                     <div class="col-md-3 col-sm-6">
                         <div class="widget">
-                            <h5 class="widget-title">Address information</h5>
+                            <h5 class="widget-title">Thông tin địa chỉ</h5>
                             <p>
                                 California. AMC Dine-In Theatres Marina,
-                                Street 26, Distritc 543 #108
+                                Đường 26, Quận 543 #108
                             </p>
                             <p>
-                                <i class="fa fa-mail"></i>Example@mail.com<br>
+                                <i class="fa fa-mail"></i> Example@mail.com<br>
                                 <i class="fa fa-phone"></i> + 123 456 7890
                             </p>
                         </div>
@@ -127,18 +129,18 @@
                     <div class="col-md-1"></div>
                     <div class="col-md-6">
                         <div class="widget">
-                            <h5 class="widget-title">Leave a message</h5>
+                            <h5 class="widget-title">Để lại tin nhắn</h5>
                             <form class="contact_form transparent">
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <input type="text" class="inputValidation" name="name" placeholder="Name *">
+                                        <input type="text" class="inputValidation" name="name" placeholder="Họ và tên *">
                                     </div>
                                     <div class="col-sm-12">
                                         <input type="text" class="inputValidation" name="email" placeholder="Email *">
                                     </div>
-                                    <div class="col-sm-12 ">
-                                        <textarea class="inputValidation" placeholder="Message *"></textarea>
-                                        <button type="submit" class="button fill rectangle">Send to us</button>
+                                    <div class="col-sm-12">
+                                        <textarea class="inputValidation" placeholder="Nội dung tin nhắn *"></textarea>
+                                        <button type="submit" class="button fill rectangle">Gửi cho chúng tôi</button>
                                     </div>
                                 </div>
                             </form>
@@ -151,12 +153,13 @@
                 <div class="container">
                     <div class="row copyright-text">
                         <div class="col-sm-12 text-center">
-                            <p class="mv3 mvt0">&copy; Copyrights 2017 Tenguu. All rights reserved</p>
+                            <p class="mv3 mvt0">&copy; Bản quyền 2017 Tenguu. Mọi quyền được bảo lưu.</p>
                         </div>
                     </div>
                 </div>
             </div>
         </footer>
+
     </div>
     <!-- Include jQuery and Scripts -->
     <script type="text/javascript" src="~/User/js/jquery.min.js"></script>

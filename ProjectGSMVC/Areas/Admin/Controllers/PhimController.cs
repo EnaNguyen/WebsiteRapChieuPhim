@@ -337,7 +337,7 @@ namespace ProjectGSMVC.Areas.Admin.Controllers
 
             if (response.IsSuccessStatusCode)
             {
-                return Ok("Thêm phim thành công!");
+                return Ok("Sửa phim thành công!");
             }
             else
             {
