@@ -14,5 +14,6 @@ namespace ProjectGSMAUI.Api.Container
         Task<APIResponse> Remove(int id);
         Task<APIResponse> Update(int Id, CreateMovie data);
         Task<APIResponse> CheckSuatChieu(int Id, CheckDate Data);
+        Task<List<PhimView>> OnBoarding();
     }
 }

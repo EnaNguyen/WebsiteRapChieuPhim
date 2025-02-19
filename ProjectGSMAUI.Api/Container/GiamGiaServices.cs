@@ -138,6 +138,7 @@ namespace ProjectGSMAUI.Api.Container
             }
             catch (Exception ex)
             {
+                await transaction.RollbackAsync();
                 response.ResponseCode = 400;
                 response.ErrorMessage = ex.Message;
                 this.logger.LogError(ex.Message, ex);

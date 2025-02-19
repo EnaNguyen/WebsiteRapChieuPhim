@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ProjectGSMAUI.Api.Migrations
 {
     /// <inheritdoc />
-    public partial class dlss : Migration
+    public partial class DLSS : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -233,7 +233,6 @@ namespace ProjectGSMAUI.Api.Migrations
                 columns: table => new
                 {
                     MaHoaDon = table.Column<int>(type: "int", nullable: false),
-                    MaDatVe = table.Column<int>(type: "int", nullable: true),
                     MaKhachHang = table.Column<string>(type: "char(10)", unicode: false, fixedLength: true, maxLength: 10, nullable: true),
                     TongTien = table.Column<int>(type: "int", nullable: true),
                     MaGiamGia = table.Column<int>(type: "int", nullable: true),
@@ -363,7 +362,8 @@ namespace ProjectGSMAUI.Api.Migrations
                 name: "ChiTietHoaDon",
                 columns: table => new
                 {
-                    MaChiTietHoaDon = table.Column<int>(type: "int", nullable: false),
+                    MaChiTietHoaDon = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     MaVe = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     MaHoaDon = table.Column<int>(type: "int", nullable: true),
                     Gia = table.Column<int>(type: "int", nullable: true),
@@ -384,30 +384,6 @@ namespace ProjectGSMAUI.Api.Migrations
                         principalColumn: "MaHoaDon");
                     table.ForeignKey(
                         name: "FK__ChiTietHo__MaVe__59FA5E80",
-                        column: x => x.MaVe,
-                        principalTable: "Ve",
-                        principalColumn: "MaVe");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "DatVe",
-                columns: table => new
-                {
-                    MaDatVe = table.Column<int>(type: "int", nullable: true),
-                    MaKhachHang = table.Column<string>(type: "char(10)", unicode: false, fixedLength: true, maxLength: 10, nullable: true),
-                    MaVe = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    NgayDat = table.Column<DateOnly>(type: "date", nullable: true),
-                    TrangThai = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.ForeignKey(
-                        name: "FK__DatVe__MaKhachHa__4D94879B",
-                        column: x => x.MaKhachHang,
-                        principalTable: "TaiKhoan",
-                        principalColumn: "IDTaiKhoan");
-                    table.ForeignKey(
-                        name: "FK__DatVe__MaVe__4E88ABD4",
                         column: x => x.MaVe,
                         principalTable: "Ve",
                         principalColumn: "MaVe");
@@ -635,18 +611,18 @@ namespace ProjectGSMAUI.Api.Migrations
                 columns: new[] { "ID", "LoaiPhong", "SoLuongGhe", "TenPhong", "TinhTrang" },
                 values: new object[,]
                 {
-                    { 1, null, 112, "Phòng 1", 1 },
-                    { 2, null, 112, "Phòng 2", 1 },
-                    { 3, null, 112, "Phòng 3", 1 },
-                    { 4, null, 112, "Phòng 4", 1 },
-                    { 5, null, 112, "Phòng 5", 1 },
-                    { 6, null, 112, "Phòng 6", 1 }
+                    { 1, null, 192, "Phòng 1", 1 },
+                    { 2, null, 192, "Phòng 2", 1 },
+                    { 3, null, 192, "Phòng 3", 1 },
+                    { 4, null, 192, "Phòng 4", 1 },
+                    { 5, null, 192, "Phòng 5", 1 },
+                    { 6, null, 192, "Phòng 6", 1 }
                 });
 
             migrationBuilder.InsertData(
                 table: "TaiKhoan",
                 columns: new[] { "IDTaiKhoan", "CCCD", "DiaChi", "DiemTichLuy", "Email", "GioiTinh", "Hinh", "MatKhau", "NgayDangKy", "NgaySinh", "SDT", "TenNguoiDung", "TenTaiKhoan", "TrangThai", "VaiTro" },
-                values: new object[] { "AD001", "123456789012", "123 Đường ABC, Thành phố XYZ", 0, "nguyenquangquyX@gmail.com", true, null, "8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92", new DateOnly(2025, 2, 10), new DateOnly(1999, 5, 19), "0973713274", "Quản trị viên", "Admin", 1, 2 });
+                values: new object[] { "AD001", "123456789012", "123 Đường ABC, Thành phố XYZ", 0, "nguyenquangquyX@gmail.com", true, null, "8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92", new DateOnly(2025, 2, 19), new DateOnly(1999, 5, 19), "0973713274", "Quản trị viên", "Admin", 1, 2 });
 
             migrationBuilder.InsertData(
                 table: "TheLoaiPhim",
@@ -737,16 +713,6 @@ namespace ProjectGSMAUI.Api.Migrations
                 column: "MaGiamGia");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DatVe_MaKhachHang",
-                table: "DatVe",
-                column: "MaKhachHang");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_DatVe_MaVe",
-                table: "DatVe",
-                column: "MaVe");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_HinhAnh_PhimNavigationId",
                 table: "HinhAnh",
                 column: "PhimNavigationId");
@@ -810,9 +776,6 @@ namespace ProjectGSMAUI.Api.Migrations
 
             migrationBuilder.DropTable(
                 name: "ChiTietHoaDon");
-
-            migrationBuilder.DropTable(
-                name: "DatVe");
 
             migrationBuilder.DropTable(
                 name: "HinhAnh");

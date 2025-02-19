@@ -54,6 +54,12 @@ namespace ProjectGSMAUI.Api.Controllers
             var data = await this._phimService.Update(Id, Data);
             return Ok(data);
         }
+        [HttpGet("OnBoarding")]
+        public async Task<IActionResult> OnBoarding()
+        {
+            var data = await _phimService.OnBoarding();
+            return Ok(data);
+        }
 
     }
 }

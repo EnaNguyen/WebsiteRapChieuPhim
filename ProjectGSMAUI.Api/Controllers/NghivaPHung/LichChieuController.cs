@@ -81,7 +81,11 @@ namespace ProjectGSMAUI.Api.Controllers
             }
             return Ok(response.Data);
         }
-
-       
+        [HttpGet("GetLichChieuByDate")]
+        public async Task<IActionResult> GetLichChieuByDate(int id, DateOnly date)
+        {
+            var response = await this.service.GetLichChieuByDate(id, date);
+            return Ok(response);
+        }
     }
 }

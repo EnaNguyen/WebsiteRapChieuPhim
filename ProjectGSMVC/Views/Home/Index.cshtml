@@ -1,6 +1,8 @@
-﻿@{
+﻿@using ProjectGSMAUI.Api.Modal
+@{
 
     ViewData["Title"] = "Home Page";
+    var ListPhim = ViewData["ListPhim"] as List<PhimView>;
     
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -985,5 +987,225 @@
     <script type="text/javascript" src="~/User/js/google-maps.js"></script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?callback=initMap"></script>
 </section>
-
+<div id="order">
+    <div class="container">
+        <div class="row order-content">
+            <div class="col-sm-8 col-xs-12 seat_content ph0">
+                <h2>order a ticket</h2>
+                <div class="entry-order-content">
+                    <form id="msform" name="msform">
+                        <!-- fieldsets -->
+                        <fieldset id="Tab1">
+                            <div class="wpc-content">                               
+                                <h3 class="mt3">Tên Phim</h3>
+                                <select id="TenPhim">
+                                    @if (ListPhim != null)
+                                    {
+                                        @foreach (var item in ListPhim)
+                                        {
+                                            <option value="@item.Id"
+                                                    data-ngaykhoichieu="@(item.NgayKhoiChieu.HasValue ? item.NgayKhoiChieu.Value.ToString("yyyy-MM-dd") : "")"
+                                                    data-ngayketthuc="@(item.NgayKetThuc.HasValue ? item.NgayKetThuc.Value.ToString("yyyy-MM-dd") : "")">
+                                                @item.TenPhim
+                                            </option>
+                                        }
+                                    }
+                                </select>
+                                <h3 class="mt3">Ngày chiếu phim</h3>
+                                <input type="date" class="datetime" id="NgayDatVe" />
+                                <h3 class="mt3">Giờ chiếu</h3>                                
+                            </div>                         
+                        </fieldset>
+                        <fieldset class="seat-content" style="left: 25%">
+                            <div class="wpc-content">
+                                <h3 class="seat_title" style="height:100px">GHẾ</h3>
+                                <div id="seat-map" style="padding-left: 130px"></div>
+                            </div>
+                            <input type="submit" name="submit" class="submit action-button" id="DatVeOnClick" value="Đặt vé" />
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+            <div class="col-sm-4 col-xs-12 order_sidebar ph0">
+                <h2>Thông tin đặt vé</h2>
+                <div class="order-details">
+                    <span>Tên Phim : </span><p id="PhimDaChon"> </p>
+                    <span>Ngày Chiếu: </span>  <p id="NgayChieuPhim"></p>
+                    <span>Giờ Chiếu: </span> <p id="KhungGioChieu"></p>
+                    <span>Ghế Ngồi: </span>
+                    <ul id="selected-seats"></ul>
+                    <div>Số lượng vé: <span id="counter">0</span></div>
+                    <div>Tổng Tiền: <b><span id="total">0</span>&nbsp; VND</b></div>
+                </div>
+                <a href="javascript:;" class="close-window"><i class="fa fa-times"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- JavaScript để hiển thị trailer -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        var caChieuDaChon = '';
+        function loadAvailableDates() {
+            var selectedMovie = $("#TenPhim option:selected");
+            var movieName = selectedMovie.text(); 
+            var minDate = selectedMovie.data("ngaykhoichieu");
+            var maxDate = selectedMovie.data("ngayketthuc");
+
+            $("#PhimDaChon").text(movieName); 
+
+            $("#NgayDatVe").attr("min", minDate);
+            $("#NgayDatVe").attr("max", maxDate);
+
+            if (minDate) {
+                $("#NgayDatVe").val(minDate);
+                loadShowtimes();
+            }
+        }
+
+        function loadShowtimes() {
+            var movieId = $("#TenPhim").val();
+            var selectedDate = $("#NgayDatVe").val();
+            $("#NgayChieuPhim").text(selectedDate); // Display selected date
+
+            if (!movieId || !selectedDate) return;
+
+            $.ajax({
+                url: `/Home/GetLichChieuByDate?id=${movieId}&date=${selectedDate}`,
+                type: "GET",
+                success: function (response) {
+                    $("#GioChieu").empty();
+                    console.log(response);
+                    if (response.length > 0) {
+                        $(".next").remove();
+                        response.forEach(function (item) {
+                            var gioChieu = item.gioChieu;
+                            var maGioChieu = item.maGioChieu;
+                            $("#Tab1").append(`<input data-id="${maGioChieu}" type="button" name="next" class="next action-button" value="${gioChieu}"/>`);
+                        });
+                        $('.entry-order-content').each(function () {
+                            var current_fs, next_fs, previous_fs; 
+                            var left, opacity, scale; 
+                            var animating;
+
+                            $(".next").on('click', function () {
+                                if (animating) return false;
+                                animating = true;
+                                caChieuDaChon = $(this).data("id");
+                                var gioChieu = $(this).val();  
+                                $("#KhungGioChieu").text(gioChieu);
+                                document.querySelectorAll(".seatCharts-seat.seatCharts-cell.selected").forEach(seat => {
+                                    seat.classList.replace("selected", "available");
+                                });
+                                document.getElementById("counter").innerHTML = "0";
+                                $cart=null;
+                                $total=0;
+                                $counter = 0;
+                                document.getElementById("total").innerHTML = "0";
+                                document.getElementById("selected-seats").innerHTML = "";
+                                current_fs = $(this).parent();
+                                next_fs = $(this).parent().next();
+
+                                next_fs.show();
+                                current_fs.animate({ opacity: 0 }, {
+                                    step: function (now, mx) {
+                                        scale = 1 - (1 - now) * 0.2;
+                                        left = (now * 50) + "%";
+                                        opacity = 1 - now;
+                                        current_fs.css({ 'transform': 'scale(' + scale + ')' });
+                                        next_fs.css({ 'left': left, 'opacity': opacity });
+                                    },
+                                    duration: 800,
+                                    complete: function () {
+                                        current_fs.hide();
+                                        animating = false;
+                                    },
+                                    easing: 'easeInOutBack'
+                                });
+                            });                       
+                            $(".submit").on('click', function () {
+                                
+                            });
+
+                        });
+                    } else {
+                        $("#GioChieu").append("<li><i>Không có suất chiếu</i></li>"); // String literal fixed
+                    }
+                },
+                error: function () {
+                    $("#GioChieu").empty();
+                    $("#GioChieu").append("<li><i>Lỗi khi tải lịch chiếu</i></li>"); // String literal fixed
+                }
+            });
+        }
+
+        $("#TenPhim").change(function () {
+            loadAvailableDates();
+        });
+
+        $("#NgayDatVe").change(function () {
+            loadShowtimes();
+        });
+        $("#DatVeOnClick").on('click', function () {
+            // Thu thập dữ liệu từ form
+            var maPhim = $("#TenPhim").val();
+            var ngayChieu = $("#NgayDatVe").val();
+            var caChieu = caChieuDaChon;
+            var ghe = seatIds;
+
+            // Kiểm tra dữ liệu hợp lệ
+            if (!maPhim || !ngayChieu || !caChieu || ghe.length === 0) {
+                alert("Vui lòng chọn đủ thông tin!");
+                return;
+            }
+
+
+            var datVeModel = {
+                MaPhim: maPhim,
+                NgayChieu: ngayChieu,
+                CaChieu: caChieu,
+                Ghe: ghe
+            };
+            console.log(datVeModel)
+            // Gửi yêu cầu AJAX đến controller MuaVe
+            $.ajax({
+                url: '/MuaVe', // Địa chỉ API
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(datVeModel), // Chuyển đổi đối tượng thành chuỗi JSON
+                success: function (response) {
+                    if (response) {
+                        alert("Đặt vé thành công!");
+                        // Bạn có thể thực hiện hành động sau khi đặt vé thành công như chuyển hướng, làm mới trang, v.v.
+                    } else {
+                        alert("Có lỗi xảy ra khi đặt vé.");
+                    }
+                },
+                error: function () {
+                    alert("Đã xảy ra lỗi khi gửi yêu cầu.");
+                }
+            });
+        });
+        loadAvailableDates(); // Call on initial load
+    });
+</script>
+
+<script>
+    var seatIds = [];
+    const observer = new MutationObserver(function (mutations) {
+        mutations.forEach(function (mutation) {
+            if (mutation.type === 'childList') {
+                seatIds = []; // Clear the array before repopulating
+                $('#selected-seats li').each(function () {
+                    var seatId = $(this).attr('id').split('-')[2];
+                    seatIds.push(seatId);
+                });
+                console.log(seatIds);
+            }
+        });
+    });
+    const config = { childList: true };
+    observer.observe(document.getElementById('selected-seats'), config);
+</script>

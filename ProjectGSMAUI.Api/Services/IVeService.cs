@@ -1,4 +1,6 @@
 ﻿using ProjectGSMAUI.Api.Data.Entities;
+using ProjectGSMAUI.Api.Helper;
+using ProjectGSMAUI.Api.Modal;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -13,5 +15,6 @@ namespace ProjectGSMAUI.Api.Container
         Task CreateVeAsync(Ve ve);
         Task UpdateVeAsync(string id, Ve ve);
         Task DeleteVeAsync(string id);
+        Task<List<string>> MuaVe(DatVeModel ve);
     }
 }

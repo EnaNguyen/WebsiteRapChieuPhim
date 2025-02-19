@@ -278,6 +278,25 @@ namespace ProjectGSMAUI.Api.Services
                 };
             }
         }
-
+        public async Task<List<LichChieuView>> GetLichChieuByDate(int id, DateOnly date)
+        {
+            var data = await context.LichChieus
+                .Where(g => g.NgayChieu == date && g.MaPhim == id)
+                .Include(l => l.MaPhimNavigation)
+                .Include(l => l.MaPhongNavigation)
+                .Include(l => l.GioChieuNavigation)
+                .Select(l => new LichChieuView  
+                {
+                    MaLichChieu = l.MaLichChieu,
+                    MaPhim = l.MaPhim,
+                    MaPhong = l.MaPhong,
+                    NgayChieu = l.NgayChieu,
+                    GioChieu = l.GioChieuNavigation.GioBatDau,
+                    GiaVe = l.GiaVe,
+                    MaGioChieu = l.GioChieu??0
+                })
+                .ToListAsync();
+            return data;
+        }
     }
 }
