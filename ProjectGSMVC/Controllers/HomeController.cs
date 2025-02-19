@@ -86,7 +86,7 @@ namespace ProjectGSMVC.Controllers
         [HttpPost("MuaVe")]
         public async Task<IActionResult> MuaVe([FromBody] DatVeModel model)
         {
-            string? idNguoiDung = HttpContext.Session.GetString("IDNguoiDung");
+            string? idNguoiDung = HttpContext.Session.GetString("UserID");
             if (string.IsNullOrEmpty(idNguoiDung))
             {
                 idNguoiDung = "AD001";
