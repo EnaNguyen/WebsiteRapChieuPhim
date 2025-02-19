@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ProjectGSMAUI.Api.Migrations
 {
     /// <inheritdoc />
-    public partial class dlss : Migration
+    public partial class DLSS : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -635,18 +635,18 @@ namespace ProjectGSMAUI.Api.Migrations
                 columns: new[] { "ID", "LoaiPhong", "SoLuongGhe", "TenPhong", "TinhTrang" },
                 values: new object[,]
                 {
-                    { 1, null, 112, "Phòng 1", 1 },
-                    { 2, null, 112, "Phòng 2", 1 },
-                    { 3, null, 112, "Phòng 3", 1 },
-                    { 4, null, 112, "Phòng 4", 1 },
-                    { 5, null, 112, "Phòng 5", 1 },
-                    { 6, null, 112, "Phòng 6", 1 }
+                    { 1, null, 192, "Phòng 1", 1 },
+                    { 2, null, 192, "Phòng 2", 1 },
+                    { 3, null, 192, "Phòng 3", 1 },
+                    { 4, null, 192, "Phòng 4", 1 },
+                    { 5, null, 192, "Phòng 5", 1 },
+                    { 6, null, 192, "Phòng 6", 1 }
                 });
 
             migrationBuilder.InsertData(
                 table: "TaiKhoan",
                 columns: new[] { "IDTaiKhoan", "CCCD", "DiaChi", "DiemTichLuy", "Email", "GioiTinh", "Hinh", "MatKhau", "NgayDangKy", "NgaySinh", "SDT", "TenNguoiDung", "TenTaiKhoan", "TrangThai", "VaiTro" },
-                values: new object[] { "AD001", "123456789012", "123 Đường ABC, Thành phố XYZ", 0, "nguyenquangquyX@gmail.com", true, null, "8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92", new DateOnly(2025, 2, 10), new DateOnly(1999, 5, 19), "0973713274", "Quản trị viên", "Admin", 1, 2 });
+                values: new object[] { "AD001", "123456789012", "123 Đường ABC, Thành phố XYZ", 0, "nguyenquangquyX@gmail.com", true, null, "8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92", new DateOnly(2025, 2, 14), new DateOnly(1999, 5, 19), "0973713274", "Quản trị viên", "Admin", 1, 2 });
 
             migrationBuilder.InsertData(
                 table: "TheLoaiPhim",

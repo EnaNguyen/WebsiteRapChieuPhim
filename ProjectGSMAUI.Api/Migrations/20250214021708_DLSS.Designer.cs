@@ -12,8 +12,8 @@ using ProjectGSMAUI.Api.Data;
 namespace ProjectGSMAUI.Api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250210032036_dlss")]
-    partial class dlss
+    [Migration("20250214021708_DLSS")]
+    partial class DLSS
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1865,42 +1865,42 @@ namespace ProjectGSMAUI.Api.Migrations
                         new
                         {
                             Id = 1,
-                            SoLuongGhe = 112,
+                            SoLuongGhe = 192,
                             TenPhong = "Phòng 1",
                             TinhTrang = 1
                         },
                         new
                         {
                             Id = 2,
-                            SoLuongGhe = 112,
+                            SoLuongGhe = 192,
                             TenPhong = "Phòng 2",
                             TinhTrang = 1
                         },
                         new
                         {
                             Id = 3,
-                            SoLuongGhe = 112,
+                            SoLuongGhe = 192,
                             TenPhong = "Phòng 3",
                             TinhTrang = 1
                         },
                         new
                         {
                             Id = 4,
-                            SoLuongGhe = 112,
+                            SoLuongGhe = 192,
                             TenPhong = "Phòng 4",
                             TinhTrang = 1
                         },
                         new
                         {
                             Id = 5,
-                            SoLuongGhe = 112,
+                            SoLuongGhe = 192,
                             TenPhong = "Phòng 5",
                             TinhTrang = 1
                         },
                         new
                         {
                             Id = 6,
-                            SoLuongGhe = 112,
+                            SoLuongGhe = 192,
                             TenPhong = "Phòng 6",
                             TinhTrang = 1
                         });
@@ -2038,7 +2038,7 @@ namespace ProjectGSMAUI.Api.Migrations
                             Email = "nguyenquangquyX@gmail.com",
                             GioiTinh = true,
                             MatKhau = "8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92",
-                            NgayDangKy = new DateOnly(2025, 2, 10),
+                            NgayDangKy = new DateOnly(2025, 2, 14),
                             NgaySinh = new DateOnly(1999, 5, 19),
                             Sdt = "0973713274",
                             TenNguoiDung = "Quản trị viên",
