@@ -2008,7 +2008,7 @@ namespace ProjectGSMAUI.Api.Migrations
                             Email = "nguyenquangquyX@gmail.com",
                             GioiTinh = true,
                             MatKhau = "8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92",
-                            NgayDangKy = new DateOnly(2025, 2, 19),
+                            NgayDangKy = new DateOnly(2025, 2, 20),
                             NgaySinh = new DateOnly(1999, 5, 19),
                             Sdt = "0973713274",
                             TenNguoiDung = "Quản trị viên",
@@ -2064,6 +2064,7 @@ namespace ProjectGSMAUI.Api.Migrations
             modelBuilder.Entity("ProjectGSMAUI.Api.Data.Entities.Ve", b =>
                 {
                     b.Property<string>("MaVe")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("MaGhe")

@@ -338,8 +338,9 @@
 	$(document).ready(function () {
 		var $cart = $('#selected-seats'), //Sitting Area
 			$counter = $('#counter'), //Votes
+			$counter1 = $('#counter1'),
 			$total = $('#total'); //Total money
-
+			$total1 = $('#total');
 		var sc = $('#seat-map').seatCharts({
 			map: ["aaaa_aaaa_aaaa_aaaa", "aaaa_aaaa_aaaa_aaaa", "aaaa_aaaa_aaaa_aaaa", "aaaa_aaaa_aaaa_aaaa", "aaaa_aaaa_aaaa_aaaa", "aaaa_aaaa_aaaa_aaaa", "aaaa_aaaa_aaaa_aaaa", "aaaa_aaaa_aaaa_aaaa"],
 			naming: {
@@ -364,8 +365,9 @@
 						.appendTo($cart);
 
 					$counter.text(sc.find('selected').length + 1);
+					$counter1.text(sc.find('selected').length + 1);
 					$total.text(recalculateTotal(sc) + 100000);
-
+					$total1.text(recalculateTotal(sc) + 100000);
 					return 'selected';
 				} else if (this.status() == 'selected') { //Checked
 					//Update Number

@@ -129,5 +129,11 @@ namespace ProjectGSMAUI.Api.Controllers
             var data = await _veService.MuaVe(model);
             return Ok(data);
         }
+        [HttpGet("GetVeByDate")]
+        public async Task<IActionResult> GetVeByDate(int LichChieu)
+        {
+            var data = await _veService.GetVeByDate(LichChieu);
+            return Ok(data);
+        }
     }
 }

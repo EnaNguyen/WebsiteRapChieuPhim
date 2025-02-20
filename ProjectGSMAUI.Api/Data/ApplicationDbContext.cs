@@ -274,7 +274,7 @@ namespace ProjectGSMAUI.Api.Data
 
                 entity.ToTable("Ve");
 
-                entity.Property(e => e.MaVe).ValueGeneratedNever();
+                entity.Property(e => e.MaVe).ValueGeneratedOnAdd();
                 entity.Property(e => e.MaGhe)
                     .HasMaxLength(10)
                     .IsUnicode(false)

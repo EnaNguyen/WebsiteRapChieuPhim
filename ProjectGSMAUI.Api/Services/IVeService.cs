@@ -16,5 +16,6 @@ namespace ProjectGSMAUI.Api.Container
         Task UpdateVeAsync(string id, Ve ve);
         Task DeleteVeAsync(string id);
         Task<List<string>> MuaVe(DatVeModel ve);
+        Task<List<string>> GetVeByDate(int LichChieu);
     }
 }

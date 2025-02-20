@@ -184,22 +184,14 @@ namespace ProjectGSMAUI.Api.Container
                 string[] parts = item.Split('_');
                 int hang = int.Parse(parts[0]);
                 int cot = int.Parse(parts[1]);
-                if (cot >= 16)
-                {
-                    cot -= 4;
-
-                }
-                else if (cot >= 12)
-                {
-                    cot -= 3;
-                }
-                else if (cot >= 8)
+                if (cot > 10)
                 {
                     cot -= 2;
+
                 }
-                else if(cot >= 4)
+                else if (cot >5)
                 {
-                    cot -= 1;
+                    cot =-1;
                 }
                 string Temp = "ABCDEFGHIJKL";
                 char KiHieuCot = Temp[cot-1];
@@ -219,6 +211,14 @@ namespace ProjectGSMAUI.Api.Container
                 MaxMaVe++;
             };
             return ListMaVe;
+        }
+        public async Task<List<string>> GetVeByDate(int LichChieu)
+        {
+            var ListVe = await _context.Ves
+                                .Where(g => g.MaLichChieu == LichChieu)
+                                .Select(g => g.MaGhe.Trim())
+                                .ToListAsync();
+            return ListVe;
         }
     }
 }
