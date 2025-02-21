@@ -94,5 +94,16 @@
 
             return Ok(result);
         }
+        [HttpGet("{customerId}")]
+        public async Task<IActionResult> GetBillsByCustomerId(string customerId)
+        {
+            var result = await Service.GetBillsByCustomerId(customerId);
+            if (result == null || result.Count == 0)
+            {
+                return NotFound(new { Message = "Không tìm thấy hóa đơn nào cho khách hàng này" });
+            }
+
+            return Ok(result);
+        }
     }
 }

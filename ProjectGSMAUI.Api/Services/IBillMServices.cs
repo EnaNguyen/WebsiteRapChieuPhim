@@ -24,6 +24,14 @@ namespace ProjectGSMAUI.Api.Services
         // Phương thức cập nhật hóa đơn
         Task<APIResponse> Update(int id);
 
+        // Phương thức lấy chi tiết hóa đơn theo ID
         Task<Billmodal> GetDetailsByID(int id);
+
+        // Phương thức lấy danh sách hóa đơn theo ID tài khoản
+        Task<List<Billmodal>> GetBillsByCustomerId(string customerId);
+
+
+
+
     }
 }
