@@ -1,140 +1,119 @@
-﻿@{
+﻿@using ProjectGSMAUI.Api.Modal
+@{
 
     ViewData["Title"] = "Home Page";
+    var ListPhim = ViewData["ListPhim"] as List<PhimView>;
     
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var thangHienTai = DateTime.Now.Month;
+    var namHienTai = DateTime.Now.Year;
+    var phimDangChieu = Model.Where(p => p.NgayKhoiChieu.HasValue &&
+                                          p.NgayKhoiChieu.Value.Month == thangHienTai &&
+                                          p.NgayKhoiChieu.Value.Year == namHienTai);
 }
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model List<ProjectGSMVC.Models.PhimVM>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+@if (TempData["SuccessMessage"] != null)
+{
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: `Đã đặt vé thành công!`,
+            text: '@Html.Raw(TempData["SuccessMessage"])',
+            timer: 3000,
+            timerProgressBar: true,
+            showConfirmButton: false
+        });
+    </script>
+}
+else if (TempData["ErrorMessage"] != null)
+{
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: `Đặt Vé Thất Bại!`,
+            text: '@Html.Raw(TempData["ErrorMessage"])',
+            timer: 3000,
+            timerProgressBar: true,
+            showConfirmButton: false
+        });
+    </script>
+}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<style>
+    #trailerModal {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100%;
+        height: 100%;
+       z-index: 9999; /* ensures the modal is on top */
+    }
 
+    iframe {
+        max-width: 90%; /* makes sure the iframe doesn't exceed screen width */
+        max-height: 80%; /* makes sure the iframe doesn't exceed screen height */
+    }
+
+</style>
 <div class="fullwidth-slider">
     <div id="headerslider" class="carousel slide">
         <ol class="carousel-indicators">
-            <li data-target="#headerslider" data-slide-to="0" class="active"></li>
-            <li data-target="#headerslider" data-slide-to="1"></li>
-            <li data-target="#headerslider" data-slide-to="2"></li>
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                <li data-target="#headerslider" data-slide-to="@i" class="@(i == 0 ? "active" : "")"></li>
+            }
         </ol>
+
         <div class="carousel-inner" role="listbox">
-            <div class="item active">
-                <div class="fill" data-bg-image="~/User/images/header/header.png">
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                var phim = Model[i];
+                <div class="item @(i == 0 ? "active" : "")">
+                    <div class="fill"
+                         style="background-image: url('data:image/jpeg;base64,@(phim.HinhAnh != null ? Convert.ToBase64String(phim.HinhAnh) : "")');
+                        background-size: cover;
+                        background-position: center;
+                        background-repeat: no-repeat;">
                     <div class="bs-slider-overlay"></div>
-                    <div class="container movie-slider-container">
-                        <div class="row">
-                            <div class="col-sm-12 movie-slider-content">
-                                <div class="slider-content">
-                                    <ul class="subtitle" data-animation="animated bounceInRight">
-                                        <li>Action</li>
-                                        <li>Science Fiction</li>
-                                        <li>Adventure</li>
-                                    </ul>
-                                    <div class="title" data-animation="animated bounceInRight">Lord of the rings: The return of the kings <i>(2017)</i></div>
-                                    <div class="slide_right" data-animation="animated bounceInRight">
-                                        <a href="javascript:;" class="btn-trailer">watch trailer</a> <a href="javascript:;" class="btn-ticket">buy ticket</a>
-                                        <ul class="award-logo">
-                                            <li><img src="~/User/images/header/icon1.png" alt="icon"></li>
-                                            <li><img src="~/User/images/header/icon2.png" alt="icon"></li>
-                                            <li><img src="~/User/images/header/icon3.png" alt="icon"></li>
-                                            <li><img src="~/User/images/header/icon4.png" alt="icon"></li>
+                        <div class="container movie-slider-container">
+                            <div class="row">
+                                <div class="col-sm-12 movie-slider-content">
+                                    <div class="slider-content">
+                                        <ul class="subtitle" data-animation="animated bounceInRight">
+                                            <li>@phim.TheLoai</li>
                                         </ul>
-                                    </div>
-                                    <div class="chart-cirle">
-                                        <div class="chart-circle-l" data-animation="animated bounceInUp">
-                                            <div class="circle-chart" data-circle-width="7" data-percent="64" data-text="6.4">
-                                            </div>
-                                            <span>IMDB Ratffing</span>
+                                        <div class="title" data-animation="animated bounceInRight" style="font-family: 'Arial', 'Roboto', sans-serif;">
+                                            @phim.TenPhim <i>(@(phim.NgayKhoiChieu?.Year ?? 2024))</i>
                                         </div>
-                                        <div class="chart-circle-r" data-animation="animated bounceInUp">
-                                            <div class="circle-chart" data-circle-width="7" data-percent="84" data-text="8.4">
-                                            </div>
-                                            <span>Rotten Rating</span>
+
+                                        <div class="slide_right" data-animation="animated bounceInRight">
+                                            <a href="javascript:void(0);" class="btn-trailer"
+                                               data-video-url="@phim.Video">
+                                                Xem Trailer
+                                            </a>
+
+                                            <a href="javascript:;" class="btn-ticket">Mua Vé</a>
                                         </div>
+                                        
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="item">
-                <div class="fill" data-bg-image="~/User/images/product/feature-item.jpg">
-                    <div class="bs-slider-overlay"></div>
-                    <div class="container movie-slider-container">
-                        <div class="row">
-                            <div class="col-sm-12 movie-slider-content">
-                                <div class="slider-content">
-                                    <ul class="subtitle" data-animation="animated bounceInRight">
-                                        <li>Action</li>
-                                        <li>Science Fiction</li>
-                                        <li>Adventure</li>
-                                    </ul>
-                                    <div class="title" data-animation="animated bounceInRight">The Battle of Algiers (La Battaglia)  <i>(1967)</i></div>
-                                    <div class="slide_right" data-animation="animated bounceInRight">
-                                        <a href="javascript:;" class="btn-trailer">watch trailer</a> <a href="javascript:;" class="btn-ticket">buy ticket</a>
-                                        <ul class="award-logo">
-                                            <li><img src="~/User/images/header/icon1.png" alt="icon"></li>
-                                            <li><img src="~/User/images/header/icon2.png" alt="icon"></li>
-                                            <li><img src="~/User/images/header/icon3.png" alt="icon"></li>
-                                            <li><img src="~/User/images/header/icon4.png" alt="icon"></li>
-                                        </ul>
-                                    </div>
-                                    <div class="chart-cirle">
-                                        <div class="chart-circle-l" data-animation="animated bounceInUp">
-                                            <div class="circle-chart" data-circle-width="7" data-percent="94" data-text="9.4">
-                                            </div>
-                                            <span>IMDB Ratffing</span>
-                                        </div>
-                                        <div class="chart-circle-r" data-animation="animated bounceInUp">
-                                            <div class="circle-chart" data-circle-width="7" data-percent="84" data-text="8.4">
-                                            </div>
-                                            <span>Rotten Rating</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="item">
-                <div class="fill" data-bg-image="~/User/images/header/header.png">
-                    <div class="bs-slider-overlay"></div>
-                    <div class="container movie-slider-container">
-                        <div class="row">
-                            <div class="col-sm-12 movie-slider-content">
-                                <div class="slider-content">
-                                    <ul class="subtitle" data-animation="animated bounceInRight">
-                                        <li>Action</li>
-                                        <li>Science Fiction</li>
-                                    </ul>
-                                    <div class="title" data-animation="animated bounceInRight">The Battle of Algiers (Di Algeri)<i>(1967)</i></div>
-                                    <div class="slide_right" data-animation="animated bounceInRight">
-                                        <a href="javascript:;" class="btn-trailer">watch trailer</a> <a href="javascript:;" class="btn-ticket">buy ticket</a>
-                                        <ul class="award-logo">
-                                            <li><img src="~/User/images/header/icon1.png" alt="icon"></li>
-                                            <li><img src="~/User/images/header/icon2.png" alt="icon"></li>
-                                            <li><img src="~/User/images/header/icon3.png" alt="icon"></li>
-                                            <li><img src="~/User/images/header/icon4.png" alt="icon"></li>
-                                        </ul>
-                                    </div>
-                                    <div class="chart-cirle" data-animation="animated bounceInUp">
-                                        <div class="chart-circle-l" data-animation="animated bounceInUp">
-                                            <div class="circle-chart" data-circle-width="7" data-percent="86" data-text="8.6">
-                                            </div>
-                                            <span>IMDB Ratffing</span>
-                                        </div>
-                                        <div class="chart-circle-r" data-animation="animated bounceInUp">
-                                            <div class="circle-chart" data-circle-width="7" data-percent="74" data-text="7.4">
-                                            </div>
-                                            <span>Rotten Rating</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            }
         </div>
 
-        <!-- Controls -->
+        <!-- Điều hướng -->
         <a class="carousel-control left" href="#headerslider" data-slide="prev">
             <i class="fa fa-angle-left"></i>
         </a>
@@ -145,200 +124,39 @@
 </div>
 
 
+<!-- Modal hoặc phần chứa video -->
+<div id="trailerModal" style="display:none; margin-left:200px; margin-top: 10px">
+     <video id="videoTrailer" width="100%" controls> 
+       <source id="videoSource" src="" type="video/mp4"> 
+        Trình duyệt của bạn không hỗ trợ thẻ video. 
+    </video> 
+</div>
+
 <section class="section-content">
     <div class="container-fluid pv11 ">
         <div class="row">
             <div class="col-sm-12">
-                <h3 class="heading text-center">Now playing</h3>
+                <h3 class="heading text-center" style="font-family: 'Arial', 'Roboto', sans-serif;">Đang chiếu</h3>
                 <div class="ticket-carousel pvt85">
                     <div class="swiper-container carousel-container movie-images" data-col="5">
                         <div class="swiper-wrapper">
-                            <div class="swiper-slide">
-                                <div class="movie-image" data-bg-image="~/User/images/carousel/movie-1.jpg">
-                                    <div class="entry-hover">
-                                        <div class="entry-actions">
-                                            <a href="https://vimeo.com/28177848" class="btn-trailers video-player">watch trailer</a>
-                                            <a href="#order" class="btn-ticket order_btn ">buy ticket</a>
+                            @foreach (var phim in phimDangChieu)
+                            {
+                                <div class="swiper-slide">
+                                    <div class="movie-image" style="background-image: url('data:image/jpeg;base64,@(phim.HinhAnh != null ? Convert.ToBase64String(phim.HinhAnh) : "")');">
+                                        <div class="entry-hover">
+                                            <div class="entry-actions">
+                                                <a href="javascript:void(0);" class="btn-trailer" data-video-url="@phim.Video">Xem Trailer</a>
+                                                <a href="#order" class="btn-ticket order_btn">Mua Vé</a>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="entry-desc">
-                                        <div class="rating">
-                                            <input name="stars" type="radio">
-                                            <label>☆</label>
-                                            <input name="stars" type="radio">
-                                            <label>☆</label>
-                                            <input name="stars" type="radio">
-                                            <label>☆</label>
-                                            <input name="stars" type="radio">
-                                            <label>☆</label>
-                                            <input name="stars" type="radio">
-                                            <label>☆</label>
+                                        <div class="entry-desc">
+                                            <h3 class="entry-title">@phim.TenPhim</h3>
+                                            <p>@phim.TheLoai</p>
                                         </div>
-                                        <h3 class="entry-title">X-Men:Apocalypse</h3>
-                                        <ul class="entry-date">
-                                            <li>11 :00</li>
-                                            <li>13 :50</li>
-                                            <li>14 :00</li>
-                                            <li>18 :00</li>
-                                        </ul>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="swiper-slide">
-                                <div class="movie-image" data-bg-image="~/User/images/carousel/movie-2.jpg">
-                                    <div class="entry-hover">
-                                        <div class="entry-actions">
-                                            <a href="https://vimeo.com/28177848" class="btn-trailers video-player">watch trailer</a>
-                                            <a href="#order" class="btn-ticket order_btn ">buy ticket</a>
-                                        </div>
-                                    </div>
-                                    <div class="entry-desc">
-                                        <div class="rating">
-                                            <input name="stars" type="radio">
-                                            <label>☆</label>
-                                            <input name="stars" type="radio">
-                                            <label>☆</label>
-                                            <input name="stars" type="radio">
-                                            <label>☆</label>
-                                            <input name="stars" type="radio">
-                                            <label>☆</label>
-                                            <input name="stars" type="radio">
-                                            <label>☆</label>
-                                        </div>
-                                        <h3 class="entry-title">X-Men:Apocalypse</h3>
-                                        <ul class="entry-date">
-                                            <li>11 :00</li>
-                                            <li>13 :50</li>
-                                            <li>14 :00</li>
-                                            <li>18 :00</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="swiper-slide">
-                                <div class="movie-image" data-bg-image="~/User/images/carousel/movie-3.jpg">
-                                    <div class="entry-hover">
-                                        <div class="entry-actions">
-                                            <a href="https://vimeo.com/28177848" class="btn-trailers video-player">watch trailer</a>
-                                            <a href="#order" class="btn-ticket order_btn ">buy ticket</a>
-                                        </div>
-                                    </div>
-                                    <div class="entry-desc">
-                                        <div class="rating">
-                                            <input name="stars" type="radio">
-                                            <label>☆</label>
-                                            <input name="stars" type="radio">
-                                            <label>☆</label>
-                                            <input name="stars" type="radio">
-                                            <label>☆</label>
-                                            <input name="stars" type="radio">
-                                            <label>☆</label>
-                                            <input name="stars" type="radio">
-                                            <label>☆</label>
-                                        </div>
-                                        <h3 class="entry-title">X-Men:Apocalypse</h3>
-                                        <ul class="entry-date">
-                                            <li>11 :00</li>
-                                            <li>13 :50</li>
-                                            <li>14 :00</li>
-                                            <li>18 :00</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="swiper-slide">
-                                <div class="movie-image" data-bg-image="~/User/images/carousel/movie-4.jpg">
-                                    <div class="entry-hover">
-                                        <div class="entry-actions">
-                                            <a href="https://vimeo.com/28177848" class="btn-trailers video-player">watch trailer</a>
-                                            <a href="#order" class="btn-ticket order_btn ">buy ticket</a>
-                                        </div>
-                                    </div>
-                                    <div class="entry-desc">
-                                        <div class="rating">
-                                            <input name="stars" type="radio">
-                                            <label>☆</label>
-                                            <input name="stars" type="radio">
-                                            <label>☆</label>
-                                            <input name="stars" type="radio">
-                                            <label>☆</label>
-                                            <input name="stars" type="radio">
-                                            <label>☆</label>
-                                            <input name="stars" type="radio">
-                                            <label>☆</label>
-                                        </div>
-                                        <h3 class="entry-title">X-Men:Apocalypse</h3>
-                                        <ul class="entry-date">
-                                            <li>11 :00</li>
-                                            <li>13 :50</li>
-                                            <li>14 :00</li>
-                                            <li>18 :00</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="swiper-slide">
-                                <div class="movie-image" data-bg-image="~/User/images/carousel/movie-5.jpg">
-                                    <div class="entry-hover">
-                                        <div class="entry-actions">
-                                            <a href="https://vimeo.com/28177848" class="btn-trailers video-player">watch trailer</a>
-                                            <a href="#order" class="btn-ticket order_btn ">buy ticket</a>
-                                        </div>
-                                    </div>
-                                    <div class="entry-desc">
-                                        <div class="rating">
-                                            <input name="stars" type="radio">
-                                            <label>☆</label>
-                                            <input name="stars" type="radio">
-                                            <label>☆</label>
-                                            <input name="stars" type="radio">
-                                            <label>☆</label>
-                                            <input name="stars" type="radio">
-                                            <label>☆</label>
-                                            <input name="stars" type="radio">
-                                            <label>☆</label>
-                                        </div>
-                                        <h3 class="entry-title">X-Men:Apocalypse</h3>
-                                        <ul class="entry-date">
-                                            <li>11 :00</li>
-                                            <li>13 :50</li>
-                                            <li>14 :00</li>
-                                            <li>18 :00</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="swiper-slide">
-                                <div class="movie-image" data-bg-image="~/User/images/carousel/movie-6.jpg">
-                                    <div class="entry-hover">
-                                        <div class="entry-actions">
-                                            <a href="https://vimeo.com/28177848" class="btn-trailers video-player">watch trailer</a>
-                                            <a href="#order" class="btn-ticket order_btn ">buy ticket</a>
-                                        </div>
-                                    </div>
-                                    <div class="entry-desc">
-                                        <div class="rating">
-                                            <input name="stars" type="radio">
-                                            <label>☆</label>
-                                            <input name="stars" type="radio">
-                                            <label>☆</label>
-                                            <input name="stars" type="radio">
-                                            <label>☆</label>
-                                            <input name="stars" type="radio">
-                                            <label>☆</label>
-                                            <input name="stars" type="radio">
-                                            <label>☆</label>
-                                        </div>
-                                        <h3 class="entry-title">X-Men:Apocalypse</h3>
-                                        <ul class="entry-date">
-                                            <li>11 :00</li>
-                                            <li>13 :50</li>
-                                            <li>14 :00</li>
-                                            <li>18 :00</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
+                            }
                         </div>
                     </div>
                     <div class="swiper-button-prev"></div>
@@ -347,732 +165,400 @@
 
             </div>
         </div>
-    </div>    <div class="section-content pvb0 bg-cover" data-bg-image="~/User/images/coming-bg.jpg">
-        <div class="container pvt80">
-            <div class="row">
-                <div class="col-md-12">
-                    <div id="slider_coming" class="flexslider">
-                        <ul class="slides">
-                            <li>
-                                <article class="product-item hover-dark">
-                                    <div class="featured-image bg-cover">
-                                        <img src="~/User/images/carousel/movie-1.jpg" alt="image" />
-                                        <a href="https://vimeo.com/28177848" class="video-player"><i class="fa fa-play"></i></a>
-                                    </div>
-                                    <div class="entry-title">
-                                        <ul class="subtitle">
-                                            <li>Action</li>
-                                            <li>Science Fiction</li>
-                                            <li>Adventure</li>
-                                        </ul>
-                                        <a href="javascript:;" class="title">Lord of the rings: The return of the kings </a>
-                                        <div class="entry-date"><span>5 May 2017</span></div>
-                                        <div class="social-links">
-                                            <a href="javascript:;"><i class="fa fa-facebook"></i></a>
-                                            <a href="javascript:;"><i class="fa fa-twitter"></i></a>
-                                            <a href="javascript:;"><i class="fa fa-instagram"></i></a>
-                                        </div>
-                                    </div>
-
-                                    <div class="entry-desc">
-                                        <div class="row mh0">
-                                            <div class="col-md-2 col-sm-3 col-xs-12 comming_movie ph0">
-                                                <img src="~/User/images/carousel/movie-1.jpg" alt="movie">
-                                            </div>
-                                            <div class="col-md-8 col-sm-7 col-xs-12 entry-text phl3">
-                                                <h3>synopsis</h3>
-                                                <p>Authoritatively pontificate error-free deliverables and technically sound mindshare. Quickly build ong-term high-impact outsourcing vis-a-vis best-of-breed communities. Collaboratively disseminate prospective supply chains after corporate "outside the box" thinking. Rapidiously promote interactive metrics for ethical materials.  Professionally repurpose market-driven applications with...</p>
-                                                <a href="javascript:;" class="btn order">pre order</a>
-                                                <a href="javascript:;" class="btn more mhl20">Read more</a>
-                                            </div>
-                                            <div class="col-md-2 col-sm-2 col-xs-12">
-                                                <div class="wpc-skills animated">
-                                                    <div class="skill-block">
-                                                        <h5 class="timer" data-to="70" data-speed="500">6.4 </h5>
-                                                        <h6> - Metacritic</h6>
-                                                        <div class="skill-line">
-                                                            <div class="line-fill" data-width-pb="70%" style="width: 70%;"></div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="skill-block">
-                                                        <h5 class="timer" data-to="56" data-speed="500"> 5.5 </h5>
-                                                        <h6> - Photoshop</h6>
-                                                        <div class="skill-line">
-                                                            <div class="line-fill" data-width-pb="56%" style="width: 56%;"></div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="skill-block">
-                                                        <h5 class="timer" data-to="70" data-speed="500">6.4 </h5>
-                                                        <h6> - Metacritic</h6>
-                                                        <div class="skill-line">
-                                                            <div class="line-fill" data-width-pb="70%" style="width: 70%;"></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </article>
-                            </li>
-                            <li>
-                                <article class="product-item hover-dark">
-                                    <div class="featured-image bg-cover">
-                                        <img src="~/User/images/carousel/movie-2.jpg" alt="image" />
-                                        <a href="https://vimeo.com/28177848" class="video-player"><i class="fa fa-play"></i></a>
-                                    </div>
-                                    <div class="entry-title">
-                                        <ul class="subtitle">
-                                            <li>Action</li>
-                                            <li>Science Fiction</li>
-                                            <li>Adventure</li>
-                                        </ul>
-                                        <a href="javascript:;" class="title">Lord of the rings: The return of the kings </a>
-                                        <div class="entry-date"><span>5 May 2017</span></div>
-                                        <div class="social-links">
-                                            <a href="javascript:;"><i class="fa fa-facebook"></i></a>
-                                            <a href="javascript:;"><i class="fa fa-twitter"></i></a>
-                                            <a href="javascript:;"><i class="fa fa-instagram"></i></a>
-                                        </div>
-                                    </div>
-
-                                    <div class="entry-desc">
-                                        <div class="row mh0">
-                                            <div class="col-md-2 col-sm-3 col-xs-12 comming_movie ph0">
-                                                <img src="~/User/images/carousel/movie-2.jpg" alt="movie">
-                                            </div>
-                                            <div class="col-md-8 col-sm-7 col-xs-12 entry-text phl3">
-                                                <h3>synopsis</h3>
-                                                <p>Authoritatively pontificate error-free deliverables and technically sound mindshare. Quickly build ong-term high-impact outsourcing vis-a-vis best-of-breed communities. Collaboratively disseminate prospective supply chains after corporate "outside the box" thinking. Rapidiously promote interactive metrics for ethical materials.  Professionally repurpose market-driven applications with...</p>
-                                                <a href="javascript:;" class="btn order">pre order</a>
-                                                <a href="javascript:;" class="btn more mhl20">Read more</a>
-                                            </div>
-                                            <div class="col-md-2 col-sm-2 col-xs-12">
-                                                <div class="wpc-skills animated">
-                                                    <div class="skill-block">
-                                                        <h5 class="timer" data-to="70" data-speed="500">6.4 </h5>
-                                                        <h6> - Metacritic</h6>
-                                                        <div class="skill-line">
-                                                            <div class="line-fill" data-width-pb="70%" style="width: 70%;"></div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="skill-block">
-                                                        <h5 class="timer" data-to="56" data-speed="500"> 5.5 </h5>
-                                                        <h6> - Photoshop</h6>
-                                                        <div class="skill-line">
-                                                            <div class="line-fill" data-width-pb="56%" style="width: 56%;"></div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="skill-block">
-                                                        <h5 class="timer" data-to="70" data-speed="500">6.4 </h5>
-                                                        <h6> - Metacritic</h6>
-                                                        <div class="skill-line">
-                                                            <div class="line-fill" data-width-pb="70%" style="width: 70%;"></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </article>
-                            </li>
-                            <li>
-                                <article class="product-item hover-dark">
-                                    <div class="featured-image bg-cover">
-                                        <img src="~/User/images/carousel/movie-3.jpg" alt="image" />
-                                        <a href="https://vimeo.com/28177848" class="video-player"><i class="fa fa-play"></i></a>
-                                    </div>
-                                    <div class="entry-title">
-                                        <ul class="subtitle">
-                                            <li>Action</li>
-                                            <li>Science Fiction</li>
-                                            <li>Adventure</li>
-                                        </ul>
-                                        <a href="javascript:;" class="title">Lord of the rings: The return of the kings </a>
-                                        <div class="entry-date"><span>5 May 2017</span></div>
-                                        <div class="social-links">
-                                            <a href="javascript:;"><i class="fa fa-facebook"></i></a>
-                                            <a href="javascript:;"><i class="fa fa-twitter"></i></a>
-                                            <a href="javascript:;"><i class="fa fa-instagram"></i></a>
-                                        </div>
-                                    </div>
-
-                                    <div class="entry-desc">
-                                        <div class="row mh0">
-                                            <div class="col-md-2 col-sm-3 col-xs-12 comming_movie ph0">
-                                                <img src="~/User/images/carousel/movie-3.jpg" alt="movie">
-                                            </div>
-                                            <div class="col-md-8 col-sm-7 col-xs-12 entry-text phl3">
-                                                <h3>synopsis</h3>
-                                                <p>Authoritatively pontificate error-free deliverables and technically sound mindshare. Quickly build ong-term high-impact outsourcing vis-a-vis best-of-breed communities. Collaboratively disseminate prospective supply chains after corporate "outside the box" thinking. Rapidiously promote interactive metrics for ethical materials.  Professionally repurpose market-driven applications with...</p>
-                                                <a href="javascript:;" class="btn order">pre order</a>
-                                                <a href="javascript:;" class="btn more mhl20">Read more</a>
-                                            </div>
-                                            <div class="col-md-2 col-sm-2 col-xs-12">
-                                                <div class="wpc-skills animated">
-                                                    <div class="skill-block">
-                                                        <h5 class="timer" data-to="70" data-speed="500">6.4 </h5>
-                                                        <h6> - Metacritic</h6>
-                                                        <div class="skill-line">
-                                                            <div class="line-fill" data-width-pb="70%" style="width: 70%;"></div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="skill-block">
-                                                        <h5 class="timer" data-to="56" data-speed="500"> 5.5 </h5>
-                                                        <h6> - Photoshop</h6>
-                                                        <div class="skill-line">
-                                                            <div class="line-fill" data-width-pb="56%" style="width: 56%;"></div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="skill-block">
-                                                        <h5 class="timer" data-to="70" data-speed="500">6.4 </h5>
-                                                        <h6> - Metacritic</h6>
-                                                        <div class="skill-line">
-                                                            <div class="line-fill" data-width-pb="70%" style="width: 70%;"></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </article>
-                            </li>
-                            <li>
-                                <article class="product-item hover-dark">
-                                    <div class="featured-image bg-cover">
-                                        <img src="~/User/images/carousel/movie-4.jpg" alt="image" />
-                                        <a href="https://vimeo.com/28177848" class="video-player"><i class="fa fa-play"></i></a>
-                                    </div>
-                                    <div class="entry-title">
-                                        <ul class="subtitle">
-                                            <li>Action</li>
-                                            <li>Science Fiction</li>
-                                            <li>Adventure</li>
-                                        </ul>
-                                        <a href="javascript:;" class="title">Lord of the rings: The return of the kings </a>
-                                        <div class="entry-date"><span>5 May 2017</span></div>
-                                        <div class="social-links">
-                                            <a href="javascript:;"><i class="fa fa-facebook"></i></a>
-                                            <a href="javascript:;"><i class="fa fa-twitter"></i></a>
-                                            <a href="javascript:;"><i class="fa fa-instagram"></i></a>
-                                        </div>
-                                    </div>
-
-                                    <div class="entry-desc">
-                                        <div class="row mh0">
-                                            <div class="col-md-2 col-sm-3 col-xs-12 comming_movie ph0">
-                                                <img src="~/User/images/carousel/movie-4.jpg" alt="movie">
-                                            </div>
-                                            <div class="col-md-8 col-sm-7 col-xs-12 entry-text phl3">
-                                                <h3>synopsis</h3>
-                                                <p>Authoritatively pontificate error-free deliverables and technically sound mindshare. Quickly build ong-term high-impact outsourcing vis-a-vis best-of-breed communities. Collaboratively disseminate prospective supply chains after corporate "outside the box" thinking. Rapidiously promote interactive metrics for ethical materials.  Professionally repurpose market-driven applications with...</p>
-                                                <a href="javascript:;" class="btn order">pre order</a>
-                                                <a href="javascript:;" class="btn more mhl20">Read more</a>
-                                            </div>
-                                            <div class="col-md-2 col-sm-2 col-xs-12">
-                                                <div class="wpc-skills animated">
-                                                    <div class="skill-block">
-                                                        <h5 class="timer" data-to="70" data-speed="500">6.4 </h5>
-                                                        <h6> - Metacritic</h6>
-                                                        <div class="skill-line">
-                                                            <div class="line-fill" data-width-pb="70%" style="width: 70%;"></div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="skill-block">
-                                                        <h5 class="timer" data-to="56" data-speed="500"> 5.5 </h5>
-                                                        <h6> - Photoshop</h6>
-                                                        <div class="skill-line">
-                                                            <div class="line-fill" data-width-pb="56%" style="width: 56%;"></div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="skill-block">
-                                                        <h5 class="timer" data-to="70" data-speed="500">6.4 </h5>
-                                                        <h6> - Metacritic</h6>
-                                                        <div class="skill-line">
-                                                            <div class="line-fill" data-width-pb="70%" style="width: 70%;"></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </article>
-                            </li>
-                            <li>
-                                <article class="product-item hover-dark">
-                                    <div class="featured-image bg-cover">
-                                        <img src="~/User/images/carousel/movie-5.jpg" alt="image" />
-                                        <a href="https://vimeo.com/28177848" class="video-player"><i class="fa fa-play"></i></a>
-                                    </div>
-                                    <div class="entry-title">
-                                        <ul class="subtitle">
-                                            <li>Action</li>
-                                            <li>Science Fiction</li>
-                                            <li>Adventure</li>
-                                        </ul>
-                                        <a href="javascript:;" class="title">Lord of the rings: The return of the kings </a>
-                                        <div class="entry-date"><span>5 May 2017</span></div>
-                                        <div class="social-links">
-                                            <a href="javascript:;"><i class="fa fa-facebook"></i></a>
-                                            <a href="javascript:;"><i class="fa fa-twitter"></i></a>
-                                            <a href="javascript:;"><i class="fa fa-instagram"></i></a>
-                                        </div>
-                                    </div>
-
-                                    <div class="entry-desc">
-                                        <div class="row mh0">
-                                            <div class="col-md-2 col-sm-3 col-xs-12 comming_movie ph0">
-                                                <img src="~/User/images/carousel/movie-5.jpg" alt="movie">
-                                            </div>
-                                            <div class="col-md-8 col-sm-7 col-xs-12 entry-text phl3">
-                                                <h3>synopsis</h3>
-                                                <p>Authoritatively pontificate error-free deliverables and technically sound mindshare. Quickly build ong-term high-impact outsourcing vis-a-vis best-of-breed communities. Collaboratively disseminate prospective supply chains after corporate "outside the box" thinking. Rapidiously promote interactive metrics for ethical materials.  Professionally repurpose market-driven applications with...</p>
-                                                <a href="javascript:;" class="btn order">pre order</a>
-                                                <a href="javascript:;" class="btn more mhl20">Read more</a>
-                                            </div>
-                                            <div class="col-md-2 col-sm-2 col-xs-12">
-                                                <div class="wpc-skills animated">
-                                                    <div class="skill-block">
-                                                        <h5 class="timer" data-to="70" data-speed="500">6.4 </h5>
-                                                        <h6> - Metacritic</h6>
-                                                        <div class="skill-line">
-                                                            <div class="line-fill" data-width-pb="70%" style="width: 70%;"></div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="skill-block">
-                                                        <h5 class="timer" data-to="56" data-speed="500"> 5.5 </h5>
-                                                        <h6> - Photoshop</h6>
-                                                        <div class="skill-line">
-                                                            <div class="line-fill" data-width-pb="56%" style="width: 56%;"></div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="skill-block">
-                                                        <h5 class="timer" data-to="70" data-speed="500">6.4 </h5>
-                                                        <h6> - Metacritic</h6>
-                                                        <div class="skill-line">
-                                                            <div class="line-fill" data-width-pb="70%" style="width: 70%;"></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </article>
-                            </li>
-                            <li>
-                                <article class="product-item hover-dark">
-                                    <div class="featured-image bg-cover">
-                                        <img src="~/User/images/carousel/movie-6.jpg" alt="image" />
-                                        <a href="https://vimeo.com/28177848" class="video-player"><i class="fa fa-play"></i></a>
-                                    </div>
-                                    <div class="entry-title">
-                                        <ul class="subtitle">
-                                            <li>Action</li>
-                                            <li>Science Fiction</li>
-                                            <li>Adventure</li>
-                                        </ul>
-                                        <a href="javascript:;" class="title">Lord of the rings: The return of the kings </a>
-                                        <div class="entry-date"><span>5 May 2017</span></div>
-                                        <div class="social-links">
-                                            <a href="javascript:;"><i class="fa fa-facebook"></i></a>
-                                            <a href="javascript:;"><i class="fa fa-twitter"></i></a>
-                                            <a href="javascript:;"><i class="fa fa-instagram"></i></a>
-                                        </div>
-                                    </div>
-
-                                    <div class="entry-desc">
-                                        <div class="row mh0">
-                                            <div class="col-md-2 col-sm-3 col-xs-12 comming_movie ph0">
-                                                <img src="~/User/images/carousel/movie-6.jpg" alt="movie">
-                                            </div>
-                                            <div class="col-md-8 col-sm-7 col-xs-12 entry-text phl3">
-                                                <h3>synopsis</h3>
-                                                <p>Authoritatively pontificate error-free deliverables and technically sound mindshare. Quickly build ong-term high-impact outsourcing vis-a-vis best-of-breed communities. Collaboratively disseminate prospective supply chains after corporate "outside the box" thinking. Rapidiously promote interactive metrics for ethical materials.  Professionally repurpose market-driven applications with...</p>
-                                                <a href="javascript:;" class="btn order">pre order</a>
-                                                <a href="javascript:;" class="btn more mhl20">Read more</a>
-                                            </div>
-                                            <div class="col-md-2 col-sm-2 col-xs-12">
-                                                <div class="wpc-skills animated">
-                                                    <div class="skill-block">
-                                                        <h5 class="timer" data-to="70" data-speed="500">6.4 </h5>
-                                                        <h6> - Metacritic</h6>
-                                                        <div class="skill-line">
-                                                            <div class="line-fill" data-width-pb="70%" style="width: 70%;"></div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="skill-block">
-                                                        <h5 class="timer" data-to="56" data-speed="500"> 5.5 </h5>
-                                                        <h6> - Photoshop</h6>
-                                                        <div class="skill-line">
-                                                            <div class="line-fill" data-width-pb="56%" style="width: 56%;"></div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="skill-block">
-                                                        <h5 class="timer" data-to="70" data-speed="500">6.4 </h5>
-                                                        <h6> - Metacritic</h6>
-                                                        <div class="skill-line">
-                                                            <div class="line-fill" data-width-pb="70%" style="width: 70%;"></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </article>
-                            </li>
-
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div id="carousel_coming" class="flexslider">
-                <ul class="slides">
-                    <li class="thumb_item bg-cover">
-                        <div class="movie-image">
-                            <a href="#" class="btn fill">Selected</a>
-                            <img src="~/User/images/carousel/movie-1.jpg" class="wpc_img" alt="image" />
-                            <div class="entry-desc">
-                                <div class="rating">
-                                    <input name="stars" type="radio">
-                                    <label>☆</label>
-                                    <input name="stars" type="radio">
-                                    <label>☆</label>
-                                    <input name="stars" type="radio">
-                                    <label>☆</label>
-                                    <input name="stars" type="radio">
-                                    <label>☆</label>
-                                    <input name="stars" type="radio">
-                                    <label>☆</label>
-                                </div>
-                                <h3 class="entry-title">The Mountian</h3>
-                                <ul class="entry-date">
-                                    <li>5 May 2017</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="thumb_item bg-cover">
-                        <div class="movie-image">
-                            <a href="#" class="btn fill">Selected</a>
-                            <img src="~/User/images/carousel/movie-2.jpg" class="wpc_img" alt="image" />
-                            <div class="entry-desc">
-                                <div class="rating">
-                                    <input name="stars" type="radio">
-                                    <label>☆</label>
-                                    <input name="stars" type="radio">
-                                    <label>☆</label>
-                                    <input name="stars" type="radio">
-                                    <label>☆</label>
-                                    <input name="stars" type="radio">
-                                    <label>☆</label>
-                                    <input name="stars" type="radio">
-                                    <label>☆</label>
-                                </div>
-                                <h3 class="entry-title">The Mountian</h3>
-                                <ul class="entry-date">
-                                    <li>5 May 2017</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="thumb_item bg-cover">
-                        <div class="movie-image">
-                            <a href="#" class="btn fill">Selected</a>
-                            <img src="~/User/images/carousel/movie-3.jpg" class="wpc_img" alt="image" />
-                            <div class="entry-desc">
-                                <div class="rating">
-                                    <input name="stars" type="radio">
-                                    <label>☆</label>
-                                    <input name="stars" type="radio">
-                                    <label>☆</label>
-                                    <input name="stars" type="radio">
-                                    <label>☆</label>
-                                    <input name="stars" type="radio">
-                                    <label>☆</label>
-                                    <input name="stars" type="radio">
-                                    <label>☆</label>
-                                </div>
-                                <h3 class="entry-title">The Mountian</h3>
-                                <ul class="entry-date">
-                                    <li>5 May 2017</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="thumb_item bg-cover">
-                        <div class="movie-image">
-                            <a href="#" class="btn fill">Selected</a>
-                            <img src="~/User/images/carousel/movie-4.jpg" class="wpc_img" alt="image" />
-                            <div class="entry-desc">
-                                <div class="rating">
-                                    <input name="stars" type="radio">
-                                    <label>☆</label>
-                                    <input name="stars" type="radio">
-                                    <label>☆</label>
-                                    <input name="stars" type="radio">
-                                    <label>☆</label>
-                                    <input name="stars" type="radio">
-                                    <label>☆</label>
-                                    <input name="stars" type="radio">
-                                    <label>☆</label>
-                                </div>
-                                <h3 class="entry-title">The Mountian</h3>
-                                <ul class="entry-date">
-                                    <li>5 May 2017</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="thumb_item bg-cover">
-                        <div class="movie-image">
-                            <a href="#" class="btn fill">Selected</a>
-                            <img src="~/User/images/carousel/movie-5.jpg" class="wpc_img" alt="image" />
-                            <div class="entry-desc">
-                                <div class="rating">
-                                    <input name="stars" type="radio">
-                                    <label>☆</label>
-                                    <input name="stars" type="radio">
-                                    <label>☆</label>
-                                    <input name="stars" type="radio">
-                                    <label>☆</label>
-                                    <input name="stars" type="radio">
-                                    <label>☆</label>
-                                    <input name="stars" type="radio">
-                                    <label>☆</label>
-                                </div>
-                                <h3 class="entry-title">The Mountian</h3>
-                                <ul class="entry-date">
-                                    <li>5 May 2017</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="thumb_item bg-cover">
-                        <div class="movie-image">
-                            <a href="#" class="btn fill">Selected</a>
-                            <img src="~/User/images/carousel/movie-6.jpg" class="wpc_img" alt="image" />
-                            <div class="entry-desc">
-                                <div class="rating">
-                                    <input name="stars" type="radio">
-                                    <label>☆</label>
-                                    <input name="stars" type="radio">
-                                    <label>☆</label>
-                                    <input name="stars" type="radio">
-                                    <label>☆</label>
-                                    <input name="stars" type="radio">
-                                    <label>☆</label>
-                                    <input name="stars" type="radio">
-                                    <label>☆</label>
-                                </div>
-                                <h3 class="entry-title">The Mountian</h3>
-                                <ul class="entry-date">
-                                    <li>5 May 2017</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>        <div class="section-content service pvb0">
-        <div class="container  pv12">
-            <div class="row">
-                <div class="col-sm-12">
-                    <h3 class="heading text-center mb9">Your experience is gonna be exquisite.</h3>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-4 ph0">
-                    <h2>IMAX®</h2>
-                    <p> IMAX® provides an exceptional movie experience with images of immersive size, striking clarity.</p>
-                </div>
-                <div class="col-sm-4 ph0">
-                    <h2>REALD™ 3D</h2>
-                    <p>RealD™ Digital 3D is the new generation of entertainment, with crisp, bright, ultra-realistic images.</p>
-                </div>
-                <div class="col-sm-4 ph0">
-                    <h2>Dolby®  Laboratories</h2>
-                    <p>(NYSE:DLB) is the global leader in technologies that are essential elements in the best entertainment.</p>
-                </div>
-            </div>
-            <div class="row mt8">
-                <div class="col-sm-4 ph0">
-                    <h2>Great Environment</h2>
-                    <p> IMAX® provides an exceptional movie experience with images of immersive size, striking clarity.</p>
-                </div>
-                <div class="col-sm-4 ph0">
-                    <h2>Entertainment Center</h2>
-                    <p>RealD™ Digital 3D is the new generation of entertainment, with crisp, bright, ultra-realistic images.</p>
-                </div>
-                <div class="col-sm-4 ph0">
-                    <h2> So Much More...</h2>
-                    <p>(NYSE:DLB) is the global leader in technologies that are essential elements in the best entertainment.</p>
-                </div>
-            </div>
-        </div>
-    </div>        <div class="fullscreen-section bg-black pvb0">
-        <div class="container wpc-boxoffice pv8">
-            <div class="row">
-                <div class="col-sm-7 col-xs-12">
-                    <h3>box office</h3>
-                    <ul class="wpc-box-list">
-                        <li class="wpc-box-item">
-                            <ol>
-                                <li class="bx-item-t"><img src="~/User/images/boxoffice/thumb-1.jpg" alt="thumb"></li>
-                                <li class="bx-item-c">1</li>
-                                <li class="bx-item-title">
-                                    <h4>X-Men: Apocalypse</h4>
-                                    <span>Action, thriller</span>
-                                </li>
-                                <li class="bx-item-d">1 week</li>
-                                <li class="bx-item-m">1.1m</li>
-                            </ol>
-                        </li>
-                        <li class="wpc-box-item">
-                            <ol>
-                                <li class="bx-item-t"><img src="~/User/images/boxoffice/thumb-2.jpg" alt="thumb"></li>
-                                <li class="bx-item-c">2</li>
-                                <li class="bx-item-title">
-                                    <h4>Warcraft</h4>
-                                    <span>Action, thriller</span>
-                                </li>
-                                <li class="bx-item-d">2 week</li>
-                                <li class="bx-item-m">1.2m</li>
-                            </ol>
-                        </li>
-                        <li class="wpc-box-item">
-                            <ol>
-                                <li class="bx-item-t"><img src="~/User/images/boxoffice/thumb-3.jpg" alt="thumb"></li>
-                                <li class="bx-item-c">3</li>
-                                <li class="bx-item-title">
-                                    <h4>Hobbit: The battle</h4>
-                                    <span>Action, thriller</span>
-                                </li>
-                                <li class="bx-item-d">3 week</li>
-                                <li class="bx-item-m">1.3m</li>
-                            </ol>
-                        </li>
-                        <li class="wpc-box-item">
-                            <ol>
-                                <li class="bx-item-t"><img src="~/User/images/boxoffice/thumb-4.jpg" alt="thumb"></li>
-                                <li class="bx-item-c">4</li>
-                                <li class="bx-item-title">
-                                    <h4>James Bond: Spectre</h4>
-                                    <span>Action, thriller</span>
-                                </li>
-                                <li class="bx-item-d">4 week</li>
-                                <li class="bx-item-m">1.4m</li>
-                            </ol>
-                        </li>
-                        <li class="wpc-box-item">
-                            <ol>
-                                <li class="bx-item-t"><img src="~/User/images/boxoffice/thumb-5.jpg" alt="thumb"></li>
-                                <li class="bx-item-c">5</li>
-                                <li class="bx-item-title">
-                                    <h4>London has fallen</h4>
-                                    <span>Action, thriller</span>
-                                </li>
-                                <li class="bx-item-d">5 week</li>
-                                <li class="bx-item-m">1.5m</li>
-                            </ol>
-                        </li>
-
-                    </ul>
-                </div>
-                <div class="col-sm-5 col-xs-12 ">
-                    <h3>testimonials</h3>
-                    <div class="wpc-testimonails">
-                        <div class="swiper-container carousel-container">
-                            <div class="swiper-wrapper">
-                                <div class="swiper-slide">
-                                    <div class="testimonial">
-                                        <img src="~/User/images/author.png" alt="testimonials author">
-                                        <div class="entry-meta">
-                                            <h4>Shela Mathews</h4>
-                                        </div>
-                                        <p>
-                                            Enthusiastically monetize plug-and-play scenarios through quality manufactured products. Monotonectally streamline standardized portals after proactive innovation. Energistically promote market positioning.
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="swiper-slide">
-                                    <div class="testimonial">
-                                        <img src="~/User/images/author.png" alt="testimonials author">
-                                        <div class="entry-meta">
-                                            <h4>Shela Mathews</h4>
-                                        </div>
-                                        <p>
-                                            Enthusiastically monetize plug-and-play scenarios through quality manufactured products. Monotonectally streamline standardized portals after proactive innovation. Energistically promote market positioning.
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="swiper-slide">
-                                    <div class="testimonial">
-                                        <img src="~/User/images/author.png" alt="testimonials author">
-                                        <div class="entry-meta">
-                                            <h4>Shela Mathews</h4>
-                                        </div>
-                                        <p>
-                                            Enthusiastically monetize plug-and-play scenarios through quality manufactured products. Monotonectally streamline standardized portals after proactive innovation. Energistically promote market positioning.
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="swiper-slide">
-                                    <div class="testimonial">
-                                        <img src="~/User/images/author.png" alt="testimonials author">
-                                        <div class="entry-meta">
-                                            <h4>Shela Mathews</h4>
-                                        </div>
-                                        <p>
-                                            Enthusiastically monetize plug-and-play scenarios through quality manufactured products. Monotonectally streamline standardized portals after proactive innovation. Energistically promote market positioning.
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="swiper-slide">
-                                    <div class="testimonial">
-                                        <img src="~/User/images/author.png" alt="testimonials author">
-                                        <div class="entry-meta">
-                                            <h4>Shela Mathews</h4>
-                                        </div>
-                                        <p>
-                                            Enthusiastically monetize plug-and-play scenarios through quality manufactured products. Monotonectally streamline standardized portals after proactive innovation. Energistically promote market positioning.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="swiper-pagination"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
-    <div class="fullscreen-section">
-        <div id="tt-google-map" class="tt-google-map" data-lat="47.919311" data-lng="106.917643" data-zoom="16" data-saturation="-100" data-color="#333" data-marker="images/marker.png">
-            <div id="gmap_content">
-                <div class="gmap-item">
-                    <label class="label-title">Keep in Touch</label>
-                </div>
-                <div class="gmap-item">
-                    <label>
-                        <i class="fa fa-map-marker"></i>
-                    </label>
-                    <span>Address : 86 New Design Street, Melbourne 105</span>
-                </div>
-                <div class="gmap-item">
-                    <label>
-                        <i class="fa fa-phone"></i>
-                    </label>
-                    <span>Phone: (01) 200 123 544</span>
-                </div>
-                <div class="gmap-item">
-                    <label>
-                        <i class="fa fa-envelope"></i>
-                    </label>
-                    <span>Email: info@example.com</span>
-                </div>
-            </div>
-        </div>
-    </div>
+
     <script type="text/javascript" src="~/User/js/google-maps.js"></script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?callback=initMap"></script>
 </section>
+<div id="order">
+    <div class="container">
+        <div class="row order-content">
+            <div class="col-sm-8 col-xs-12 seat_content ph0">
+                <h2>order a ticket</h2>
+                <div class="entry-order-content">
+                    <form id="msform" name="msform">
+                        <!-- fieldsets -->
+                        <fieldset id="Tab1">
+                            <div class="wpc-content">                               
+                                <h3 class="mt3">Tên Phim</h3>
+                                <select id="TenPhim">
+                                    @if (ListPhim != null)
+                                    {
+                                        @foreach (var item in ListPhim)
+                                        {
+                                            <option value="@item.Id"
+                                                    data-ngaykhoichieu="@(item.NgayKhoiChieu.HasValue ? item.NgayKhoiChieu.Value.ToString("yyyy-MM-dd") : "")"
+                                                    data-ngayketthuc="@(item.NgayKetThuc.HasValue ? item.NgayKetThuc.Value.ToString("yyyy-MM-dd") : "")">
+                                                @item.TenPhim
+                                            </option>
+                                        }
+                                    }
+                                </select>
+                                <h3 class="mt3">Ngày chiếu phim</h3>
+                                <input type="date" class="datetime" id="NgayDatVe" />
+                                <h3 class="mt3">Giờ chiếu</h3>                                
+                            </div>                         
+                        </fieldset>
+                        <fieldset class="seat-content" style="left: 25%">
+                            <div class="wpc-content">
+                                <h3 class="seat_title" style="height:100px">GHẾ</h3>
+                                <div id="seat-map" style="padding-left: 00px; padding-right: 100px"></div>
+                            </div>
+                            <button name="submit" class="submit action-button" id="DatVeOnClick" value="Đặt vé" data-bs-toggle="modal" data-bs-target="#myModal" style="height:40px;size: 1.5u; margin-top:-150px">Thanh Toán</button>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+            <div class="col-sm-4 col-xs-12 order_sidebar ph0">
+                <h2>Thông tin đặt vé</h2>
+                <div class="order-details">
+                    <span>Tên Phim : </span><p class="ShowInfo" id="PhimDaChon"> </p>
+                    <span>Ngày Chiếu: </span>  <p class="ShowInfo"  id="NgayChieuPhim"></p>
+                    <span>Giờ Chiếu: </span> <p class="ShowInfo" id="KhungGioChieu"></p>
+                    <span>Ghế Ngồi: </span>
+                    <ul id="selected-seats"></ul>
+                    <div><span>Số lượng vé:</span><b><p class="ShowInfo" id="counter">0</p></b></div>
+                    <div><span>Tổng Tiền: </span><b><p class="ShowInfo"  id="total">0</p>&nbsp; VND</b></div>
+                </div>
+                <a href="javascript:;" class="close-window"><i class="fa fa-times"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal" id="myModal" style="font-size:2u">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h2 class="modal-title" style="font-size:40px; padding-left: 250px">Xác nhận đặt vé</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div id="orderdetail2" style="padding-left: 100px">
+                                <span>1. Tên Phim : </span><p class="ShowInfo" id="PhimDaChon1"> </p>
+                                <span>2. Ngày Chiếu: </span>  <p class="ShowInfo" id="NgayChieuPhim1"></p>
+                                <span>3. Giờ Chiếu: </span> <p class="ShowInfo" id="KhungGioChieu1"></p>
+                                <span>4. Ghế Ngồi: </span>
+                                <ul id="selected-seats1" style="font-size: 20px"></ul>
+                                <div style="display:inline"><span style="display:inline">5. Số lượng vé:</span><b style="display:inline; font-size:20px"><p class="ShowInfo" id="counter1" style="display:inline;">0</p> Vé</b></div>
+                                <br />
+                                <div style="display:inline">
+                                    <span style="display:inline">6. Tổng Tiền: </span>
+                                    <b style="display:inline; font-size:20px">
+                                        <p class="ShowInfo" id="total1" style="display:inline;">0</p> VND
+                                    </b>
+                                </div>
+                            </div>                           
+                        </div>
+                        <div class="col-md-6" style="border: 1px solid black; border-radius: 5px; padding-top: 20px;padding-left: 50px">
+                            <h1 style="font-size: 20px; padding-left:10px">Chọn phương thức thanh toán</h1>
+                            <button class="btn btn-primary" style="height: 40px; width: 300px; font-size: 20px;" id="TTVNPay">Thanh Toán Bằng VNPay</button>
+                        </div>
+                    </div>                   
+                </div>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- JavaScript để hiển thị trailer -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    $(document).ready(function () {
+        var caChieuDaChon = '';
+        function loadAvailableDates() {
+            var selectedMovie = $("#TenPhim option:selected");
+            var movieName = selectedMovie.text(); 
+            var minDate = selectedMovie.data("ngaykhoichieu");
+            var maxDate = selectedMovie.data("ngayketthuc");
+
+            $("#PhimDaChon").text(movieName); 
+            $("#PhimDaChon1").text(movieName);
+            $("#NgayDatVe").attr("min", minDate);
+            $("#NgayDatVe").attr("max", maxDate);
+
+            if (minDate) {
+                $("#NgayDatVe").val(minDate);
+                loadShowtimes();
+            }
+        }
+
+        function loadShowtimes() {
+            var movieId = $("#TenPhim").val();
+            var selectedDate = $("#NgayDatVe").val();
+            $("#NgayChieuPhim").text(selectedDate); // Display selected date
+            $("#NgayChieuPhim1").text(selectedDate);
+            if (!movieId || !selectedDate) return;
+
+            $.ajax({
+                url: `/Home/GetLichChieuByDate?id=${movieId}&date=${selectedDate}`,
+                type: "GET",
+                success: function (response) {
+                    $("#GioChieu").empty();
+                    console.log(response);
+                    if (response.length > 0) {
+                        $(".next").remove();
+                        response.forEach(function (item) {
+                            var gioChieu = item.gioChieu;
+                            var maGioChieu = item.maGioChieu;
+                            $("#Tab1").append(`<input data-MaLichChieu="${item.maLichChieu}" data-id="${maGioChieu}" type="button" name="next" class="next action-button" value="${gioChieu}" style="height:40px;size: 1.5u"/>`);
+                        });
+                        $('.entry-order-content').each(function () {
+                            var current_fs, next_fs, previous_fs; 
+                            var left, opacity, scale; 
+                            var animating;
+
+                            $(".next").on('click', function () {
+                                if (animating) return false;
+                                animating = true;
+                                caChieuDaChon = $(this).data("id");
+                                var LichChieu = $(this).data("malichchieu");
+                                var gioChieu = $(this).val();  
+                                console.log(LichChieu);
+                                $("#KhungGioChieu").text(gioChieu);
+                                $("#KhungGioChieu1").text(gioChieu);
+                                $.ajax({
+                                    url: `/Home/GetVeByDate?LichChieu=${LichChieu}`,
+                                    type: "GET",
+                                    success: function (response) {
+                                        console.log(response);
+                                        response.forEach(function (id) {
+                                            var element = document.getElementById(id);
+                                            if (element) {
+                                                // Thay thế class 'available' thành 'selected'
+                                                element.classList.replace("available", "unavailable");
+                                                // Hoặc nếu muốn thêm một class khác, có thể dùng:
+                                                // element.classList.add("selected");
+                                                // Và nếu cần loại bỏ class 'available' thì dùng:
+                                                // element.classList.remove("available");
+                                            }
+                                        });
+                                    }
+                                });
+                                document.querySelectorAll(".seatCharts-seat.seatCharts-cell.selected").forEach(seat => {
+                                    seat.classList.replace("selected", "available");
+                                });
+                                document.getElementById("counter").innerHTML = "0";
+                                $cart=null;
+                                $total=0;
+                                $counter = 0;
+                                document.getElementById("total").innerHTML = "0";
+                                document.getElementById("selected-seats").innerHTML = "";
+                                current_fs = $(this).parent();
+                                next_fs = $(this).parent().next();
+
+                                next_fs.show();
+                                current_fs.animate({ opacity: 0 }, {
+                                    step: function (now, mx) {
+                                        scale = 1 - (1 - now) * 0.2;
+                                        left = (now * 50) + "%";
+                                        opacity = 1 - now;
+                                        current_fs.css({ 'transform': 'scale(' + scale + ')' });
+                                        next_fs.css({ 'left': left, 'opacity': opacity });
+                                    },
+                                    duration: 800,
+                                    complete: function () {
+                                        current_fs.hide();
+                                        animating = false;
+                                    },
+                                    easing: 'easeInOutBack'
+                                });
+                            });                       
+                            $(".submit").on('click', function () {
+                                
+                            });
+
+                        });
+                    } else {
+                        $("#GioChieu").append("<li><i>Không có suất chiếu</i></li>"); // String literal fixed
+                    }
+                },
+                error: function () {
+                    $("#GioChieu").empty();
+                    $("#GioChieu").append("<li><i>Lỗi khi tải lịch chiếu</i></li>"); // String literal fixed
+                }
+            });
+        }
+
+        $("#TenPhim").change(function () {
+            loadAvailableDates();
+        });
+
+        $("#NgayDatVe").change(function () {
+            loadShowtimes();
+        });
+        $("#DatVeOnClick").on('click', function () {
+            $("#counter1").text($("#counter").text());
+            $("#total1").text($("#total").text());
+            var ShowGheNgoi = document.getElementById("selected-seats")
+            var ShowGheNgoi1 = document.getElementById("selected-seats1")
+            ShowGheNgoi1.innerHTML = ShowGheNgoi.innerHTML;
+        
+            // // Thu thập dữ liệu từ form
+            // var maPhim = $("#TenPhim").val();
+            // var ngayChieu = $("#NgayDatVe").val();
+            // var caChieu = caChieuDaChon;
+            // var ghe = seatIds;
+
+            // // Kiểm tra dữ liệu hợp lệ
+            // if (!maPhim || !ngayChieu || !caChieu || ghe.length === 0) {
+            //     Swal.fire({
+            //         icon: 'error',
+            //         title: `Bạn chưa chọn ghế!`,
+            //         text: 'Vui lòng chọn ít nhất 1 ghế trong số các ghế còn trống bên trái',
+            //         timer: 3000,
+            //         timerProgressBar: true,
+            //         showConfirmButton: false
+            //     });
+            //     return;
+            // }
+
+
+            // var datVeModel = {
+            //     MaPhim: maPhim,
+            //     NgayChieu: ngayChieu,
+            //     CaChieu: caChieu,
+            //     Ghe: ghe
+            // };
+            // // console.log(datVeModel)
+            // // Gửi yêu cầu AJAX đến controller MuaVe
+            // $.ajax({
+            //     url: '/MuaVe', Địa chỉ API
+            //     type: 'POST',
+            //     contentType: 'application/json',
+            //     data: JSON.stringify(datVeModel), //Chuyển đổi đối tượng thành chuỗi JSON
+            //     success: function (response) {
+            //         if (response) {
+            //             window.location.href = response;
+            //         } else {
+            //             alert("Có lỗi xảy ra khi đặt vé.");
+            //         }
+            //     },
+            //     error: function () {
+            //         alert("Đã xảy ra lỗi khi gửi yêu cầu.");
+            //     }
+            // });
+        });
+        $("#TTVNPay").on('click', function () {
+            // Thu thập dữ liệu từ form
+            var maPhim = $("#TenPhim").val();
+            var ngayChieu = $("#NgayDatVe").val();
+            var caChieu = caChieuDaChon;
+            var ghe = seatIds;
+
+            // Kiểm tra dữ liệu hợp lệ
+            if (!maPhim || !ngayChieu || !caChieu || ghe.length === 0) {
+                Swal.fire({
+                    icon: 'error',
+                    title: `Bạn chưa chọn ghế!`,
+                    text: 'Vui lòng chọn ít nhất 1 ghế trong số các ghế còn trống bên trái',
+                    timer: 3000,
+                    timerProgressBar: true,
+                    showConfirmButton: false
+                });
+                return;
+            }
+
+
+            var datVeModel = {
+                MaPhim: maPhim,
+                NgayChieu: ngayChieu,
+                CaChieu: caChieu,
+                Ghe: ghe
+            };
+            // console.log(datVeModel)
+            // Gửi yêu cầu AJAX đến controller MuaVe
+            $.ajax({
+                url: '/MuaVe', 
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(datVeModel), //Chuyển đổi đối tượng thành chuỗi JSON
+                success: function (response) {
+                    if (response) {
+                        window.location.href = response;
+                    } else {
+                        alert("Có lỗi xảy ra khi đặt vé.");
+                    }
+                },
+                error: function () {
+                    alert("Đã xảy ra lỗi khi gửi yêu cầu.");
+                }
+            });
+        });
+        loadAvailableDates(); // Call on initial load
+    });
+</script>
+
+<script>
+    var seatIds = [];
+    const observer = new MutationObserver(function (mutations) {
+        mutations.forEach(function (mutation) {
+            if (mutation.type === 'childList') {
+                seatIds = []; // Clear the array before repopulating
+                $('#selected-seats li').each(function () {
+                    var seatId = $(this).attr('id').split('-')[2];
+                    seatIds.push(seatId);
+                });
+                console.log(seatIds);
+            }
+        });
+    });
+    const config = { childList: true };
+    observer.observe(document.getElementById('selected-seats'), config);
+</script>
+
+
+<!-- JavaScript để hiển thị trailer -->
+<script>
+    document.querySelectorAll('.btn-trailer').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            // Lấy URL video từ data attribute
+            var videoUrl = btn.getAttribute('data-video-url');
+            if (videoUrl) {
+                let youtubeMatch = videoUrl.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|v\/)|youtu\.be\/)([^&?]+)/);
+                let  embedUrl = `https://www.youtube.com/embed/${youtubeMatch[1]}`;
+                // Cập nhật source cho video và hiển thị modal
+                document.getElementById('trailerModal').innerHTML=`<iframe width="70%" height="80%" src="${embedUrl}" frameborder="0" allowfullscreen></iframe>`;
+                // document.getElementById('videoSource').src = embedUrl;
+                // document.getElementById('videoTrailer').load(); Tải lại video
+                document.getElementById('trailerModal').style.display = 'block';
+            }
+        });
+    });
+    // Đóng modal khi click ngoài video
+    document.getElementById('trailerModal').addEventListener('click', function(event) {
+        if (event.target === this) {
+            this.style.display = 'none';
+            document.getElementById('videoTrailer').pause();
+        }
+    });
+</script>
+<style>
+    .seatCharts-seat
+    {
+        width: 40px;
+    }
+    .ShowInfo
+    {
+        margin-left: 50px;
+        font-size: 30px;
+    }
+    #orderdetail2 span
+    {
+        font-size: 20px;
+        font-style: italic;
+        text-decoration: underline;
+    }
+</style>

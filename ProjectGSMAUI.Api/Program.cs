@@ -39,6 +39,7 @@ builder.Services.AddTransient<ITaiKhoanService, TaiKhoanService>();
 builder.Services.AddScoped<ISanPham, SanPhamService>();
 builder.Services.AddScoped<IBillMServices, BillMServices>();
 builder.Services.AddScoped<IGeminiServices, GeminiServices>();
+builder.Services.AddScoped<ICheckOutServices, CheckOutServices>();
 //builder.Services.AddAuthentication("BasicAuthentication").AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
 var _authkey = builder.Configuration.GetValue<string>("JwtSettings:securitykey");
 builder.Services.AddAuthentication(item =>
@@ -88,9 +89,9 @@ builder.Services.Configure<GeminiSettings>(
 // Cấu hình Session
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(30); // Thời gian timeout của session
-    options.Cookie.HttpOnly = true; // Chỉ cho phép truy cập cookie qua HTTP
-    options.Cookie.IsEssential = true; // Đảm bảo cookie luôn được lưu
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Session timeout after 30 minutes of inactivity
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
 });
 
 builder.Services.AddControllers().AddJsonOptions(options =>

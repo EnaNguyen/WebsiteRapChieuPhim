@@ -201,8 +201,7 @@ namespace ProjectGSMAUI.Api.Container
 
         public async Task<List<PhimView>> GetAll(string name)
         {
-            var data = await _context.Phims
-            .AsNoTracking()
+            var data = await _context.Phims.AsNoTracking()
             .Select(item => new PhimView
             {
                 Id = item.Id,
@@ -219,7 +218,11 @@ namespace ProjectGSMAUI.Api.Container
                 HinhAnh = _context.HinhAnhs
                     .Where(g => (g.Phim == item.Id&&g.Avatar==true))
                     .Select(g => g.ImageData)
-                    .FirstOrDefault()??null
+                    .FirstOrDefault()??null,
+                Video = _context.Videos
+                .Where(v => v.Phim == item.Id)
+                .Select(v => v.Link)
+                .FirstOrDefault()??null,
             })
             .ToListAsync();
             return data;
@@ -267,6 +270,33 @@ namespace ProjectGSMAUI.Api.Container
             return Movie;
         }
 
+        public async Task<List<PhimView>> OnBoarding()
+        {
+            var data = await _context.Phims.AsNoTracking().Where(g => (g.NgayKhoiChieu <= DateOnly.FromDateTime(DateTime.Now)) && (g.NgayKetThuc >= DateOnly.FromDateTime(DateTime.Now))).Select(item => new PhimView
+            {
+                Id = item.Id,
+                TenPhim = item.TenPhim,
+                TheLoai = item.TheLoai,
+                ThoiLuong = item.ThoiLuong,
+                DaoDien = item.DaoDien,
+                GioiHanDoTuoi = item.GioiHanDoTuoi,
+                NgayKhoiChieu = item.NgayKhoiChieu,
+                NgayKetThuc = item.NgayKetThuc,
+                SoSuatChieu = item.SoSuatChieu,
+                TrangThai = item.TrangThai,
+                MoTa = item.MoTa,
+                HinhAnh = _context.HinhAnhs
+                         .Where(g => g.Phim == item.Id && g.Avatar == true)
+                         .Select(g => g.ImageData)
+                         .FirstOrDefault(),
+                Video = _context.Videos
+                .Where(v => v.Phim == item.Id)
+                .Select(v => v.Link)
+                .FirstOrDefault() ?? null,
+            }).ToListAsync();
+            return data;
+        }
+
         public Task<APIResponse> Remove(int id)
         {
             throw new NotImplementedException();
@@ -297,14 +327,14 @@ namespace ProjectGSMAUI.Api.Container
                 var OldVideo = _context.Videos.Where(g => g.Phim == Id).ToList();
                 _context.Videos.RemoveRange(OldVideo);
                 await _context.SaveChangesAsync();
-                foreach (var image in data.HinhAnhs)
+                for (int i = 0; i < data.HinhAnhs.Count; i++)
                 {
-                    if (!string.IsNullOrEmpty(image.ImageData))
+                    if (!string.IsNullOrEmpty(data.HinhAnhs[i].ImageData))
                     {
                         byte[] imageBytes;
                         try
                         {
-                            imageBytes = Convert.FromBase64String(image.ImageData);
+                            imageBytes = Convert.FromBase64String(data.HinhAnhs[i].ImageData);
                         }
                         catch (FormatException)
                         {
@@ -315,7 +345,7 @@ namespace ProjectGSMAUI.Api.Container
                         }
 
                         string ID = Guid.NewGuid().ToString();
-                        _context.HinhAnhs.Add(new HinhAnh { Id = ID, Phim = Id, ImageData = imageBytes });
+                        _context.HinhAnhs.Add(new HinhAnh { Id = ID, Phim = Id, ImageData = imageBytes , Avatar = (i==0)});
                     }
                 }
                 foreach (var video in data.Videos)

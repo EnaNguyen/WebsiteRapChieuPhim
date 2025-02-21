@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectGSMAUI.Shared", "Pro
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectGSMVC", "ProjectGSMVC\ProjectGSMVC.csproj", "{266701B6-92B9-4CCB-BA14-B62AC8B62D53}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectGS", "C:\Users\nguye\source\repos\ProjectGS\ProjectGS\ProjectGS.csproj", "{1D226298-6BFB-49F4-9236-31A48E426ABE}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,11 +27,6 @@ Global
 		{266701B6-92B9-4CCB-BA14-B62AC8B62D53}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{266701B6-92B9-4CCB-BA14-B62AC8B62D53}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{266701B6-92B9-4CCB-BA14-B62AC8B62D53}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1D226298-6BFB-49F4-9236-31A48E426ABE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1D226298-6BFB-49F4-9236-31A48E426ABE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1D226298-6BFB-49F4-9236-31A48E426ABE}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{1D226298-6BFB-49F4-9236-31A48E426ABE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1D226298-6BFB-49F4-9236-31A48E426ABE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

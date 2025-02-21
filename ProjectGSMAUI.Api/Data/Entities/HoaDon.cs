@@ -7,8 +7,6 @@ public partial class HoaDon
 {
     public int MaHoaDon { get; set; }
 
-    public int? MaDatVe { get; set; }
-
     public string? MaKhachHang { get; set; }
 
     public int? TongTien { get; set; }

@@ -10,7 +10,7 @@ namespace ProjectGSMVC.Areas.Admin.Controllers
     [Area("Admin")]
     public class VhBillMController : Controller
     {
-        private readonly Uri baseAddress = new Uri("http://localhost:5030/api");
+        private readonly Uri baseAddress = new Uri("https://localhost:7141/api");
         private readonly HttpClient _client;
 
         public VhBillMController()

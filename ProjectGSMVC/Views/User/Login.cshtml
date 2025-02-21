@@ -1,0 +1,54 @@
+﻿@{
+    ViewData["Title"] = "Login";
+    Layout = "~/Views/Shared/_Layout.cshtml"; // Keep your layout
+}
+
+<link href="~/css/auth-style.css" rel="stylesheet" /> @* Link to the new CSS file *@
+
+<div class="auth-container">
+    <div class="auth-left-panel">
+        <div class="logo-area">
+            <img src="~/User/images/logo.png" alt="Starlight Entertainment Center Logo" class="auth-logo" />
+        </div>
+        <div class="welcome-text">
+            Đăng nhập với tài khoản của bạn!
+        </div>
+    </div>
+    <div class="auth-right-panel">
+        <div class="auth-form-box login-box">
+            <h2>Đăng nhập</h2>
+            @if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
+            {
+                <div class="alert alert-success" role="alert">
+                    @ViewBag.SuccessMessage
+                </div>
+            }
+            @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+            {
+                <div class="alert alert-danger" role="alert">
+                    @ViewBag.ErrorMessage
+                </div>
+            }
+            <form asp-controller="User" asp-action="Login" method="post" class="auth-form">
+                <input type="hidden" name="returnUrl" value="@Context.Session.GetString("ReturnUrl")" />
+                <div class="form-group">
+                    <input type="text" class="form-control auth-input" id="tenTaiKhoan" name="tenTaiKhoan" placeholder="Email / Tên đăng nhập" required style="color:black">
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control auth-input" id="matKhau" name="matKhau" placeholder="Mật khẩu(*)" style="color:black" required>
+                </div>
+                <div class="form-group forgot-register-links">
+                    <a asp-action="Register" class="register-link">Đăng ký</a> / <a href="#" class="forgot-password-link">Quên mật khẩu?</a>
+                </div>
+                <button type="submit" class="btn auth-button">Đăng nhập</button>
+            </form>
+            <div class="social-login-separator">
+                <span>Hoặc đăng nhập với</span>
+            </div>
+            <div class="social-login-buttons">
+                <a href="#" class="social-button facebook-button"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social-button google-button"><i class="fab fa-google"></i></a>
+            </div>
+        </div>
+    </div>
+</div>

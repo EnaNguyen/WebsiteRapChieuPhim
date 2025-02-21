@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using ProjectGSMAUI.Api.Modal;
 namespace ProjectGSMAUI.Api.Controllers
 {
     [Route("api/[controller]")]
@@ -121,6 +122,18 @@ namespace ProjectGSMAUI.Api.Controllers
         {
             await _veService.DeleteVeAsync(id);
             return NoContent();
+        }
+        [HttpPost("MuaVe")]
+        public async Task<IActionResult> MuaVe(DatVeModel model)
+        {
+            var data = await _veService.MuaVe(model);
+            return Ok(data);
+        }
+        [HttpGet("GetVeByDate")]
+        public async Task<IActionResult> GetVeByDate(int LichChieu)
+        {
+            var data = await _veService.GetVeByDate(LichChieu);
+            return Ok(data);
         }
     }
 }

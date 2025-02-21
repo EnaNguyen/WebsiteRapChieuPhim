@@ -10,8 +10,6 @@ namespace ProjectGSMAUI.Api.Data
 
         public virtual DbSet<Coupon> Coupons { get; set; }
 
-        public virtual DbSet<DatVe> DatVes { get; set; }
-
         public virtual DbSet<Ghe> Ghes { get; set; }
 
         public virtual DbSet<GiamGia> GiamGia { get; set; }
@@ -70,7 +68,7 @@ namespace ProjectGSMAUI.Api.Data
 
                 entity.ToTable("ChiTietHoaDon");
 
-                entity.Property(e => e.MaChiTietHoaDon).ValueGeneratedNever();
+                entity.Property(e => e.MaChiTietHoaDon).ValueGeneratedOnAdd();
 
                 entity.HasOne(d => d.MaVeNavigation).WithMany(p => p.ChiTietHoaDons)
                     .HasForeignKey(d => d.MaVe)
@@ -99,27 +97,6 @@ namespace ProjectGSMAUI.Api.Data
                     .HasForeignKey(d => d.MaGiamGia)
                     .HasConstraintName("FK__Coupon__MaGiamGi__534D60F1");
             });
-
-            modelBuilder.Entity<DatVe>(entity =>
-            {
-                entity
-                    .HasNoKey()
-                    .ToTable("DatVe");
-
-                entity.Property(e => e.MaKhachHang)
-                    .HasMaxLength(10)
-                    .IsUnicode(false)
-                    .IsFixedLength();
-
-                entity.HasOne(d => d.MaKhachHangNavigation).WithMany()
-                    .HasForeignKey(d => d.MaKhachHang)
-                    .HasConstraintName("FK__DatVe__MaKhachHa__4D94879B");
-
-                entity.HasOne(d => d.MaVeNavigation).WithMany()
-                    .HasForeignKey(d => d.MaVe)
-                    .HasConstraintName("FK__DatVe__MaVe__4E88ABD4");
-            });
-
             modelBuilder.Entity<Ghe>(entity =>
             {
                 entity.HasKey(e => e.MaGhe).HasName("PK__Ghe__3CD3C67B40EF14C7");
@@ -170,14 +147,14 @@ namespace ProjectGSMAUI.Api.Data
                     .HasMaxLength(10)
                     .IsUnicode(false)
                     .IsFixedLength();
-
+              
                 entity.HasOne(d => d.MaGiamGiaNavigation).WithMany(p => p.HoaDons)
                     .HasForeignKey(d => d.MaGiamGia)
                     .HasConstraintName("FK__HoaDon__MaGiamGi__571DF1D5");
 
                 entity.HasOne(d => d.MaKhachHangNavigation).WithMany(p => p.HoaDons)
                     .HasForeignKey(d => d.MaKhachHang)
-                    .HasConstraintName("FK__HoaDon__MaKhachH__5629CD9C");
+                    .HasConstraintName("FK__HoaDon__MaKhachH__5629CD9C");             
             });
 
             modelBuilder.Entity<KhungGio>(entity =>
@@ -297,7 +274,7 @@ namespace ProjectGSMAUI.Api.Data
 
                 entity.ToTable("Ve");
 
-                entity.Property(e => e.MaVe).ValueGeneratedNever();
+                entity.Property(e => e.MaVe).ValueGeneratedOnAdd();
                 entity.Property(e => e.MaGhe)
                     .HasMaxLength(10)
                     .IsUnicode(false)
@@ -525,12 +502,12 @@ namespace ProjectGSMAUI.Api.Data
             );
 
             modelBuilder.Entity<Phong>().HasData(
-                new Phong { Id = 1, TenPhong = "Phòng 1", SoLuongGhe = 112, TinhTrang = 1 },
-                new Phong { Id = 2, TenPhong = "Phòng 2", SoLuongGhe = 112, TinhTrang = 1 },
-                new Phong { Id = 3, TenPhong = "Phòng 3", SoLuongGhe = 112, TinhTrang = 1 },
-                new Phong { Id = 4, TenPhong = "Phòng 4", SoLuongGhe = 112, TinhTrang = 1 },
-                new Phong { Id = 5, TenPhong = "Phòng 5", SoLuongGhe = 112, TinhTrang = 1 },
-                new Phong { Id = 6, TenPhong = "Phòng 6", SoLuongGhe = 112, TinhTrang = 1 }
+                new Phong { Id = 1, TenPhong = "Phòng 1", SoLuongGhe = 192, TinhTrang = 1 },
+                new Phong { Id = 2, TenPhong = "Phòng 2", SoLuongGhe = 192, TinhTrang = 1 },
+                new Phong { Id = 3, TenPhong = "Phòng 3", SoLuongGhe = 192, TinhTrang = 1 },
+                new Phong { Id = 4, TenPhong = "Phòng 4", SoLuongGhe = 192, TinhTrang = 1 },
+                new Phong { Id = 5, TenPhong = "Phòng 5", SoLuongGhe = 192, TinhTrang = 1 },
+                new Phong { Id = 6, TenPhong = "Phòng 6", SoLuongGhe = 192, TinhTrang = 1 }
 
             );//16 cột
             modelBuilder.Entity<KhungGio>().HasData(

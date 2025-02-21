@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using ProjectGSMAUI.Api.Container;
-
+using ProjectGSMVC.Services;
 using ProjectGSMAUI.Api.Services;
 using ProjectGSMVC.Areas.Admin.Controllers;
 using System.Text.Json.Serialization;
@@ -28,7 +28,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
 });
 builder.Services.AddDistributedMemoryCache(); // Thêm cache cho session
-
+builder.Services.AddSingleton<IVnPayServices, VnPayServices>();
 // Cấu hình Session
 builder.Services.AddSession(options =>
 {

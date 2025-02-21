@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using ProjectGSMAUI.Api.Helper;
+using ProjectGSMAUI.Api.Modal;
 namespace ProjectGSMAUI.Api.Container
 {
     public class VeService : IVeService
@@ -170,6 +172,53 @@ namespace ProjectGSMAUI.Api.Container
                 _context.Ves.Remove(ve);
                 await _context.SaveChangesAsync();
             }
+        }
+        public async Task<List<string>> MuaVe(DatVeModel ve)
+        {
+            var LichChieu = await _context.LichChieus.Where(g=>(g.NgayChieu==ve.NgayChieu && g.GioChieu==ve.CaChieu && g.MaPhim==ve.MaPhim)).FirstOrDefaultAsync();
+            int? MaxMaVe = int.TryParse(_context.Ves.OrderByDescending(g => g.MaVe).Select(global => global.MaVe).FirstOrDefault(), out int result) ? result : (int?)null;
+            MaxMaVe = MaxMaVe.HasValue ? MaxMaVe.Value + 1 : 0;
+            List<string> ListMaVe = new List<string>();
+            foreach (var item in ve.Ghe)
+            {
+                string[] parts = item.Split('_');
+                int hang = int.Parse(parts[0]);
+                int cot = int.Parse(parts[1]);
+                if (cot > 10)
+                {
+                    cot -= 2;
+
+                }
+                else if (cot >5)
+                {
+                    cot =-1;
+                }
+                string Temp = "ABCDEFGHIJKL";
+                char KiHieuCot = Temp[cot-1];
+                Ve newve = new Ve
+                {
+                    MaVe = MaxMaVe.ToString(),
+                    MaLichChieu = LichChieu.MaLichChieu,
+                    MaPhong = LichChieu.MaPhong,
+                    MaPhim = ve.MaPhim,
+                    TinhTrang = 1,
+                    MaGhe =  $"{KiHieuCot}{hang}",
+                    ThoiGianTao = DateTime.Now,
+                };
+                _context.Ves.Add(newve);
+                ListMaVe.Add(MaxMaVe.ToString());
+                await _context.SaveChangesAsync();
+                MaxMaVe++;
+            };
+            return ListMaVe;
+        }
+        public async Task<List<string>> GetVeByDate(int LichChieu)
+        {
+            var ListVe = await _context.Ves
+                                .Where(g => g.MaLichChieu == LichChieu)
+                                .Select(g => g.MaGhe.Trim())
+                                .ToListAsync();
+            return ListVe;
         }
     }
 }

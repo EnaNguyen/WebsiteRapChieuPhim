@@ -1,4 +1,7 @@
-﻿namespace ProjectGSMVC.Areas.Admin.Models
+﻿using Microsoft.AspNetCore.Http;
+using System;
+
+namespace ProjectGSMVC.Areas.Admin.Models
 {
     public class TaiKhoanModel
     {
@@ -13,6 +16,6 @@
         public string? Cccd { get; set; }
         public string? GioiTinh { get; set; }
         public string? DiaChi { get; set; }
-        public IFormFile ImageFile { get; set; }
+        public IFormFile? ImageFile { get; set; } // Make IFormFile nullable
     }
 }

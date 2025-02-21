@@ -12,7 +12,7 @@ using ProjectGSMAUI.Api.Data;
 namespace ProjectGSMAUI.Api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250121065833_DLSS")]
+    [Migration("20250220083952_DLSS")]
     partial class DLSS
     {
         /// <inheritdoc />
@@ -54,7 +54,10 @@ namespace ProjectGSMAUI.Api.Migrations
             modelBuilder.Entity("ProjectGSMAUI.Api.Data.Entities.ChiTietHoaDon", b =>
                 {
                     b.Property<int>("MaChiTietHoaDon")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MaChiTietHoaDon"));
 
                     b.Property<string>("GheMaGhe")
                         .HasColumnType("char(10)");
@@ -204,33 +207,6 @@ namespace ProjectGSMAUI.Api.Migrations
                             MaNhap = "COUPON010",
                             TrangThai = false
                         });
-                });
-
-            modelBuilder.Entity("ProjectGSMAUI.Api.Data.Entities.DatVe", b =>
-                {
-                    b.Property<int?>("MaDatVe")
-                        .HasColumnType("int");
-
-                    b.Property<string>("MaKhachHang")
-                        .HasMaxLength(10)
-                        .IsUnicode(false)
-                        .HasColumnType("char(10)")
-                        .IsFixedLength();
-
-                    b.Property<string>("MaVe")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateOnly?>("NgayDat")
-                        .HasColumnType("date");
-
-                    b.Property<int?>("TrangThai")
-                        .HasColumnType("int");
-
-                    b.HasIndex("MaKhachHang");
-
-                    b.HasIndex("MaVe");
-
-                    b.ToTable("DatVe", (string)null);
                 });
 
             modelBuilder.Entity("ProjectGSMAUI.Api.Data.Entities.Ghe", b =>
@@ -1465,6 +1441,9 @@ namespace ProjectGSMAUI.Api.Migrations
                         .HasColumnName("ID")
                         .IsFixedLength();
 
+                    b.Property<bool>("Avatar")
+                        .HasColumnType("bit");
+
                     b.Property<string>("ImageData")
                         .HasColumnType("text");
 
@@ -1485,9 +1464,6 @@ namespace ProjectGSMAUI.Api.Migrations
             modelBuilder.Entity("ProjectGSMAUI.Api.Data.Entities.HoaDon", b =>
                 {
                     b.Property<int>("MaHoaDon")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("MaDatVe")
                         .HasColumnType("int");
 
                     b.Property<int?>("MaGiamGia")
@@ -1862,42 +1838,42 @@ namespace ProjectGSMAUI.Api.Migrations
                         new
                         {
                             Id = 1,
-                            SoLuongGhe = 112,
+                            SoLuongGhe = 192,
                             TenPhong = "Phòng 1",
                             TinhTrang = 1
                         },
                         new
                         {
                             Id = 2,
-                            SoLuongGhe = 112,
+                            SoLuongGhe = 192,
                             TenPhong = "Phòng 2",
                             TinhTrang = 1
                         },
                         new
                         {
                             Id = 3,
-                            SoLuongGhe = 112,
+                            SoLuongGhe = 192,
                             TenPhong = "Phòng 3",
                             TinhTrang = 1
                         },
                         new
                         {
                             Id = 4,
-                            SoLuongGhe = 112,
+                            SoLuongGhe = 192,
                             TenPhong = "Phòng 4",
                             TinhTrang = 1
                         },
                         new
                         {
                             Id = 5,
-                            SoLuongGhe = 112,
+                            SoLuongGhe = 192,
                             TenPhong = "Phòng 5",
                             TinhTrang = 1
                         },
                         new
                         {
                             Id = 6,
-                            SoLuongGhe = 112,
+                            SoLuongGhe = 192,
                             TenPhong = "Phòng 6",
                             TinhTrang = 1
                         });
@@ -2035,7 +2011,7 @@ namespace ProjectGSMAUI.Api.Migrations
                             Email = "nguyenquangquyX@gmail.com",
                             GioiTinh = true,
                             MatKhau = "8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92",
-                            NgayDangKy = new DateOnly(2025, 1, 21),
+                            NgayDangKy = new DateOnly(2025, 2, 20),
                             NgaySinh = new DateOnly(1999, 5, 19),
                             Sdt = "0973713274",
                             TenNguoiDung = "Quản trị viên",
@@ -2091,6 +2067,7 @@ namespace ProjectGSMAUI.Api.Migrations
             modelBuilder.Entity("ProjectGSMAUI.Api.Data.Entities.Ve", b =>
                 {
                     b.Property<string>("MaVe")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("MaGhe")
@@ -2200,23 +2177,6 @@ namespace ProjectGSMAUI.Api.Migrations
                         .HasConstraintName("FK__Coupon__MaGiamGi__534D60F1");
 
                     b.Navigation("MaGiamGiaNavigation");
-                });
-
-            modelBuilder.Entity("ProjectGSMAUI.Api.Data.Entities.DatVe", b =>
-                {
-                    b.HasOne("ProjectGSMAUI.Api.Data.Entities.TaiKhoan", "MaKhachHangNavigation")
-                        .WithMany()
-                        .HasForeignKey("MaKhachHang")
-                        .HasConstraintName("FK__DatVe__MaKhachHa__4D94879B");
-
-                    b.HasOne("ProjectGSMAUI.Api.Data.Entities.Ve", "MaVeNavigation")
-                        .WithMany()
-                        .HasForeignKey("MaVe")
-                        .HasConstraintName("FK__DatVe__MaVe__4E88ABD4");
-
-                    b.Navigation("MaKhachHangNavigation");
-
-                    b.Navigation("MaVeNavigation");
                 });
 
             modelBuilder.Entity("ProjectGSMAUI.Api.Data.Entities.HinhAnh", b =>

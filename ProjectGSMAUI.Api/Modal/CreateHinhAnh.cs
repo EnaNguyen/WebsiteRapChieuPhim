@@ -4,6 +4,6 @@
     {
         public int? Phim { get; set; }
 
-        public string ImageData { get; set; }
+        public string? ImageData { get; set; }
     }
 }
