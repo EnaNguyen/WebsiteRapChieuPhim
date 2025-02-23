@@ -16,20 +16,19 @@ namespace ProjectGSMVC.Controllers
     {
         private readonly HttpClient _httpClient;
         Uri baseAddress = new Uri("https://localhost:7141/api"); // Your API Base URL
-
+        private readonly string _apiUrl = "https://localhost:7141/api/Auth/Login";
         public UserController(HttpClient httpClient)
         {
             _httpClient = httpClient;
             _httpClient.BaseAddress = baseAddress;
         }
-
         [HttpGet]
         public IActionResult Login()
         {
-            // Check if user is already logged in
+            // 🔹 Nếu đã đăng nhập, chuyển hướng về trang chủ
             if (HttpContext.Session.GetString("UserId") != null)
             {
-                return RedirectToAction("Index", "Home"); // Redirect to homepage if already logged in
+                return RedirectToAction("Index", "Home");
             }
             return View();
         }
@@ -45,32 +44,34 @@ namespace ProjectGSMVC.Controllers
 
             try
             {
-                var loginData = new Dictionary<string, string>
+                var loginData = new
                 {
-                    { "tenTaiKhoan", tenTaiKhoan },
-                    { "matKhau", matKhau }
+                    tenTaiKhoan = tenTaiKhoan,
+                    matKhau = matKhau
                 };
 
                 var jsonContent = new StringContent(JsonConvert.SerializeObject(loginData), Encoding.UTF8, "application/json");
-                HttpResponseMessage response = await _httpClient.PostAsync("/api/Auth/Login", jsonContent); // Assuming your login API endpoint is /api/Auth/Login
+
+                HttpResponseMessage response = await _httpClient.PostAsync(_apiUrl, jsonContent);
 
                 if (response.IsSuccessStatusCode)
                 {
                     var responseContent = await response.Content.ReadAsStringAsync();
-                    var loginResult = JsonConvert.DeserializeObject<LoginResponse>(responseContent); // Assuming an API response with UserId and success
+                    var loginResult = JsonConvert.DeserializeObject<LoginResponse>(responseContent);
 
                     if (loginResult != null && loginResult.Success)
                     {
-                        HttpContext.Session.SetString("UserId", loginResult.UserId); // Store UserId in session
-                        HttpContext.Session.SetString("UserName", loginResult.UserName); // Optionally store username too
+                        // ✅ Lưu UserId và UserName vào Session
+                        HttpContext.Session.SetString("UserId", loginResult.UserId);
+                        HttpContext.Session.SetString("UserName", loginResult.UserName);
 
                         if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                         {
-                            return Redirect(returnUrl); // Redirect back to booking page or original URL
+                            return Redirect(returnUrl);
                         }
                         else
                         {
-                            return RedirectToAction("Index", "Home"); // Redirect to homepage after login
+                            return RedirectToAction("Index", "Home"); // 🔹 Chuyển về trang chủ sau khi đăng nhập
                         }
                     }
                     else
@@ -85,7 +86,7 @@ namespace ProjectGSMVC.Controllers
                     return View();
                 }
             }
-            catch (HttpRequestException ex)
+            catch (HttpRequestException)
             {
                 ViewBag.ErrorMessage = "Lỗi kết nối đến máy chủ. Vui lòng thử lại sau.";
                 return View();

@@ -24,9 +24,12 @@ namespace ProjectGSMVC.Controllers
         Uri baseAddress = new Uri("https://localhost:7141/api");
         private readonly HttpClient _client;
         private readonly IVnPayServices _vnPayServices;
-
-        public HomeController(IVnPayServices vnPayServices)
+        private readonly ILogger<HomeController> _logger; // ✅ Khai báo Logger
+        private readonly HttpClient _httpClient;
+        public HomeController(ILogger<HomeController> logger, IVnPayServices vnPayServices, HttpClient httpClient)
         {
+            _logger = logger;
+            _httpClient = httpClient;
             _vnPayServices = vnPayServices;
             _client = new HttpClient();
             _client.BaseAddress = baseAddress;
@@ -155,6 +158,8 @@ namespace ProjectGSMVC.Controllers
             }
             return Ok(MaGhe);
         }
+
+
         public async Task<IActionResult> PaymentCallBack()
         {           
             var response2 = _vnPayServices.PaymentExcute(Request.Query);
@@ -209,5 +214,34 @@ namespace ProjectGSMVC.Controllers
             }
 
         }
+        [HttpGet("GetUserBillHistory")]
+        public async Task<IActionResult> GetUserBillHistory()
+        {
+            string? idNguoiDung = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(idNguoiDung))
+            {
+                _logger.LogWarning("⚠️ Session bị mất! Không thể lấy UserId.");
+                return RedirectToAction("Login", "User"); // Chuyển hướng đến trang đăng nhập
+            }
+
+            _logger.LogInformation("✅ Session tồn tại, UserId: {UserId}", idNguoiDung);
+
+            var apiURL = $"https://localhost:7141/api/Bill_Management/GetUserBillHistory?id={idNguoiDung}";
+            var response = await _httpClient.GetAsync(apiURL);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                _logger.LogError("❌ Không thể lấy lịch sử hóa đơn từ API.");
+                TempData["ErrorMessage"] = "Không thể lấy lịch sử giao dịch.";
+                return RedirectToAction("Index"); // Quay lại trang chính
+            }
+
+            string data = await response.Content.ReadAsStringAsync();
+            var billHistory = JsonConvert.DeserializeObject<List<BillHistoryViewModel>>(data);
+
+            return View("GetUserBillHistory", billHistory); // 🛠 Chuyển dữ liệu vào View
+        }
+
+
     }
 }

@@ -1,0 +1,49 @@
+﻿@using ProjectGSMVC.Models
+@model List<BillHistoryViewModel>
+
+@{
+    ViewData["Title"] = "Lịch Sử Giao Dịch";
+}
+
+<div style="margin-top: 200px;">
+    <h2 class="text-center mt-4">Lịch Sử Giao Dịch</h2>
+
+    @if (Model != null && Model.Any())
+    {
+        <table class="table table-striped mt-3">
+            <thead class="table-dark">
+                <tr>
+                    <th>Mã Hóa Đơn</th>
+                    <th>Tên Phim</th>
+                    <th>Mã Phim</th>
+                    <th>Ngày Đặt</th>
+                    <th>Giờ Đặt</th>
+                    <th>Tên Người Dùng</th>
+                    <th>Mã Vé</th>
+                    <th>Mã Ghế</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var bill in Model)
+                {
+                    <tr>
+                        <td>@bill.MaHoaDon</td>
+                        <td>@bill.TenPhim</td>
+                        <td>@bill.MaPhim</td>
+                        <td>@bill.NgayDatPhim.ToString("dd/MM/yyyy")</td>
+                        <td>@bill.GioDatPhim.ToString("HH:mm")</td>
+                        <td>@bill.TenUser</td>
+                        <td>@bill.MaVe</td>
+                        <td>@bill.MaGhe</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="alert alert-info mt-3 text-center">
+            Không có lịch sử giao dịch nào.
+        </div>
+    }
+</div>

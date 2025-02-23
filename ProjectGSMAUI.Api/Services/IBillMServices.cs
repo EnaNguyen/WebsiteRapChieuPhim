@@ -25,5 +25,7 @@ namespace ProjectGSMAUI.Api.Services
         Task<APIResponse> Update(int id);
 
         Task<Billmodal> GetDetailsByID(int id);
+        Task<List<BillHistoryModal>> GetUserBillHistory(string userId);
+
     }
 }

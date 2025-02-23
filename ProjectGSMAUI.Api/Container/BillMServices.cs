@@ -43,25 +43,36 @@ namespace ProjectGSMAUI.Api.Container
         public async Task<List<Billmodal>> GetAll()
         {
             List<Billmodal> _response = new List<Billmodal>();
+
+            // Lấy dữ liệu hóa đơn và bao gồm cả bảng ChiTietHoaDon + Ve
             var _data = await _context.HoaDons
-                .Include(h => h.ChiTietHoaDons)  // Bao gồm ChiTietHoaDons
+                .Include(h => h.ChiTietHoaDons)
+                    .ThenInclude(ct => ct.MaVeNavigation)  // Bao gồm thông tin từ bảng Ve
                 .ToListAsync();
 
             if (_data != null)
             {
                 _response = _mapper.Map<List<HoaDon>, List<Billmodal>>(_data);
-                // Duyệt qua mỗi hóa đơn để ánh xạ chi tiết hóa đơn
+
+                // Duyệt qua từng hóa đơn để ánh xạ danh sách chi tiết hóa đơn
                 foreach (var bill in _response)
                 {
-                    bill.DetailBills = _data
-                        .FirstOrDefault(b => b.MaHoaDon == bill.MaHoaDon)?
-                        .ChiTietHoaDons
-                        .Select(ct => _mapper.Map<detailBillModal>(ct))
-                        .ToList();
+                    var hoadon = _data.FirstOrDefault(b => b.MaHoaDon == bill.MaHoaDon);
+                    if (hoadon != null)
+                    {
+                        bill.DetailBills = hoadon.ChiTietHoaDons.Select(ct => new detailBillModal
+                        {
+                            MaVe = ct.MaVeNavigation.MaVe,   // Lấy mã vé từ MaVeNavigation
+                            MaGhe = ct.MaVeNavigation.MaGhe  // Lấy mã ghế từ MaVeNavigation
+                        }).ToList();
+                    }
                 }
             }
+
             return await Task.FromResult(_response);
         }
+
+
 
         // Phương thức lấy hóa đơn theo ID
         public async Task<Billmodal> GetByID(int id)
@@ -217,8 +228,52 @@ namespace ProjectGSMAUI.Api.Container
             }
         }
 
+        public async Task<List<BillHistoryModal>> GetUserBillHistory(string userId)
+        {
+            try
+            {
+                var userBills = await _context.HoaDons
+                    .Include(h => h.ChiTietHoaDons) // ✅ JOIN `ChiTietHoaDon`
+                    .ThenInclude(ct => ct.MaVeNavigation) // ✅ JOIN `Ve`
+                    .Include(h => h.MaKhachHangNavigation) // ✅ JOIN `TaiKhoan`
+                    .Where(h => h.MaKhachHang == userId)
+                    .ToListAsync();
 
+                if (userBills == null || userBills.Count == 0)
+                {
+                    return new List<BillHistoryModal>();
+                }
 
+                var billHistory = userBills.Select(h => new BillHistoryModal
+                {
+                    MaHoaDon = h.MaHoaDon,
+
+                    // ✅ Lấy `MaVe` từ `ChiTietHoaDon`
+                    MaVe = h.ChiTietHoaDons
+                        .Where(ct => ct.MaVeNavigation != null)
+                        .Select(ct => ct.MaVeNavigation.MaVe)
+                        .FirstOrDefault() ?? "Không có dữ liệu",
+
+                    // ✅ Lấy ngày xuất hóa đơn
+                    NgayDatPhim = h.NgayXuat.HasValue ? h.NgayXuat.Value.ToDateTime(TimeOnly.MinValue) : DateTime.MinValue,
+
+                    // ✅ Lấy mã ghế từ `Ve`
+                    MaGhe = h.ChiTietHoaDons
+                .Select(ct => ct.MaVeNavigation?.MaGhe)
+                .FirstOrDefault() ?? "Không có dữ liệu",
+                    // ✅ Lấy tên người dùng
+                    TenUser = h.MaKhachHangNavigation?.TenNguoiDung ?? "Không có dữ liệu"
+
+                }).ToList();
+
+                return billHistory;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Lỗi khi lấy lịch sử hóa đơn của user ID: {UserId}", userId);
+                throw;
+            }
+        }
 
     }
 }
