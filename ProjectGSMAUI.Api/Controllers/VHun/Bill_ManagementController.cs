@@ -94,5 +94,39 @@
 
             return Ok(result);
         }
+        [HttpGet]
+        public async Task<IActionResult> GetUserBillHistory()
+        {
+            try
+            {
+                // ✅ Kiểm tra Session có bị null không
+                if (HttpContext.Session == null)
+                {
+                    return StatusCode(500, new { Message = "Lỗi: HttpContext.Session bị null!" });
+                }
+
+                var userId = HttpContext.Session.GetString("UserId");
+
+                if (string.IsNullOrEmpty(userId))
+                {
+                    return Unauthorized(new { Message = "Người dùng chưa đăng nhập hoặc Session đã hết hạn." });
+                }
+
+                var billHistory = await Service.GetUserBillHistory(userId);
+
+                if (billHistory == null || !billHistory.Any())
+                {
+                    return NotFound(new { Message = "Không tìm thấy lịch sử hóa đơn" });
+                }
+
+                return Ok(billHistory);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "Lỗi hệ thống", Error = ex.Message });
+            }
+        }
+
+
     }
 }

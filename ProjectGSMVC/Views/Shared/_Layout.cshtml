@@ -54,6 +54,7 @@
                     </div>
                     <div class="col-md-4 col-md-offset-2 col-sm-6 col-xs-8 phl0">
                         <div class="header_author">
+
                             @if (HttpContextAccessor.HttpContext.Session.GetString("UserId") != null)
                             {
                                 <span>Chào, @HttpContextAccessor.HttpContext.Session.GetString("UserName")</span>
@@ -61,12 +62,14 @@
                             }
                             else
                             {
+
                                 <a asp-controller="User" asp-action="Login">Đăng nhập</a>
                                 <a asp-controller="User" asp-action="Register" class="ml-3">Đăng ký</a>
                             }                          
                         </div>
                         <div class="header_ticket">
                             <a href="#order" class="order_btn">Vé của tôi</a>
+                            <a asp-action="GetUserBillHistory" asp-controller="Home" class="btn btn-primary">Lịch Sử Giao Dịch</a>
                             <span>3</span>
                         </div>
                         <a href="javascript:;" id="header-search"></a>
