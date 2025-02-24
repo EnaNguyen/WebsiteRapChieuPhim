@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Net.WebSockets;
 
 namespace ProjectGSMAUI.Api.Container
 {
@@ -232,41 +233,33 @@ namespace ProjectGSMAUI.Api.Container
         {
             try
             {
-                var userBills = await _context.HoaDons
-                    .Include(h => h.ChiTietHoaDons) // ✅ JOIN `ChiTietHoaDon`
-                    .ThenInclude(ct => ct.MaVeNavigation) // ✅ JOIN `Ve`
-                    .Include(h => h.MaKhachHangNavigation) // ✅ JOIN `TaiKhoan`
-                    .Where(h => h.MaKhachHang == userId)
-                    .ToListAsync();
-
-                if (userBills == null || userBills.Count == 0)
+                List<BillHistoryModal> model = new List<BillHistoryModal>();
+                var ListBill = _context.HoaDons.Where(g=> g.MaKhachHang==userId).ToList();
+                foreach(var item in ListBill)
                 {
-                    return new List<BillHistoryModal>();
-                }
+                   BillHistoryModal addto = new BillHistoryModal();
+                   addto.MaHoaDon = item.MaHoaDon;
+                   addto.TenUser = item.MaKhachHang;
+                    List<string> ListGhe = new List<string>();
+                   var CTHD = _context.ChiTietHoaDons.Where(g => g.MaHoaDon==item.MaHoaDon).Select(h=>h.MaVe).ToList();
+                   for(int i=0;i<CTHD.Count; i++)
+                    {
+                        var VeList = _context.Ves.Where(h => h.MaVe == CTHD[i]).FirstOrDefault();
 
-                var billHistory = userBills.Select(h => new BillHistoryModal
-                {
-                    MaHoaDon = h.MaHoaDon,
+                        ListGhe.Add(VeList.MaGhe);
+                        if(i==0)
+                        {
+                            var Phim = _context.Phims.Where(g => g.Id == VeList.MaPhim).FirstOrDefault();
+                            addto.TenPhim = Phim.TenPhim;
+                           
+                        }
+                        addto.NgayDatPhim = DateOnly.FromDateTime(VeList.ThoiGianTao??DateTime.Now);
+                        //var GioChieu = _context.KhungGios.Where(g => g.Id == MaLichChieu.GioChieu).Select(g => g.GioBatDau).FirstOrDefault();
+                        //addto.GioDatPhim = GioChieu??TimeOnly.FromDateTime(DateTime.Now);
+                    }
 
-                    // ✅ Lấy `MaVe` từ `ChiTietHoaDon`
-                    MaVe = h.ChiTietHoaDons
-                        .Where(ct => ct.MaVeNavigation != null)
-                        .Select(ct => ct.MaVeNavigation.MaVe)
-                        .FirstOrDefault() ?? "Không có dữ liệu",
-
-                    // ✅ Lấy ngày xuất hóa đơn
-                    NgayDatPhim = h.NgayXuat.HasValue ? h.NgayXuat.Value.ToDateTime(TimeOnly.MinValue) : DateTime.MinValue,
-
-                    // ✅ Lấy mã ghế từ `Ve`
-                    MaGhe = h.ChiTietHoaDons
-                .Select(ct => ct.MaVeNavigation?.MaGhe)
-                .FirstOrDefault() ?? "Không có dữ liệu",
-                    // ✅ Lấy tên người dùng
-                    TenUser = h.MaKhachHangNavigation?.TenNguoiDung ?? "Không có dữ liệu"
-
-                }).ToList();
-
-                return billHistory;
+                }    
+                return model;
             }
             catch (Exception ex)
             {
