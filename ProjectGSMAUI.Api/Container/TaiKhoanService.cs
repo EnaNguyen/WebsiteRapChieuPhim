@@ -315,36 +315,26 @@ namespace ProjectGSMAUI.Api.Container
             return response;
         }
 
-        //Customer Services
         public async Task<List<TaiKhoan>> TaiKhoanCustomer(string Name)
         {
-            List<TaiKhoan> _response = new List<TaiKhoan>();
-            if (Name == null)
+            if (string.IsNullOrEmpty(Name))
             {
-                var _data = await this._context.TaiKhoans.Where(g => g.VaiTro == 1)
+                return await _context.TaiKhoans
+                    .Where(g => g.VaiTro == 1)
+                    .ToListAsync();
+            }
+
+            var data = await _context.TaiKhoans
+                .Where(g => g.VaiTro == 1 &&
+                    (g.TenTaiKhoan.Contains(Name) ||
+                     g.TenNguoiDung.Contains(Name) ||
+                     g.Sdt.Contains(Name) ||
+                     g.Email.Contains(Name)))
                 .ToListAsync();
-                if (_data != null)
-                {
-                    _response = _data;
-                }
-            }
-            else
-            {
-                var _data = await this._context.TaiKhoans.Where(g => g.VaiTro == 1 && ((g.TenTaiKhoan.Contains(Name)) || (g.TenNguoiDung.Contains(Name)) || (g.Sdt.Contains(Name)) || (g.Email.Contains(Name))))
-               .ToListAsync();
-                if (_data != null)
-                {
-                    _response = _data;
-                }
-                if (_data != null)
-                {
-                    {
-                        _response = _data;
-                    }
-                }
-            }
-            return _response;
+
+            return data;
         }
+
         public async Task<APIResponse> CreateCustomer(TaiKhoanRequest data)
         {
             APIResponse response = new APIResponse();
@@ -435,7 +425,7 @@ namespace ProjectGSMAUI.Api.Container
 
 
                 Tk.TenNguoiDung = data.TenNguoiDung;
-                Tk.MatKhau = PasswordHasher.HashPassword(data.MatKhau);
+                Tk.MatKhau = data.MatKhau;
                 Tk.TenTaiKhoan = data.TenTaiKhoan;
                 Tk.Email = data.Email;
                 Tk.Sdt = data.Sdt;
@@ -468,7 +458,67 @@ namespace ProjectGSMAUI.Api.Container
         public async Task<TaiKhoan> GetTaiKhoanByTenTaiKhoanAsync(string tenTaiKhoan)
         {
             return await _context.TaiKhoans
-                .FirstOrDefaultAsync(t => t.TenTaiKhoan == tenTaiKhoan); // Search by TenTaiKhoan
+                .FirstOrDefaultAsync(t => t.TenTaiKhoan == tenTaiKhoan); 
+        }
+
+        public async Task<APIResponse> UpdateCustomer2(string id, TaiKhoanRequest data)
+        {
+            APIResponse response = new APIResponse();
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+
+                byte[] imageBytes = null;
+                if (!string.IsNullOrEmpty(data.Hinh))
+                {
+                    try
+                    {
+                        imageBytes = Convert.FromBase64String(data.Hinh);
+                    }
+                    catch (FormatException)
+                    {
+                        response.ResponseCode = 400;
+                        response.ErrorMessage = "Dữ liệu hình ảnh không hợp lệ.";
+                        return response;
+                    }
+                }
+                var Tk = await _context.TaiKhoans.Where(g => g.IdtaiKhoan == id).FirstOrDefaultAsync();
+
+                var mk = Tk.MatKhau;
+
+
+                Tk.TenNguoiDung = data.TenNguoiDung;
+                
+                
+                Tk.Email = data.Email;
+                Tk.Sdt = data.Sdt;
+                Tk.VaiTro = 1;
+                Tk.NgaySinh = data.NgaySinh;
+                Tk.NgayDangKy = DateOnly.FromDateTime(DateTime.Today);
+                Tk.TrangThai = 1;
+                Tk.DiemTichLuy = 0;
+
+                Tk.Cccd = data.Cccd;
+                Tk.GioiTinh = data.GioiTinh;
+                Tk.DiaChi = data.DiaChi;
+                if (data.Hinh != null)
+                {
+                    Tk.Hinh = imageBytes;
+                }
+                var test = Tk;
+                int y= 1;
+                this._context.TaiKhoans.Update(Tk);
+                
+                await this._context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                response.ResponseCode = 201;
+            }
+            catch (Exception ex)
+            {
+                response.ResponseCode = 400;
+                response.ErrorMessage = ex.Message;
+            }
+            return response;
         }
     }
 }

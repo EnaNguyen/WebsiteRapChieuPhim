@@ -132,6 +132,15 @@
         </div>
     </div>
 </div>
+<div class="blog-pagination mb-30">
+    <div class="btn-toolbar justify-content-center mb-15">
+        <div class="btn-group" id="paginationControls">
+            <a href="#" class="btn btn-outline-primary prev"><i class="fa fa-angle-double-left"></i></a>
+            <a href="#" class="btn btn-outline-primary next"><i class="fa fa-angle-double-right"></i></a>
+        </div>
+    </div>
+</div>
+
 
 <div class="modal fade" id="myModal">
     <div class="modal-dialog modal-xl">
@@ -723,3 +732,56 @@
         });
     });
 </script>
+<script>
+    $(document).ready(function () {
+        const itemsPerPage = 5;  // Số lượng tài khoản mỗi trang
+        let currentPage = 1;
+        const $listAdmin = $("#ListAdmin tbody");
+        const totalItems = $listAdmin.find("tr").length;
+        const totalPages = Math.ceil(totalItems / itemsPerPage);
+        const $paginationControls = $("#paginationControls");
+
+        function showPage(page) {
+            currentPage = page;
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            $listAdmin.find("tr").hide().slice(start, end).show();
+
+            // Cập nhật nút phân trang
+            $paginationControls.find("a.page-number").remove();
+            for (let i = 1; i <= totalPages; i++) {
+                const $pageButton = $('<a href="#" class="btn btn-outline-primary page-number"></a>').text(i);
+                if (i === currentPage) {
+                    $pageButton.addClass("current");
+                }
+                $pageButton.insertBefore($paginationControls.find(".next"));
+            }
+        }
+
+        // Hiển thị trang đầu tiên
+        showPage(currentPage);
+
+        // Xử lý khi bấm vào số trang
+        $paginationControls.on("click", "a.page-number", function (e) {
+            e.preventDefault();
+            const page = parseInt($(this).text());
+            showPage(page);
+        });
+
+        // Xử lý khi bấm nút Previous & Next
+        $paginationControls.find(".prev").click(function (e) {
+            e.preventDefault();
+            if (currentPage > 1) {
+                showPage(currentPage - 1);
+            }
+        });
+
+        $paginationControls.find(".next").click(function (e) {
+            e.preventDefault();
+            if (currentPage < totalPages) {
+                showPage(currentPage + 1);
+            }
+        });
+    });
+</script>
+

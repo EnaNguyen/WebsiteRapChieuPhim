@@ -19,5 +19,6 @@ namespace ProjectGSMAUI.Api.Modal
         public string? TinhTrangDisplay { get; set; }
 
         public List<detailBillModal> DetailBills { get; set; }
+
     }
 }

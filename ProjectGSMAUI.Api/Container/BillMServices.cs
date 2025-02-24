@@ -28,19 +28,6 @@ namespace ProjectGSMAUI.Api.Container
             _logger = logger;
         }
 
-        // Phương thức lấy tất cả hóa đơn
-        //public async Task<List<Billmodal>> GetAll()
-        //{
-
-        //        List<Billmodal> _response = new List<Billmodal>();
-        //    var _data = await this._context.HoaDons.ToListAsync();
-        //    if (_data != null)
-        //    {
-        //        _response = this._mapper.Map<List<HoaDon>, List<Billmodal>>(_data);
-        //    }
-        //    return await Task.FromResult(_response);
-
-        //}
         public async Task<List<Billmodal>> GetAll()
         {
             List<Billmodal> _response = new List<Billmodal>();
@@ -228,6 +215,40 @@ namespace ProjectGSMAUI.Api.Container
                 throw;
             }
         }
+        public async Task<List<Billmodal>> GetBillsByCustomerId(string customerId)
+        {
+            try
+            {
+                var bills = await _context.HoaDons
+                    .Where(h => h.MaKhachHang == customerId) // Tìm theo Mã Khách Hàng
+                    .Include(h => h.ChiTietHoaDons)
+                    .ToListAsync();
+
+                var response = _mapper.Map<List<Billmodal>>(bills);
+
+                // Ánh xạ chi tiết hóa đơn
+                foreach (var bill in response)
+                {
+                    bill.DetailBills = bills
+                        .FirstOrDefault(b => b.MaHoaDon == bill.MaHoaDon)?
+                        .ChiTietHoaDons
+                        .Select(ct => _mapper.Map<detailBillModal>(ct))
+                        .ToList();
+                }
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching bills for customer ID: {CustomerId}", customerId);
+                throw;
+            }
+        }
+
+
+
+
+
 
         public async Task<List<BillHistoryModal>> GetUserBillHistory(string userId)
         {

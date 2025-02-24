@@ -24,9 +24,7 @@
                 </ol>
             </nav>
         </div>
-        <div class="col-md-6 col-sm-12 text-right">
-            <a asp-action="Create" class="btn btn-primary">Tạo hóa đơn mới</a>
-        </div>
+
     </div>
 </div>
 
@@ -76,7 +74,10 @@
                                     <text>Chuyển thành Chưa thanh toán</text>
                                 }
                             </button>
-                            <a asp-action="Details" asp-route-id="@item.MaHoaDon" data-id="@item.MaHoaDon" class="btn btn-info btn-sm">Chi tiết</a>
+                            <!-- Nút mở form chi tiết -->
+                            <button class="btn btn-info btn-sm btn-view-detail" data-id="@item.MaHoaDon">
+                                Xem chi tiết
+                            </button>
                         </td>
                     </tr>
                     index++;
@@ -91,35 +92,46 @@
         </tbody>
     </table>
 </div>
+<div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detailModalLabel">Chi tiết hóa đơn</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="modalContent">Đang tải...</div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
     $(document).ready(function () {
         // Khi nhấn nút "Chuyển thành Đã thanh toán" hoặc "Chuyển thành Chưa thanh toán"
         $('.btn-status').click(function (e) {
-            e.preventDefault(); // Ngăn chặn hành động mặc định của button
+            e.preventDefault();
 
-            var maHoaDon = $(this).data('id'); // Lấy MaHoaDon từ thuộc tính data-id của nút
-            var tinhTrang = $(this).data('status'); // Lấy TinhTrang từ thuộc tính data-status của nút
+            var maHoaDon = $(this).data('id');
+            var tinhTrang = $(this).data('status');
+            var currentButton = $(this);
 
-            // Gửi yêu cầu Ajax tới controller để cập nhật trạng thái
             $.ajax({
-                url: "/Admin/VhBillM/UpdateStatus", // URL tới controller
+                url: "/Admin/QuanLiHoaDon/UpdateStatus",
                 type: 'POST',
-                data: {
-                    id: maHoaDon,
-                    tinhTrang: tinhTrang // Gửi thông tin trạng thái (Đã thanh toán/Chưa thanh toán)
-                },
+                data: { id: maHoaDon, tinhTrang: tinhTrang },
                 success: function (response) {
                     if (response.success) {
-                        // Cập nhật trạng thái hiển thị sau khi API trả về thành công
-                        var button = $('[data-id="' + maHoaDon + '"]');
-                        if (response.tinhTrang === "Chưa thanh toán") {
-                            button.text("Chuyển thành Đã thanh toán");
-                            button.data('status', "Đã thanh toán");
-                        } else {
-                            button.text("Chuyển thành Chưa thanh toán");
-                            button.data('status', "Chưa thanh toán");
-                        }
+                        var newStatus = response.tinhTrang;
+                        var newButtonText = newStatus === "Chưa thanh toán" ? "Chuyển thành Đã thanh toán" : "Chuyển thành Chưa thanh toán";
+
+                        currentButton.text(newButtonText);
+                        currentButton.data('status', newStatus);
+
+                        currentButton.closest('tr').find('td:nth-child(7)').text(newStatus);
                     } else {
                         alert('Đã xảy ra lỗi khi thay đổi trạng thái.');
                     }
@@ -129,28 +141,33 @@
                 }
             });
         });
-    });
-    $(document).ready(function () {
-        // Bắt sự kiện click vào nút Chi tiết
-        $('.btn-info').click(function (e) {
-            e.preventDefault(); // Ngăn chặn hành động mặc định (chuyển trang)
-            var maHoaDon = $(this).data('id'); // Lấy MaHoaDon từ thuộc tính data-id của nút
 
-            // Gửi yêu cầu Ajax để lấy chi tiết hóa đơn
-            $.ajax({
-                url: "/Admin/VhBillM/Details", // Controller action để xử lý
-                type: 'GET',
-                data: { id: maHoaDon }, // Gửi ID hóa đơn
-                success: function (response) {
-                    // Hiển thị dữ liệu chi tiết trong modal
-                    $('#modal-body').html(response); // Hiển thị nội dung trả về
-                    $('#detailModal').modal('show'); // Hiển thị modal
-                },
-                error: function () {
-                    alert('Lỗi khi tải chi tiết hóa đơn.');
-                }
+        // Khi nhấn nút "Xem chi tiết"
+        $(document).ready(function () {
+            // Khi nhấn nút "Xem chi tiết"
+            $('.btn-view-detail').click(function (e) {
+                e.preventDefault();
+
+                var maHoaDon = $(this).data('id'); // Lấy mã hóa đơn từ thuộc tính data-id
+
+                // Hiển thị modal và đặt nội dung ban đầu
+                $('#detailModal').modal('show');
+                $('#modalContent').html('<p>Đang tải chi tiết hóa đơn...</p>');
+
+                // Gửi yêu cầu tới server để lấy thông tin chi tiết
+                $.ajax({
+                    url: "/Admin/QuanLiHoaDon/Details", // API lấy thông tin chi tiết
+                    type: 'GET',
+                    data: { id: maHoaDon },
+                    success: function (response) {
+                        $('#modalContent').html(response); // Hiển thị nội dung chi tiết trong modal
+                    },
+                    error: function () {
+                        $('#modalContent').html('<p class="text-danger">Không thể tải dữ liệu chi tiết.</p>');
+                    }
+                });
             });
         });
     });
-
 </script>
+
