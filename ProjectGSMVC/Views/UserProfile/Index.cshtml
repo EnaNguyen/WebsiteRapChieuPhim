@@ -1,0 +1,317 @@
+﻿@model ProjectGSMVC.Models.TaiKhoanModel
+@{
+    ViewData["Title"] = "Thông tin cá nhân";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/css/auth-style.css" rel="stylesheet" />
+<style>
+    body, label, .form-control, .text-center, .alert {
+        color: #333 !important;
+    }
+
+    .form-control {
+        color: #000 !important;
+        background-color: #fff !important;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 10px;
+    }
+
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+        }
+
+    .profile-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .profile-img {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 3px solid #007bff;
+        margin-bottom: 15px;
+    }
+
+    .btn-custom {
+        background-color: #007bff;
+        color: #fff;
+        font-weight: bold;
+        padding: 10px 20px;
+        border-radius: 8px;
+        transition: 0.3s;
+    }
+
+        .btn-custom:hover {
+            background-color: #0056b3;
+        }
+
+    .avatar-wrapper {
+        position: relative;
+        display: inline-block;
+    }
+
+    .profile-img {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 3px solid #007bff;
+        cursor: pointer;
+        transition: opacity 0.3s;
+    }
+
+    .avatar-label {
+        position: relative;
+        display: inline-block;
+        cursor: pointer;
+    }
+
+    .change-avatar-text {
+        position: absolute;
+        bottom: 5px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.6);
+        color: white;
+        font-size: 12px;
+        padding: 4px 8px;
+        border-radius: 5px;
+        display: none;
+    }
+
+    .avatar-label:hover .change-avatar-text {
+        display: block;
+    }
+</style>
+
+
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg p-4" style="background: #fff; border-radius: 12px;">
+                <h3 class="mt-2" style="color: #000; font-weight: 700;">Thông Tin Tài Khoản</h3>
+
+
+                @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+                {
+                    <div class="alert alert-danger text-center">@ViewBag.ErrorMessage</div>
+                }
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success text-center">@TempData["SuccessMessage"]</div>
+                }
+
+                <form asp-action="Update" method="post" enctype="multipart/form-data">
+                    <input type="hidden" asp-for="IdTaiKhoan" />
+                    <div class="profile-container">
+                        <div class="avatar-wrapper">
+                            <label for="fileInput" class="avatar-label">
+                                <img id="avatarPreview" src="@(string.IsNullOrEmpty(Model.HinhBase64) ? Url.Content("~/images/default-avatar.png") : $"data:image/jpeg;base64,{Model.HinhBase64}")"
+                                     class="profile-img"
+                                     alt="Ảnh đại diện">
+                                <span class="change-avatar-text">🖊 Đổi ảnh</span>
+                            </label>
+                            <input type="file" asp-for="HinhFile" id="fileInput" class="d-none" accept="image/*">
+                        </div>
+                        
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+@*                             <div class="form-group">
+                                <label class="font-weight-bold">Tên Đăng Nhập</label>
+                                <input type="text" class="form-control bg-light" asp-for="TenTaiKhoan" readonly>
+                            </div> *@
+
+                            <div class="form-group">
+                                <label class="font-weight-bold">Họ và Tên</label>
+                                <input type="text" class="form-control" asp-for="TenNguoiDung">
+                            </div>
+                            <div class="form-group" hidden>
+                                <label class="font-weight-bold">Mậ</label>
+                                <input type="text" class="form-control" asp-for="MatKhau" >
+                            </div>
+                            <div class="form-group">
+                                <label class="font-weight-bold">Email</label>
+                                <input type="email" class="form-control" asp-for="Email">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="font-weight-bold">Số Điện Thoại</label>
+                                <input type="text" class="form-control" asp-for="Sdt">
+                            </div>
+                            <div class="form-group">
+                                <label class="font-weight-bold">Căn cước công dân</label>
+                                <input type="text" class="form-control" asp-for="Cccd">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="font-weight-bold">Điểm tích lũy</label>
+                                <input type="text" class="form-control" asp-for="DiemTichLuy" readonly>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="font-weight-bold">Ngày Sinh</label>
+                                <input type="date" class="form-control" asp-for="NgaySinh">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="font-weight-bold">Ngày Đăng Ký</label>
+                                <input type="date" class="form-control" asp-for="NgayDangKy" readonly>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="font-weight-bold">Giới Tính</label>
+                                <select class="form-control" asp-for="GioiTinh">
+                                    <option value="true">Nam</option>
+                                    <option value="false">Nữ</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="font-weight-bold">Địa Chỉ</label>
+                                <textarea class="form-control" asp-for="DiaChi"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group text-center mt-4">
+                        <button type="submit" class="btn btn-custom">
+                            Cập Nhật
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#updateForm").validate({
+            rules: {
+                TenNguoiDung: {
+                    required: true,
+                    minlength: 3
+                },
+                Email: {
+                    required: true,
+                    email: true
+                },
+                Sdt: {
+                    required: true,
+                    digits: true,
+                    minlength: 10,
+                    maxlength: 11
+                },
+                Cccd: {
+                    required: true,
+                    digits: true,
+                    minlength: 12,
+                    maxlength: 12
+                },
+                NgaySinh: {
+                    required: true,
+                    date: true
+                },
+                DiaChi: {
+                    required: true,
+                    minlength: 5
+                },
+                MatKhau: {
+                    required: true,
+                    minlength: 6
+                },
+                ReMatKhau: {
+                    required: true,
+                    equalTo: "#MatKhau"
+                }
+            },
+            messages: {
+                TenNguoiDung: {
+                    required: "Họ và tên không được để trống.",
+                    minlength: "Tên phải có ít nhất 3 ký tự."
+                },
+                Email: {
+                    required: "Email không được để trống.",
+                    email: "Email không hợp lệ."
+                },
+                Sdt: {
+                    required: "Số điện thoại không được để trống.",
+                    digits: "Số điện thoại chỉ được chứa số.",
+                    minlength: "Số điện thoại phải có ít nhất 10 số.",
+                    maxlength: "Số điện thoại tối đa 11 số."
+                },
+                Cccd: {
+                    required: "CCCD không được để trống.",
+                    digits: "CCCD chỉ được chứa số.",
+                    minlength: "CCCD phải có 12 số.",
+                    maxlength: "CCCD phải có 12 số."
+                },
+                NgaySinh: {
+                    required: "Vui lòng chọn ngày sinh."
+                },
+                DiaChi: {
+                    required: "Địa chỉ không được để trống.",
+                    minlength: "Địa chỉ phải có ít nhất 5 ký tự."
+                },
+                MatKhau: {
+                    required: "Mật khẩu không được để trống.",
+                    minlength: "Mật khẩu phải có ít nhất 6 ký tự."
+                },
+                ReMatKhau: {
+                    required: "Vui lòng nhập lại mật khẩu.",
+                    equalTo: "Mật khẩu nhập lại không khớp."
+                }
+            },
+            submitHandler: function (form) {
+                // Sử dụng AJAX để gửi form mà không cần reload trang
+                $.ajax({
+                    url: $(form).attr("action"),
+                    type: "POST",
+                    data: new FormData(form),
+                    processData: false,
+                    contentType: false,
+                    beforeSend: function () {
+                        $(".btn-custom").prop("disabled", true).text("Đang cập nhật...");
+                    },
+                    success: function (response) {
+                        $(".btn-custom").prop("disabled", false).text("Cập Nhật");
+
+                        if (response.success) {
+                            alert("Cập nhật thành công!");
+                            location.reload();
+                        } else {
+                            alert("Cập nhật thất bại: " + response.message);
+                        }
+                    },
+                    error: function () {
+                        $(".btn-custom").prop("disabled", false).text("Cập Nhật");
+                        alert("Có lỗi xảy ra! Vui lòng thử lại.");
+                    }
+                });
+            }
+        });
+
+        // Preview ảnh khi chọn file
+        $("#fileInput").change(function (event) {
+            var file = event.target.files[0];
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $("#avatarPreview").attr("src", e.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    });
+</script>
+
+

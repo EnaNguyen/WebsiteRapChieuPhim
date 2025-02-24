@@ -234,13 +234,25 @@ namespace ProjectGSMAUI.Api.Controllers.PBH
 
 
 
-        //Customer
         [HttpGet("TaiKhoanCustomer")]
         public async Task<IActionResult> TaiKhoanCustomer([FromQuery] string Name = null)
         {
             var data = await this._taiKhoanService.TaiKhoanCustomer(Name);
-            return Ok(data);
+
+            if (data == null || data.Count == 0)
+            {
+                return NotFound("Không tìm thấy tài khoản.");
+            }
+
+            // Nếu có Name => Chỉ trả về khách hàng đầu tiên
+            if (!string.IsNullOrEmpty(Name))
+            {
+                return Ok(data.First());
+            }
+
+            return Ok(data); // Nếu không có Name, trả về danh sách đầy đủ
         }
+
 
         [HttpPost("CreateCustomer")] 
         public async Task<IActionResult> CreateCustomer(TaiKhoanRequest _data) 
@@ -324,6 +336,24 @@ namespace ProjectGSMAUI.Api.Controllers.PBH
 
             // Gọi phương thức Update hiện tại
             var response = await _taiKhoanService.UpdateCustomer(id, data);
+
+            if (response.ResponseCode == 201)
+            {
+                return Ok(response.Result);
+            }
+            else
+            {
+                return BadRequest(response.ErrorMessage);
+            }
+        }
+        [HttpPut("UpdateCustomer2")]
+        public async Task<IActionResult> UpdateCustomer2([FromBody] TaiKhoanEdit request)
+        {
+            string id = request.Id;
+            TaiKhoanRequest data = request.TaiKhoanRequest;
+
+            // Gọi phương thức Update hiện tại
+            var response = await _taiKhoanService.UpdateCustomer2(id, data);
 
             if (response.ResponseCode == 201)
             {
