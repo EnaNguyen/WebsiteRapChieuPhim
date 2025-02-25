@@ -1,0 +1,66 @@
+﻿.chat-container {
+    position: fixed; /* Đặt vị trí cố định */
+    bottom: 20px;
+    right: 20px;
+    width: 350px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-header {
+    background-color: #007bff;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.chat-messages {
+    flex-grow: 1; /* Cho phép chat-messages mở rộng để lấp đầy không gian */
+    height: 300px; /* Đặt chiều cao cố định */
+    padding: 10px;
+    overflow-y: auto; /* Thêm thanh cuộn khi nội dung vượt quá chiều cao */
+    background-color: #f9f9f9;
+}
+
+.chat-input {
+    display: flex;
+    border-top: 1px solid #ccc;
+}
+
+    .chat-input input {
+        flex: 1;
+        padding: 10px;
+        border: none;
+    }
+
+    .chat-input button {
+        padding: 10px 15px;
+        border: none;
+        background-color: #007bff;
+        color: white;
+        cursor: pointer;
+    }
+
+.message {
+    padding: 8px 12px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    max-width: 70%; /* Giới hạn chiều rộng tin nhắn */
+    word-wrap: break-word; /* Cho phép tin nhắn dài xuống dòng */
+}
+
+.user-message {
+    background-color: #e2f0ff;
+    align-self: flex-end; /* Đẩy tin nhắn người dùng về phía bên phải */
+}
+
+.bot-message {
+    background-color: #e0e0e0;
+    align-self: flex-start; /* Đẩy tin nhắn chatbot về phía bên trái */
+}

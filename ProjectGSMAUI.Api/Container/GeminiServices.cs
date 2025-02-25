@@ -1,30 +1,44 @@
-﻿
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using ProjectGSMAUI.Api.Data;
 using ProjectGSMAUI.Api.Helper;
 using ProjectGSMAUI.Api.Services;
-using System.Diagnostics;
 using System.Text;
-using static System.Net.WebRequestMethods;
+
 namespace ProjectGSMAUI.Api.Container
 {
     public class GeminiServices : IGeminiServices
     {
         private readonly ApplicationDbContext _context;
         private readonly GeminiSettings _authSettings;
+
         public GeminiServices(ApplicationDbContext context, GeminiSettings authSettings)
         {
             _context = context;
             _authSettings = authSettings;
         }
+
         public async Task<APIResponse> TraLoi(string userInput)
         {
             APIResponse response1 = new APIResponse();
             try
             {
-                string Openning = "Hãy xưng hô với tôi là Rem - Chủ Nhân để trả lời câu hỏi của tôi:";
+                string Openning = "Dưới đây là danh sách phim đang chiếu:\n";
+                StringBuilder danhSachPhim = new StringBuilder("");
+                var phimList = _context.Phims.ToList();
+                if (phimList.Count == 0)
+                {
+                    danhSachPhim.Append("Hiện tại không có phim nào đang chiếu.");
+                }
+                else
+                {
+                    for (int i = 0; i < phimList.Count; i++)
+                    {
+                        danhSachPhim.AppendLine($"{i + 1}. Tên: {phimList[i].TenPhim}, Thể loại: {phimList[i].TheLoai}");
+                    }
+                }
                 var GoogleAPIKey = _authSettings.Google.GoogleAPIKey;
                 var GoogleAPIUrl = _authSettings.Google.GoogleAPIUrl;
+
                 var requestBody = new
                 {
                     contents = new[]
@@ -33,15 +47,18 @@ namespace ProjectGSMAUI.Api.Container
                         {
                             parts = new[]
                             {
-                               new{  text = Openning + userInput
-                                  /*  "\nYêu cầu đầu ra: Tôi sẽ đưa câu trả lời của bạn vào innerHTML , do đó, nếu cần xuống dòng hãy thêm <br>, nếu cần gắn link sản phẩm hãy gắn <button class='btn btn-primary'><a href=\"https://localhost:7265/Detail/Index/@maSanPham\">Xem Chi Tiết</a></button>." +
-                                    "\n Hãy linh hoạt trong câu trả lời và trả lời ngắn gọn, nếu khách hàng hỏi câu hỏi bên ngoài thì vẫn trả lời và không cần đề cập đến các sản phẩm trong cửa hàng mà hãy trả lời như bình thường." +
-                                    " Còn nếu câu hỏi về cần tư vấn sản phẩm thì hãy dựa vào dữ liệu tôi đưa ( khi cần ) để trả lời câu hỏi sau : " + userInput*/
+                                new
+                                {
+                                    text = $"{Openning}\n{danhSachPhim}\n" +
+                                           "Hãy đóng vai là một chuyên viên tư vấn phim, giúp tôi chọn phim phù hợp với câu hỏi sau:\n" +
+                                           $"{userInput}.\n" 
+                                         
                                 }
-                            },
+                            }
                         }
                     }
                 };
+
                 var jsonRequestBody = JsonConvert.SerializeObject(requestBody);
                 var content = new StringContent(jsonRequestBody, Encoding.UTF8, "application/json");
 
@@ -60,7 +77,6 @@ namespace ProjectGSMAUI.Api.Container
             }
             catch (Exception ex)
             {
-
                 response1.ResponseCode = 400;
                 response1.ErrorMessage = ex.Message;
             }

@@ -8,5 +8,6 @@
         public int? Gia { get; set; }
         public string? MaVe { get; set; }
 
+
     }
 }
