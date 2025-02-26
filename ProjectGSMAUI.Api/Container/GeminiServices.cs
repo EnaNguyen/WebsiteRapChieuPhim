@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using ProjectGSMAUI.Api.Data;
 using ProjectGSMAUI.Api.Helper;
 using ProjectGSMAUI.Api.Services;
@@ -24,7 +25,12 @@ namespace ProjectGSMAUI.Api.Container
             {
                 string Openning = "Dưới đây là danh sách phim đang chiếu:\n";
                 StringBuilder danhSachPhim = new StringBuilder("");
-                var phimList = _context.Phims.ToList();
+
+                // Lấy danh sách phim cùng với thông tin thể loại từ bảng liên quan
+                var phimList = _context.Phims
+                    .Include(p => p.TheLoaiNavigation) // Load thông tin thể loại phim
+                    .ToList();
+
                 if (phimList.Count == 0)
                 {
                     danhSachPhim.Append("Hiện tại không có phim nào đang chiếu.");
@@ -33,9 +39,13 @@ namespace ProjectGSMAUI.Api.Container
                 {
                     for (int i = 0; i < phimList.Count; i++)
                     {
-                        danhSachPhim.AppendLine($"{i + 1}. Tên: {phimList[i].TenPhim}, Thể loại: {phimList[i].TheLoai}");
+                        var phim = phimList[i];
+                        string tenTheLoai = phim.TheLoaiNavigation?.TenTheLoai ?? "Không xác định";
+
+                        danhSachPhim.AppendLine($"{i + 1}. Tên: {phim.TenPhim}, Thể loại: {tenTheLoai}");
                     }
                 }
+
                 var GoogleAPIKey = _authSettings.Google.GoogleAPIKey;
                 var GoogleAPIUrl = _authSettings.Google.GoogleAPIUrl;
 

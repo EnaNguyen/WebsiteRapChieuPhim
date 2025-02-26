@@ -43,6 +43,9 @@ namespace ProjectGSMAUI.Api.Helper
             CreateMap<ChiTietHoaDon, detailBillModal>()
                  .ReverseMap();
 
+            // Map từ ComboModal sang Combo và ngược lại
+            CreateMap<ComboModal, Combo>().ReverseMap();
+            CreateMap<ChiTietComboModal, ChiTietCombo>().ReverseMap();
         }
     }
 }
