@@ -1,0 +1,200 @@
+﻿<script src="https://kit.fontawesome.com/aad898c2bc.js" crossorigin="anonymous"></script>
+<div id="chatbot" onclick="toggleChat()">
+    <i class="fa-regular fa-comments" style="color: #FFD43B;"></i>
+</div>
+<div id="chat-body">
+    <div id="chat-header" onclick="toggleChat()">💬 Hỗ trợ AI</div>
+    <div id="chat-messages"></div>
+    <input type="text" id="chat-input" placeholder="Nhập tin nhắn..." onkeypress="sendMessage(event)">
+</div>
+
+<style>
+    /* Chatbot icon */
+    #chatbot {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 60px;
+        height: 60px;
+        background: #FFA500; /* Màu cam */
+        color: white; /* Chữ màu trắng */
+        border-radius: 50%;
+        text-align: center;
+        line-height: 60px;
+        cursor: pointer;
+        z-index: 9999;
+        font-weight: bold;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    #chatbot:hover {
+        transform: scale(1.1);
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Chat body */
+    #chat-body {
+        display: none;
+        position: fixed;
+        bottom: 90px;
+        right: 20px;
+        width: 300px;
+        height: 435px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        padding: 10px;
+        z-index: 9999;
+        color: black;
+        font-family: 'Arial', sans-serif;
+    }
+
+    #chatbot i {
+    font-size: 20px; /* Tăng kích thước biểu tượng */
+}
+    /* Chat header */
+    #chat-header {
+        background: #FFA500; /* Màu cam */
+        color: white; /* Chữ màu trắng */
+        padding: 10px;
+        border-radius: 10px 10px 0 0;
+        font-weight: bold;
+        cursor: pointer;
+        text-align: center;
+        font-size: 16px;
+    }
+
+    /* Chat messages */
+    #chat-messages {
+        height: 300px;
+        overflow-y: auto;
+        margin-bottom: 10px;
+        padding: 10px;
+        background: #f9f9f9;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+    }
+
+    /* Style for user messages */
+    .user-message {
+        background: #007bff; /* Màu xanh dương */
+        color: white;
+        padding: 8px 12px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        max-width: 80%;
+        align-self: flex-end;
+        word-wrap: break-word;
+    }
+
+    /* Style for bot messages */
+    .bot-message {
+        background: #e9ecef; /* Màu xám nhạt */
+        color: black;
+        padding: 8px 12px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        max-width: 80%;
+        align-self: flex-start;
+        word-wrap: break-word;
+    }
+
+    /* Chat input */
+    #chat-input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 14px;
+        outline: none;
+        transition: border-color 0.2s ease;
+    }
+
+    #chat-input:focus {
+        border-color: #FFA500; /* Màu cam khi focus */
+    }
+
+    /* Custom scrollbar */
+    #chat-messages::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    #chat-messages::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+    }
+
+    #chat-messages::-webkit-scrollbar-thumb {
+        background: #FFA500; /* Màu cam */
+        border-radius: 4px;
+    }
+
+    #chat-messages::-webkit-scrollbar-thumb:hover {
+        background: #e69500; /* Màu cam đậm hơn khi hover */
+    }
+</style>
+
+<script>
+    function toggleChat() {
+        var chatBody = document.getElementById("chat-body");
+        chatBody.style.display = chatBody.style.display === "none" || chatBody.style.display === "" ? "block" : "none";
+    }
+
+    async function sendMessage(event) {
+        if (event.key === "Enter") {
+            let userInput = document.getElementById("chat-input").value.trim();
+            if (userInput === "") return;
+
+            let chatMessages = document.getElementById("chat-messages");
+
+            // Thêm tin nhắn của người dùng
+            let userMessageDiv = document.createElement("div");
+            userMessageDiv.className = "user-message";
+            userMessageDiv.innerHTML = `<strong>Bạn:</strong> ${userInput}`;
+            chatMessages.appendChild(userMessageDiv);
+
+            // Gọi API để nhận phản hồi từ bot
+            fetch('/GeminiTraLoiUser/GetGeminiResponse', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ UserQuestion: userInput })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Lỗi từ server!");
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data && data.response) {
+                    // Thêm tin nhắn của bot
+                    let botMessageDiv = document.createElement("div");
+                    botMessageDiv.className = "bot-message";
+                    botMessageDiv.innerHTML = `<strong>Bot:</strong> ${data.response}`;
+                    chatMessages.appendChild(botMessageDiv);
+                } else {
+                    // Thêm thông báo lỗi nếu không có phản hồi
+                    let errorMessageDiv = document.createElement("div");
+                    errorMessageDiv.className = "bot-message";
+                    errorMessageDiv.innerHTML = `<strong>Bot:</strong> Không có phản hồi!`;
+                    chatMessages.appendChild(errorMessageDiv);
+                }
+            })
+            .catch(error => {
+                console.error("Lỗi:", error);
+                // Thêm thông báo lỗi nếu có lỗi kết nối
+                let errorMessageDiv = document.createElement("div");
+                errorMessageDiv.className = "bot-message";
+                errorMessageDiv.innerHTML = `<strong>Bot:</strong> Lỗi khi kết nối API!`;
+                chatMessages.appendChild(errorMessageDiv);
+            });
+
+            // Xóa nội dung ô nhập
+            document.getElementById("chat-input").value = "";
+
+            // Cuộn xuống dưới cùng
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+    }
+</script>

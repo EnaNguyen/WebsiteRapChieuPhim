@@ -1,91 +1,67 @@
-﻿@{
-    ViewData["Title"] = "Index";
-    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
-}
+﻿<h2>Thống kê doanh thu & vé bán</h2>
 
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <link rel="stylesheet" href="vendors/styles/core.css" />
-    <link rel="stylesheet" href="vendors/styles/icon-font.min.css" />
-    <link rel="stylesheet" href="vendors/styles/style.css" />
-</head>
+<!-- Chọn ngày -->
+<label>Chọn ngày:</label>
+<input type="date" id="dateInput">
 
-<body>
-    <div class="main-container">
-        <div class="pd-ltr-20 xs-pd-20-10">
-            <div class="min-height-200px">
-                <div class="page-header">
-                    <div class="row">
-                        <div class="col-md-6 col-sm-12">
-                            <div class="title">
-                                <h4>Thống Kê Hóa Đơn</h4>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+<!-- Chọn phim -->
+<label>Chọn phim:</label>
+<select id="movieSelect">
+    <option value="">Tất cả phim</option>
+</select>
 
-                <div class="row">
-                    <div class="col-md-6 mb-30">
-                        <div class="pd-20 card-box height-100-p">
-                            <h4 class="h4 text-blue">Biểu Đồ Bánh</h4>
-                            <div id="chart8"></div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 mb-30">
-                        <div class="pd-20 card-box height-100-p">
-                            <h4 class="h4 text-blue">Biểu Đồ Radial</h4>
-                            <div id="chart9"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+<!-- Các nút thống kê -->
+<button onclick="loadRevenueByDate()">Doanh thu theo ngày</button>
+<button onclick="loadRevenueByMovie()">Doanh thu theo phim</button>
+<button onclick="loadTicketSalesByMovie()">Số vé bán theo phim</button>
 
-    <script src="vendors/scripts/core.js"></script>
-    <script src="vendors/scripts/script.min.js"></script>
-    <script src="vendors/scripts/process.js"></script>
-    <script src="vendors/scripts/layout-settings.js"></script>
-    <script src="src/plugins/apexcharts/apexcharts.min.js"></script>
-    <script src="~/vendors/scripts/apexcharts-setting.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<div id="result"></div>
 
-    <script>
-        $(document).ready(function() {
-    // Gọi Ajax khi trang được tải xong
-    $.ajax({
-        url: '@Url.Action("Index", "ThongKe", new { area = "Admin" })', // URL đến action controller
-        type: 'GET',
-        dataType: 'json',
-        success: function(response) {
-            if (response.success) {
-                // Cập nhật dữ liệu cho biểu đồ Bánh
-                var chart8 = new ApexCharts(document.querySelector("#chart8"), {
-                    series: response.data.map(item => item.someProperty), // Adjust this to your data
-                    chart: {
-                        type: 'donut'
-                    }
-                });
-                chart8.render();
-
-                // Cập nhật dữ liệu cho biểu đồ Radial
-                var chart9 = new ApexCharts(document.querySelector("#chart9"), {
-                    series: response.data.map(item => item.someOtherProperty), // Adjust this to your data
-                    chart: {
-                        height: 390,
-                        type: 'radialBar'
-                    }
-                });
-                chart9.render();
-            } else {
-                alert('Lỗi: ' + response.message);
-            }
-        },
-        error: function() {
-            alert('Có lỗi xảy ra khi tải dữ liệu.');
-        }
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        loadMovieList(); // Gọi API để lấy danh sách phim
     });
-});
 
-    </script>
-</body>
+    function loadMovieList() {
+        fetch(`/Admin/ThongKe/GetMovieList`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    let select = document.getElementById("movieSelect");
+                    data.movies.forEach(movie => {
+                        let option = document.createElement("option");
+                        option.value = movie;
+                        option.textContent = movie;
+                        select.appendChild(option);
+                    });
+                }
+            });
+    }
+
+    function loadRevenueByDate() {
+        let date = document.getElementById("dateInput").value;
+        fetch(`/Admin/ThongKe/GetRevenueByDate?date=${date}`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("result").innerHTML = JSON.stringify(data.data, null, 2);
+            });
+    }
+
+    function loadRevenueByMovie() {
+        let movie = document.getElementById("movieSelect").value;
+        fetch(`/Admin/ThongKe/GetRevenueByMovie?movie=${movie}`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("result").innerHTML = JSON.stringify(data.data, null, 2);
+            });
+    }
+
+    function loadTicketSalesByMovie() {
+        let movie = document.getElementById("movieSelect").value;
+        fetch(`/Admin/ThongKe/GetTicketSalesByMovie?movie=${movie}`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("result").innerHTML = JSON.stringify(data.data, null, 2);
+            });
+    }
+</script>

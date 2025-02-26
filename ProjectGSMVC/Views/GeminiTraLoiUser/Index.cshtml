@@ -1,0 +1,24 @@
+﻿@{
+    ViewData["Title"] = "Chat với AI";
+}
+<h1>1</h1>
+<h1>1</h1>
+<h1>1</h1>
+<h1>1</h1>
+<h1>1</h1>
+<h1>1</h1>
+<h1>1</h1>
+
+<h2>Chat với Gemini AI</h2>
+
+<form method="post" asp-action="GetGeminiResponse">
+    <label>Nhập câu hỏi của bạn:</label>
+    <input type="text" name="userQuestion" class="form-control" required />
+    <button type="submit" class="btn btn-primary mt-2">Gửi</button>
+</form>
+
+@if (ViewBag.Response != null)
+{
+    <h3 class="mt-3">Câu trả lời:</h3>
+    <p>@ViewBag.Response</p>
+}

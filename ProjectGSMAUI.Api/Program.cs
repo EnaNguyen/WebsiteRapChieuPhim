@@ -40,6 +40,7 @@ builder.Services.AddScoped<ISanPham, SanPhamService>();
 builder.Services.AddScoped<IBillMServices, BillMServices>();
 builder.Services.AddScoped<IGeminiServices, GeminiServices>();
 builder.Services.AddScoped<ICheckOutServices, CheckOutServices>();
+builder.Services.AddScoped<IThongKe, ThongKeService>();
 //builder.Services.AddAuthentication("BasicAuthentication").AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
 var _authkey = builder.Configuration.GetValue<string>("JwtSettings:securitykey");
 builder.Services.AddAuthentication(item =>
