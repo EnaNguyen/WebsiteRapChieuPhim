@@ -239,9 +239,30 @@ namespace ProjectGSMVC.Controllers
             string data = await response.Content.ReadAsStringAsync();
             var billHistory = JsonConvert.DeserializeObject<List<ProjectGSMAUI.Api.Modal.BillHistoryModal>>(data);
 
-            return View("GetUserBillHistory", billHistory); // 🛠 Chuyển dữ liệu vào View
+            return View("GetUserBillHistory", billHistory);
         }
+        [HttpGet]
+        public async Task<DetailMovie> Detail(int id)
+        {
+            
+                HttpResponseMessage response = await _client.GetAsync(_client.BaseAddress + $"/Phim/GetByID?id={id}");
 
+                if (response.IsSuccessStatusCode)
+                {
+                    var phimData = await response.Content.ReadAsStringAsync();
+                    var phim = JsonConvert.DeserializeObject<DetailMovie>(phimData);
 
+                    if (phim == null)
+                    {
+                        return null;
+                    }
+                    return phim;
+                }
+                else
+                {
+                    return null;
+                }
+           
+        }
     }
 }

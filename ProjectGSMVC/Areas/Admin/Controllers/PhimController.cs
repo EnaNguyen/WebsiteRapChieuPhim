@@ -106,7 +106,7 @@ namespace ProjectGSMVC.Areas.Admin.Controllers
             }
             if (string.IsNullOrWhiteSpace(model.PhimDatas.MoTa))
             {
-                errors["MoTa"] = "Đạo diễn không được để trống";
+                errors["MoTa"] = "Mô Tả không được để trống";
             }
             if (errors.Count > 0)
             {
@@ -309,7 +309,7 @@ namespace ProjectGSMVC.Areas.Admin.Controllers
             }
             if (string.IsNullOrWhiteSpace(model.PhimDatas.MoTa))
             {
-                errors["MoTa"] = "Đạo diễn không được để trống";
+                errors["MoTa"] = "Mô Tả không được để trống";
             }           
             if (errors.Count > 0)
             {
@@ -350,6 +350,29 @@ namespace ProjectGSMVC.Areas.Admin.Controllers
         {
             public CreateMovie Model { get; set; }
             public int IdPhim { get; set; }
+        }
+        [HttpGet]
+        public async Task<DetailMovie> Detail(int id)
+        {
+
+            HttpResponseMessage response = await _httpClient.GetAsync($"https://localhost:7141/api/Phim/GetByID?id={id}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var phimData = await response.Content.ReadAsStringAsync();
+                var phim = JsonConvert.DeserializeObject<DetailMovie>(phimData);
+
+                if (phim == null)
+                {
+                    return null;
+                }
+                return phim;
+            }
+            else
+            {
+                return null;
+            }
+
         }
         //[HttpPost]
         //public async Task<IActionResult> Delete(int id)

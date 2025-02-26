@@ -22,7 +22,7 @@ namespace ProjectGSMVC.Controllers
         {
             try
             {
-                var userId = HttpContext.Session.GetString("UserId"); // Lấy UserId từ Session
+                var userId = HttpContext.Session.GetString("UserId"); 
                 var userName = HttpContext.Session.GetString("UserName");
                 if (string.IsNullOrEmpty(userId))
                 {

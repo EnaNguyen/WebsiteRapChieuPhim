@@ -3,7 +3,7 @@
 
     ViewData["Title"] = "Home Page";
     var ListPhim = ViewData["ListPhim"] as List<PhimView>;
-    
+
     Layout = "~/Views/Shared/_Layout.cshtml";
     var thangHienTai = DateTime.Now.Month;
     var namHienTai = DateTime.Now.Year;
@@ -13,6 +13,13 @@
 }
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @model List<ProjectGSMVC.Models.PhimVM>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<style>
+    .mySlides {
+        display: none;
+    }
+</style>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @if (TempData["SuccessMessage"] != null)
 {
@@ -100,7 +107,6 @@ else if (TempData["ErrorMessage"] != null)
                                                data-video-url="@phim.Video">
                                                 Xem Trailer
                                             </a>
-
                                             <a href="javascript:;" class="btn-ticket">Mua Vé</a>
                                         </div>
                                         
@@ -136,7 +142,7 @@ else if (TempData["ErrorMessage"] != null)
     <div class="container-fluid pv11 ">
         <div class="row">
             <div class="col-sm-12">
-                <h3 class="heading text-center" style="font-family: 'Arial', 'Roboto', sans-serif;">Đang chiếu</h3>
+                <h3 class="heading text-center" style="font-family: 'Arial', 'Roboto', sans-serif; color: white">Đang chiếu</h3>
                 <div class="ticket-carousel pvt85">
                     <div class="swiper-container carousel-container movie-images" data-col="5">
                         <div class="swiper-wrapper">
@@ -148,6 +154,7 @@ else if (TempData["ErrorMessage"] != null)
                                             <div class="entry-actions">
                                                 <a href="javascript:void(0);" class="btn-trailer" data-video-url="@phim.Video">Xem Trailer</a>
                                                 <a href="#order" class="btn-ticket order_btn">Mua Vé</a>
+                                                <a href="javascript:;" class="btn-ticket InfoPhim" data-idphim="@phim.Id" data-bs-toggle="modal" data-bs-target="#myModal2">Thông Tin Phim</a>
                                             </div>
                                         </div>
                                         <div class="entry-desc">
@@ -272,6 +279,39 @@ else if (TempData["ErrorMessage"] != null)
         </div>
     </div>
 </div>
+<div class="modal" id="myModal2" style="font-size:2u">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="movie-container">
+                    <h2 class="movie-title" id="DetailName"></h2>
+
+
+                    <div class="movie-image">
+                        <img id="DetailHinhAnh" src="" alt="Hình ảnh phim"  style="max-height:369px; max-width: 738px"/>
+                    </div>
+                    <div class="w3-content w3-display-container" style="max-width:800px" id="ListHinhAnh">
+                      
+                    </div>
+                    <div class="movie-info">
+                        <p id="DetailTheLoai"><strong>Thể loại:</strong> </p>
+                        <p id="DetailThoiLuong"><strong>Thời lượng:</strong></p>
+                        <p id="DetailDaoDien"><strong>Đạo diễn:</strong> </p>
+                        <p id="DetailGioiHanDoTuoi"><strong>Giới hạn độ tuổi:</strong> </p>
+                        <p id="DetailNgayKhoiChieu"><strong>Ngày khởi chiếu:</strong> </p>
+                        <p id="DetailMoTa" class="movie-description"><strong>Mô tả:</strong> </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
 <!-- JavaScript để hiển thị trailer -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -283,12 +323,15 @@ else if (TempData["ErrorMessage"] != null)
             var movieName = selectedMovie.text(); 
             var minDate = selectedMovie.data("ngaykhoichieu");
             var maxDate = selectedMovie.data("ngayketthuc");
-
+            var today = new Date().toISOString().split('T')[0];
+            if (minDate < today) {
+                minDate = today;
+            }
             $("#PhimDaChon").text(movieName); 
             $("#PhimDaChon1").text(movieName);
             $("#NgayDatVe").attr("min", minDate);
             $("#NgayDatVe").attr("max", maxDate);
-
+            console.log(minDate);
             if (minDate) {
                 $("#NgayDatVe").val(minDate);
                 loadShowtimes();
@@ -518,6 +561,71 @@ else if (TempData["ErrorMessage"] != null)
     const config = { childList: true };
     observer.observe(document.getElementById('selected-seats'), config);
 </script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".InfoPhim").click(function () {
+            var idPhim = $(this).data("idphim");
+
+            $.ajax({
+                url: "/Home/Detail",
+                type: "GET",
+                data: { id: idPhim },
+                success: function (data) {
+                    if (data) {
+                        console.log(data);
+                        $("#DetailName").text(data.movies.tenPhim);
+                        $("#DetailHinhAnh").attr("src", "data:image/jpeg;base64," + data.hinhAnhs[0].imageData);
+                        $("#DetailTheLoai").html("<strong>Thể loại:</strong> " + data.movies.theLoai);
+                        $("#DetailThoiLuong").html("<strong>Thời lượng:</strong> " + data.movies.thoiLuong + " phút");
+                        $("#DetailDaoDien").html("<strong>Đạo diễn:</strong> " + data.movies.daoDien);
+                        $("#DetailGioiHanDoTuoi").html("<strong>Giới hạn độ tuổi:</strong> " + data.movies.gioiHanDoTuoi);
+                        $("#DetailNgayKhoiChieu").html("<strong>Ngày khởi chiếu:</strong> " + data.movies.ngayKhoiChieu);
+                        $("#DetailMoTa").html("<strong>Mô tả:</strong> " + data.movies.moTa);
+
+                        // Làm sạch danh sách hình ảnh trước khi thêm ảnh mới
+                        $("#ListHinhAnh").empty();
+
+                        if (data.hinhAnhs && data.hinhAnhs.length > 1) {
+                            let imagesHtml = '';
+                            let dotsHtml = '';
+
+                            for (let i = 0; i < data.hinhAnhs.length; i += 3) {
+                                imagesHtml += `<div class="mySlides w3-animate-fading" style="width:100%">
+                                                    <div class="container">
+                                                        <div class="row">`;
+                                for (let j = i; j < i + 3 && j < data.hinhAnhs.length; j++) {
+                                    imagesHtml += `<div class="col-md-4">
+                                                        <img src="data:image/jpeg;base64,${data.hinhAnhs[j].imageData}" style="width:100%">
+                                                   </div>`;
+                                }
+                                imagesHtml += `</div></div></div>`;
+
+                                // Thêm chấm điều hướng cho slider
+                                dotsHtml += `<span class="w3-badge demo w3-border w3-transparent w3-hover-white" onclick="currentDiv(${Math.floor(i / 3) + 1})"></span>`;
+                            }
+
+                            $("#ListHinhAnh").html(`
+                                ${imagesHtml}
+                                <div class="w3-center w3-container w3-section w3-large w3-text-white w3-display-bottommiddle" style="width:100%">
+                                    <div class="w3-left w3-hover-text-khaki" onclick="plusDivs(-1)">&#10094;</div>
+                                    <div class="w3-right w3-hover-text-khaki" onclick="plusDivs(1)">&#10095;</div>
+                                    ${dotsHtml}
+                                </div>
+                            `);
+
+                            // Khởi động slider về ảnh đầu tiên
+                            showDivs(1);
+                        }
+                    }
+                },
+                error: function () {
+                    alert("Không thể tải thông tin phim.");
+                }
+            });
+        });
+    });
+</script>
 
 
 <!-- JavaScript để hiển thị trailer -->
@@ -545,6 +653,35 @@ else if (TempData["ErrorMessage"] != null)
         }
     });
 </script>
+<script>
+    var slideIndex = 1;
+    showDivs(slideIndex);
+
+    function plusDivs(n) {
+        showDivs(slideIndex += n);
+    }
+
+    function currentDiv(n) {
+        showDivs(slideIndex = n);
+    }
+
+    function showDivs(n) {
+        var i;
+        var x = document.getElementsByClassName("mySlides");
+        var dots = document.getElementsByClassName("demo");
+        if (n > x.length) { slideIndex = 1 }
+        if (n < 1) { slideIndex = x.length }
+        for (i = 0; i < x.length; i++) {
+            x[i].style.display = "none";
+        }
+        for (i = 0; i < dots.length; i++) {
+            dots[i].className = dots[i].className.replace(" w3-white", "");
+        }
+        x[slideIndex - 1].style.display = "block";
+        dots[slideIndex - 1].className += " w3-white";
+    }
+</script>
+
 <style>
     .seatCharts-seat
     {
@@ -561,4 +698,58 @@ else if (TempData["ErrorMessage"] != null)
         font-style: italic;
         text-decoration: underline;
     }
+</style>
+<style>
+    body {
+        background-color: #000;
+        color: #ffa500;
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 20px;
+    }
+
+    .movie-container {
+        max-width: 800px;
+        margin: auto;
+        background: #1a1a1a;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 15px rgba(255, 165, 0, 0.6);
+        text-align: center;
+    }
+
+    .movie-title {
+        font-size: 28px;
+        font-weight: bold;
+        color: #ffa500;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+    }
+
+    .movie-image img {
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+        border: 3px solid #ffa500;
+    }
+
+    .movie-info {
+        text-align: left;
+        font-size: 18px;
+        margin-top: 20px;
+    }
+
+        .movie-info p {
+            margin: 8px 0;
+        }
+
+    .movie-description {
+        font-style: italic;
+        color: #ffcc80;
+    }
+
+    strong {
+        color: #ff4500;
+    }
+
 </style>

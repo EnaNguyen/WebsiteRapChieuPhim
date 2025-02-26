@@ -48,8 +48,8 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-6 col-sm-6 col-xs-4">
-                        <a href="./" id="logo" title="Tenguu" class="logo-image" data-bg-image="~/User/images/logo.png">
-                            Tenguu
+                        <a href="./" id="logo" title="Tenguu" class="logo-image" data-bg-image="~/Admin/vendors/images/Untitled-1.webp">
+                            <img src="/Admin/vendors/images/Untitled-1.webp" alt="Alternate Text" />
                         </a>
                     </div>
                     <div class="col-md-4 col-md-offset-2 col-sm-6 col-xs-8 phl0">
@@ -59,6 +59,8 @@
                             {
                                 <span>Chào, @HttpContextAccessor.HttpContext.Session.GetString("UserName")</span>
                                 <a asp-controller="User" asp-action="Logout" class="ml-3">Đăng xuất</a>
+                                <a href="/UserProfile"><i class="fa-regular fa-user"></i></a>
+        
                             }
                             else
                             {
