@@ -1,14 +1,14 @@
 ﻿@{
     ViewData["Title"] = "Login";
-    Layout = "~/Views/Shared/_Layout.cshtml"; // Keep your layout
+    Layout = null; 
 }
 
-<link href="~/css/auth-style.css" rel="stylesheet" /> @* Link to the new CSS file *@
-
+<link href="~/css/auth-style.css" rel="stylesheet" /> 
+<script src="https://kit.fontawesome.com/7371d1d4b9.js" crossorigin="anonymous"></script>
 <div class="auth-container">
     <div class="auth-left-panel">
         <div class="logo-area">
-            <img src="~/User/images/logo.png" alt="Starlight Entertainment Center Logo" class="auth-logo" />
+            <img src="~/user/images/cgs_cinema_white.png" alt="CGS Entertainment Center Logo" class="auth-logo" />
         </div>
         <div class="welcome-text">
             Đăng nhập với tài khoản của bạn!
@@ -19,34 +19,41 @@
             <h2>Đăng nhập</h2>
             @if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
             {
-                <div class="alert alert-success" role="alert">
+                <div class="alert alert-success" role="alert" style="color:green">
                     @ViewBag.SuccessMessage
                 </div>
             }
             @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
             {
-                <div class="alert alert-danger" role="alert">
+                <div class="alert alert-danger" role="alert" style="color:red">
                     @ViewBag.ErrorMessage
                 </div>
             }
-            <form asp-controller="User" asp-action="Login" method="post" class="auth-form">
-                <input type="hidden" name="returnUrl" value="@Context.Session.GetString("ReturnUrl")" />
-                <div class="form-group">
-                    <input type="text" class="form-control auth-input" id="tenTaiKhoan" name="tenTaiKhoan" placeholder="Email / Tên đăng nhập" required style="color:black">
-                </div>
-                <div class="form-group">
-                    <input type="password" class="form-control auth-input" id="matKhau" name="matKhau" placeholder="Mật khẩu(*)" style="color:black" required>
-                </div>
-                <div class="form-group forgot-register-links">
-                    <a asp-action="Register" class="register-link">Đăng ký</a> / <a href="#" class="forgot-password-link">Quên mật khẩu?</a>
-                </div>
-                <button type="submit" class="btn auth-button">Đăng nhập</button>
-            </form>
+            <div>
+                <form asp-controller="User" asp-action="Login" method="post" class="auth-form">
+                    <input type="hidden" name="returnUrl" value="@Context.Session.GetString("ReturnUrl")" />
+                    <div class="form-group">
+                        <input type="text" class="form-control auth-input" id="tenTaiKhoan" name="tenTaiKhoan" placeholder=" Tên đăng nhập"  style="color:black">
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control auth-input" id="matKhau" name="matKhau" placeholder=" Mật khẩu" style="color:black" >
+                    </div>
+                    <div class="form-group forgot-register-links">
+                        <a asp-action="Register" class="register-link">Đăng ký</a> / <a asp-action="ForgotPasswordRequest" class="forgot-password-link">Quên mật khẩu?</a>
+                    </div>
+                    <button type="submit" class="btn auth-button">Đăng nhập</button>
+                </form>
+            </div>
+            
             <div class="social-login-separator">
                 <span>Hoặc đăng nhập với</span>
             </div>
+
             <div class="social-login-buttons">
                 <a href="#" class="social-button facebook-button"><i class="fab fa-facebook-f"></i></a>
+                <form asp-controller="User" asp-action="FacebookLogin" method="post">
+                    <button type="submit" class="social-button facebook-button"><i class="fab fa-facebook-f"></i></button>
+                </form>
                 <a href="#" class="social-button google-button"><i class="fab fa-google"></i></a>
             </div>
         </div>

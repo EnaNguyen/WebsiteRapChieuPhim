@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using ProjectGSMAUI.Api.Helper;
 using ProjectGSMAUI.Api.Modal;
 using AutoMapper;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Caching.Memory; 
 
 namespace ProjectGSMAUI.Api.Container
 {
@@ -16,12 +18,104 @@ namespace ProjectGSMAUI.Api.Container
         private readonly ApplicationDbContext _context;
         private readonly IMapper mapper;
         private readonly ILogger<TaiKhoanService> logger;
+        private readonly EmailService _emailService; 
+        private readonly IMemoryCache _memoryCache;   
 
-        public TaiKhoanService(ApplicationDbContext context, IMapper mapper, ILogger<TaiKhoanService> _logger)
+        public TaiKhoanService(ApplicationDbContext context, IMapper mapper, ILogger<TaiKhoanService> _logger, EmailService emailService, IMemoryCache memoryCache)
         {
             _context = context;
             this.mapper = mapper;
             logger = _logger;
+            _emailService = emailService;
+            _memoryCache = memoryCache;
+        }
+
+        
+
+        public async Task<bool> RequestPasswordResetAsync(string email)
+        {
+            var taiKhoan = await GetTaiKhoanByEmailAsync(email);
+            if (taiKhoan == null)
+            {
+                logger.LogWarning($"Password reset requested for email '{email}', but email not found."); 
+                return false; 
+            }
+
+            string otp = OTPGenerator.GenerateOTP();
+            string lowerEmail = email.ToLowerInvariant();
+
+            
+            logger.LogInformation($"Setting OTP in cache for email: '{lowerEmail}', OTP: '{otp}'");
+
+            MemoryCacheEntryOptions cacheExpiryOptions = new MemoryCacheEntryOptions
+            {
+                AbsoluteExpiration = DateTime.Now.AddMinutes(10),
+                Priority = CacheItemPriority.High,
+                SlidingExpiration = TimeSpan.FromMinutes(2)
+            };
+            _memoryCache.Set(lowerEmail, otp, cacheExpiryOptions);
+
+            
+            logger.LogInformation($"OTP set in cache SUCCESSFULLY for email: '{lowerEmail}'");
+
+
+            string subject = "Your Password Reset OTP";
+            string body = $"Mã OTP để đặt lại mật khẩu của bạn là: <b>{otp}</b>. Mã OTP này sẽ hết hạn sau 10 phút.";
+
+            bool emailSent = _emailService.SendEmail(email, subject, body);
+            if (emailSent)
+            {
+                logger.LogInformation($"Email with OTP sent successfully to: '{email}'"); 
+            }
+            else
+            {
+                logger.LogError($"FAILED to send email with OTP to: '{email}'"); 
+            }
+            return emailSent;
+        }
+
+        public async Task<bool> VerifyOTPAsync(string email, string otp)
+        {
+            string lowerEmailVerify = email.ToLowerInvariant();
+
+            // **Log BEFORE retrieving from cache**
+            logger.LogInformation($"Attempting to retrieve OTP from cache for email: '{lowerEmailVerify}'");
+
+            string storedOTP = _memoryCache.Get<string>(lowerEmailVerify);
+
+            // **Log AFTER retrieving from cache, regardless of result**
+            if (storedOTP != null)
+            {
+                logger.LogInformation($"OTP RETRIEVED from cache for email: '{lowerEmailVerify}', Stored OTP: '{storedOTP}'");
+            }
+            else
+            {
+                logger.LogWarning($"OTP NOT FOUND in cache for email: '{lowerEmailVerify}'"); // Log warning if OTP not found
+            }
+
+
+            if (storedOTP != null && storedOTP == otp)
+            {
+                _memoryCache.Remove(lowerEmailVerify);
+                logger.LogInformation($"OTP VERIFIED SUCCESSFULLY and removed from cache for email: '{lowerEmailVerify}'"); // Log OTP verification success and removal
+                return true; // OTP is valid
+            }
+            logger.LogWarning($"OTP verification FAILED for email: '{lowerEmailVerify}', Entered OTP: '{otp}', Stored OTP: '{storedOTP}'"); // Log OTP verification failure
+            return false; // OTP is invalid or expired
+        }
+
+        public async Task<bool> ResetPasswordAsync(string email, string otp, string newPassword)
+        {
+            var taiKhoan = await GetTaiKhoanByEmailAsync(email);
+            if (taiKhoan == null)
+            {
+                return false; 
+            }
+
+            taiKhoan.MatKhau = PasswordHasher.HashPassword(newPassword); 
+            _context.TaiKhoans.Update(taiKhoan);
+            await _context.SaveChangesAsync();
+            return true; 
         }
 
         public async Task<IEnumerable<TaiKhoan>> GetTaiKhoansAsync()
@@ -465,10 +559,23 @@ namespace ProjectGSMAUI.Api.Container
             }
             return response;
         }
+
+        public async Task<TaiKhoan> GetTaiKhoanByEmailAsync(string email)
+        {
+            return await _context.TaiKhoans
+                .FirstOrDefaultAsync(t => t.Email == email); // Search by Email
+        }
+
         public async Task<TaiKhoan> GetTaiKhoanByTenTaiKhoanAsync(string tenTaiKhoan)
         {
             return await _context.TaiKhoans
                 .FirstOrDefaultAsync(t => t.TenTaiKhoan == tenTaiKhoan); // Search by TenTaiKhoan
+        }
+
+        public async Task<TaiKhoan> GetTaiKhoanByFacebookIdAsync(string facebookId)
+        {
+            return await _context.TaiKhoans
+                .FirstOrDefaultAsync(t => t.FacebookId == facebookId); 
         }
     }
 }

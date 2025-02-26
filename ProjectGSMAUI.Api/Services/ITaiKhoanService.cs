@@ -30,6 +30,14 @@ namespace ProjectGSMAUI.Api.Container
         Task<APIResponse> CreateCustomer(TaiKhoanRequest data);
         Task<APIResponse> UpdateCustomer(string id, TaiKhoanRequest data);
         Task<TaiKhoan> GetTaiKhoanByTenTaiKhoanAsync(string tenTaiKhoan);
+        Task<TaiKhoan> GetTaiKhoanByEmailAsync(string email);
+        Task<TaiKhoan> GetTaiKhoanByFacebookIdAsync(string facebookId);
+
+
+        // New methods for Forgot Password
+        Task<bool> RequestPasswordResetAsync(string email); // Request password reset, send OTP
+        Task<bool> VerifyOTPAsync(string email, string otp);    // Verify OTP
+        Task<bool> ResetPasswordAsync(string email, string otp, string newPassword); // Reset password with verified OTP
     }
 }
 

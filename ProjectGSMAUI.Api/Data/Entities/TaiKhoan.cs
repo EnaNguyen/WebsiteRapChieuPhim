@@ -22,6 +22,7 @@ namespace ProjectGSMAUI.Api.Data.Entities
         public string? Cccd { get; set; }
         public bool? GioiTinh { get; set; }
         public string? DiaChi { get; set; }
+        public string? FacebookId { get; set; }
         public virtual ICollection<HoaDon> HoaDons { get; set; } = new List<HoaDon>();
     }
 }

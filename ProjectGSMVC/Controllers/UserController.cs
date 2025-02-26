@@ -102,7 +102,7 @@ namespace ProjectGSMVC.Controllers
         [HttpPost]
         public async Task<IActionResult> Register([FromForm] TaiKhoanModel data)
         {
-            // ... (Validation and error checking for other fields - unchanged) ...
+            
             var errors = new Dictionary<string, string>();
 
             if (string.IsNullOrEmpty(data.TenNguoiDung))
@@ -113,6 +113,14 @@ namespace ProjectGSMVC.Controllers
             if (string.IsNullOrEmpty(data.TenTaiKhoan))
             {
                 errors["TenTaiKhoan"] = "Tên Tài Khoản không được để trống.";
+            }
+            else
+            {
+                HttpResponseMessage usernameCheckResponse = await _httpClient.GetAsync($"/api/TaiKhoan/GetByTenTaiKhoan?Name={Uri.EscapeDataString(data.TenTaiKhoan)}");
+                if (!usernameCheckResponse.IsSuccessStatusCode) 
+                {
+                    errors["TenTaiKhoan"] = "Tên Tài Khoản đã tồn tại.";
+                }
             }
 
             if (string.IsNullOrEmpty(data.MatKhau) || data.MatKhau.Contains(" ") || data.MatKhau.Length < 6)
@@ -127,14 +135,22 @@ namespace ProjectGSMVC.Controllers
             {
                 errors["Email"] = "Email không được để trống.";
             }
+            else
+            {
+                HttpResponseMessage emailCheckResponse = await _httpClient.GetAsync($"/api/TaiKhoan/GetByEmail?Name={Uri.EscapeDataString(data.Email)}");
+                if (!emailCheckResponse.IsSuccessStatusCode) 
+                {
+                    errors["Email"] = "Email đã tồn tại.";
+                }
+            }
 
             if (string.IsNullOrWhiteSpace(data.Sdt) || (data.Sdt.Length != 10 && data.Sdt.Length != 11) || !data.Sdt.All(char.IsDigit))
             {
-                errors["Sdt"] = "Số điện thoại không được nhập chữ hay kí tự đặc biệt, độ dài 10-11 số";
+                errors["Sdt"] = "Số điện thoại không hợp lệ";
             }
             if (data.NgaySinh == default || data.NgaySinh > DateOnly.FromDateTime(DateTime.Today))
             {
-                errors["NgaySinh"] = "Ngày bắt đầu không được nhỏ hơn ngày hiện tại.";
+                errors["NgaySinh"] = "Ngày sinh không không hợp lệ.";
             }
             if (string.IsNullOrEmpty(data.Cccd) || data.Cccd.Length != 12 || !data.Cccd.All(char.IsDigit))
             {
@@ -146,16 +162,16 @@ namespace ProjectGSMVC.Controllers
                 {
                     ModelState.AddModelError(error.Key, error.Value);
                 }
-                return View(data); // Return to view with model state errors
+                return View(data); 
             }
 
 
             try
             {
-                string? imageBase64String = null; // Initialize as null
+                string? imageBase64String = null; 
 
-                // **Conditional Image Processing**
-                if (data.ImageFile != null && data.ImageFile.Length > 0) // Check if ImageFile is not null AND has content
+                
+                if (data.ImageFile != null && data.ImageFile.Length > 0) 
                 {
                     using (var memoryStream = new MemoryStream())
                     {
@@ -176,7 +192,7 @@ namespace ProjectGSMVC.Controllers
                     Cccd = data.Cccd,
                     GioiTinh = data.GioiTinh == "1" ? true : false,
                     DiaChi = data.DiaChi,
-                    Hinh = imageBase64String // Set Hinh to the base64 string (or null if no image)
+                    Hinh = imageBase64String 
                 };
 
                 var jsonContent = new StringContent(
@@ -223,23 +239,208 @@ namespace ProjectGSMVC.Controllers
             return RedirectToAction("Index", "Home"); // Redirect to homepage after logout
         }
 
-        // Example action to demonstrate booking redirection (you'll need to adapt this to your booking flow)
-        public IActionResult BookTicket()
+        
+
+        [HttpGet]
+        public IActionResult ForgotPasswordRequest()
         {
-            if (HttpContext.Session.GetString("UserId") == null)
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ForgotPasswordRequest(string email)
+        {
+            if (string.IsNullOrEmpty(email))
             {
-                // Store current URL to redirect back after login
-                HttpContext.Session.SetString("ReturnUrl", "/User/BookTicket"); // Assuming /User/BookTicket is the booking action URL
-                TempData["LoginMessage"] = "Bạn cần đăng nhập để đặt vé."; // Message to display on login page (optional)
-                return RedirectToAction("Login");
+                ViewBag.ErrorMessage = "Vui lòng nhập email.";
+                return View();
             }
 
-            // User is logged in, proceed with booking logic
-            return View(); // Your booking view
+            try
+            {
+                var forgotPasswordRequest = new Dictionary<string, string>
+                {
+                    { "email", email }
+                };
+
+                var jsonContent = new StringContent(JsonConvert.SerializeObject(forgotPasswordRequest), Encoding.UTF8, "application/json");
+                HttpResponseMessage response = await _httpClient.PostAsync("/api/Auth/ForgotPasswordRequest", jsonContent); // API endpoint
+
+                if (response.IsSuccessStatusCode)
+                {
+                    ViewBag.SuccessMessage = "OTP đã được gửi đến email của bạn. Vui lòng kiểm tra hộp thư đến.";
+                    ViewBag.Email = email; // Pass email to VerifyOTP view
+                    return View("VerifyOTP"); // Redirect to VerifyOTP view
+                }
+                else
+                {
+                    string apiError = await response.Content.ReadAsStringAsync();
+                    ViewBag.ErrorMessage = $"Lỗi yêu cầu OTP: {apiError}";
+                    return View(); // Stay on ForgotPasswordRequest view with error message
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                ViewBag.ErrorMessage = "Lỗi kết nối đến máy chủ. Vui lòng thử lại sau.";
+                return View();
+            }
         }
+
+
+        [HttpGet]
+        public IActionResult VerifyOTP()
+        {
+            string email = ViewBag.Email; 
+            if (string.IsNullOrEmpty(email))
+            {
+                return RedirectToAction("ForgotPasswordRequest"); 
+            }
+            ViewBag.Email = email; 
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> VerifyOTP(string email, string otp)
+        {
+            if (string.IsNullOrEmpty(otp))
+            {
+                ViewBag.ErrorMessage = "Vui lòng nhập mã OTP.";
+                ViewBag.Email = email; 
+                return View();
+            }
+
+            try
+            {
+                var verifyOTPRequest = new Dictionary<string, string>
+                {
+                    { "email", email },
+                    { "otp", otp }
+                };
+
+                var jsonContent = new StringContent(JsonConvert.SerializeObject(verifyOTPRequest), Encoding.UTF8, "application/json");
+                HttpResponseMessage response = await _httpClient.PostAsync("/api/Auth/VerifyOTP", jsonContent); // API endpoint
+
+                if (response.IsSuccessStatusCode)
+                {
+                    ViewBag.SuccessMessage = "OTP hợp lệ. Vui lòng đặt mật khẩu mới.";
+                    ViewBag.Email = email; // Pass email to ResetPassword view
+                    ViewBag.OTP = otp;       // Pass OTP to ResetPassword view (for hidden field)
+                    return View("ResetPassword"); // Redirect to ResetPassword view
+                }
+                else
+                {
+                    string apiError = await response.Content.ReadAsStringAsync();
+                    ViewBag.ErrorMessage = $"Mã OTP không hợp lệ: {apiError}";
+                    ViewBag.Email = email; // Keep email in ViewBag
+                    return View(); // Stay on VerifyOTP view with error message
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                ViewBag.ErrorMessage = "Lỗi kết nối đến máy chủ. Vui lòng thử lại sau.";
+                ViewBag.Email = email; // Keep email in ViewBag
+                return View();
+            }
+        }
+
+
+        [HttpGet]
+        public IActionResult ResetPassword(string email, string otp) 
+        {
+            ViewBag.Email = email; // Pass email to ResetPassword view
+            ViewBag.OTP = otp;     // Pass OTP to ResetPassword view
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(string email, string otp, string newPassword, string confirmPassword)
+        {
+            if (string.IsNullOrEmpty(newPassword) || string.IsNullOrEmpty(confirmPassword))
+            {
+                ViewBag.ErrorMessage = "Vui lòng nhập mật khẩu mới và xác nhận mật khẩu.";
+                ViewBag.Email = email; // Keep email in ViewBag
+                ViewBag.OTP = otp;     // Keep OTP in ViewBag
+                return View();
+            }
+
+            if (newPassword != confirmPassword)
+            {
+                ViewBag.ErrorMessage = "Mật khẩu xác nhận không khớp.";
+                ViewBag.Email = email; // Keep email in ViewBag
+                ViewBag.OTP = otp;     // Keep OTP in ViewBag
+                return View();
+            }
+
+            try
+            {
+                var resetPasswordRequest = new Dictionary<string, string>
+                {
+                    { "email", email },
+                    { "otp", otp },
+                    { "newPassword", newPassword }
+                };
+
+                var jsonContent = new StringContent(JsonConvert.SerializeObject(resetPasswordRequest), Encoding.UTF8, "application/json");
+                HttpResponseMessage response = await _httpClient.PostAsync("/api/Auth/ResetPassword", jsonContent); // API endpoint
+
+                if (response.IsSuccessStatusCode)
+                {
+                    ViewBag.SuccessMessage = "Mật khẩu đã được đặt lại thành công. Vui lòng đăng nhập bằng mật khẩu mới.";
+                    return View("Login"); // Redirect to login page with success message
+                }
+                else
+                {
+                    string apiError = await response.Content.ReadAsStringAsync();
+                    ViewBag.ErrorMessage = $"Lỗi đặt lại mật khẩu: {apiError}";
+                    ViewBag.Email = email; // Keep email in ViewBag
+                    ViewBag.OTP = otp;     // Keep OTP in ViewBag
+                    return View(); // Stay on ResetPassword view with error message
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                ViewBag.ErrorMessage = "Lỗi kết nối đến máy chủ. Vui lòng thử lại sau.";
+                ViewBag.Email = email; // Keep email in ViewBag
+                ViewBag.OTP = otp;     // Keep OTP in ViewBag
+                return View();
+            }
+        }
+
+        [HttpPost]
+        public IActionResult FacebookLogin()
+        {
+            // **Simply call the API's FacebookLogin endpoint - the API now handles the redirect to Facebook**
+            return RedirectToAction("FacebookLogin", "Auth", new { Area = "", }); // Redirect to API's FacebookLogin
+        }
+
+
+        [HttpGet("FacebookLoginCallback")] // Route for callback from API after Facebook auth
+        public async Task<IActionResult> FacebookLoginCallback()
+        {
+            // Call API's FacebookLoginCallback endpoint to finalize login and get login response
+            HttpResponseMessage response = await _httpClient.GetAsync("/api/Auth/FacebookLoginCallback");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var loginResult = JsonConvert.DeserializeObject<LoginResponse>(responseContent);
+
+                if (loginResult != null && loginResult.Success)
+                {
+                    HttpContext.Session.SetString("UserId", loginResult.UserId);
+                    HttpContext.Session.SetString("UserName", loginResult.UserName);
+                    return RedirectToAction("Index", "Home"); // Redirect to homepage after Facebook login
+                }
+            }
+
+            // Facebook login failed at API level
+            ViewBag.ErrorMessage = "Đăng nhập Facebook không thành công. Vui lòng thử lại sau.";
+            return View("Login"); // Return to login page with error message
+        }
+
     }
 
-    // Response class for Login API (adjust based on your actual API response)
+   
     public class LoginResponse
     {
         public bool Success { get; set; }

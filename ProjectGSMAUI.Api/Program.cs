@@ -15,6 +15,7 @@ using System.Text;
 using ProjectGSMAUI.Api.Container;
 using System;
 using Microsoft.Extensions.Options;
+using ProjectGSMAUI.Api.Utilities;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ??
@@ -40,6 +41,8 @@ builder.Services.AddScoped<ISanPham, SanPhamService>();
 builder.Services.AddScoped<IBillMServices, BillMServices>();
 builder.Services.AddScoped<IGeminiServices, GeminiServices>();
 builder.Services.AddScoped<ICheckOutServices, CheckOutServices>();
+builder.Services.AddScoped<EmailService>(); // Register EmailService
+builder.Services.AddMemoryCache();       // Register IMemoryCache
 //builder.Services.AddAuthentication("BasicAuthentication").AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
 var _authkey = builder.Configuration.GetValue<string>("JwtSettings:securitykey");
 builder.Services.AddAuthentication(item =>
@@ -60,6 +63,7 @@ builder.Services.AddAuthentication(item =>
     };
 
 });
+
 var automapper = new MapperConfiguration(item => item.AddProfile(new AutoMapperHandler()));
 IMapper mapper = automapper.CreateMapper();
 //builder.Services.AddCors(p => p.AddPolicy("corspolicy", build =>

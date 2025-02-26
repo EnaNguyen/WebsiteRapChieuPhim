@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://kit.fontawesome.com/7371d1d4b9.js" crossorigin="anonymous"></script>
 </head>
 <body class="sticky-menu">
     <div id="loader">
@@ -92,6 +93,8 @@
         </header>
 
         @RenderBody()
+        @* @await RenderSectionAsync("Scripts", required: false) *@
+
         <footer id="footer">
             <div class="container footer-container">
                 <div class="row">
@@ -168,5 +171,6 @@
     <script type="text/javascript" src="~/User/js/scripts.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- jQuery easing plugin -->
+    
 </body>
 </html> 
