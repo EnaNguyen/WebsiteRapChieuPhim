@@ -226,7 +226,7 @@ namespace ProjectGSMVC.Controllers
 
             _logger.LogInformation("✅ Session tồn tại, UserId: {UserId}", idNguoiDung);
 
-            var apiURL = $"https://localhost:7141/api/Bill_Management/GetUserBillHistory?id={idNguoiDung}";
+            var apiURL = $"https://localhost:7141/api/Bill_Management/GetBillsByCustomerId?id={idNguoiDung}";
             var response = await _httpClient.GetAsync(apiURL);
 
             if (!response.IsSuccessStatusCode)
@@ -237,7 +237,7 @@ namespace ProjectGSMVC.Controllers
             }
 
             string data = await response.Content.ReadAsStringAsync();
-            var billHistory = JsonConvert.DeserializeObject<List<BillHistoryViewModel>>(data);
+            var billHistory = JsonConvert.DeserializeObject<List<ProjectGSMAUI.Api.Modal.BillHistoryModal>>(data);
 
             return View("GetUserBillHistory", billHistory); // 🛠 Chuyển dữ liệu vào View
         }

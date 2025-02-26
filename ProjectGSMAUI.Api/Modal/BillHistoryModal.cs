@@ -2,13 +2,12 @@
 {
     public class BillHistoryModal
     {
-        public string TenPhim { get; set; }    // Tên phim
-        public int MaHoaDon { get; set; }    // Tên phim
-        public int MaPhim { get; set; }    // Tên phim
-        public DateTime GioDatPhim { get; set; } // Giờ đặt phim
-        public DateOnly NgayDatPhim { get; set; } // Ngày đặt phim
-        public string TenUser { get; set; }    // Tên user
-        public List<string> MaGhe { get; set; }      // Mã ghế
+        public string TenPhim { get; set; }   
+        public int MaHoaDon { get; set; }     
+        public DateTime GioDatPhim { get; set; }
+        public DateOnly NgayTaoHoaDon { get; set; } 
+        public string TenUser { get; set; }
+        public List<string> MaGhe { get; set; }   
     }
 
 

@@ -1,5 +1,5 @@
-﻿@using ProjectGSMVC.Models
-@model List<BillHistoryViewModel>
+﻿@using ProjectGSMAUI.Api.Modal;
+@model List<BillHistoryModal>
 
 @{
     ViewData["Title"] = "Lịch Sử Giao Dịch";
@@ -15,12 +15,10 @@
                 <tr>
                     <th>Mã Hóa Đơn</th>
                     <th>Tên Phim</th>
-                    <th>Mã Phim</th>
-                    <th>Ngày Đặt</th>
-                    <th>Giờ Đặt</th>
+                    <th>Giờ Chiếu Phim</th>
                     <th>Tên Người Dùng</th>
-                    <th>Mã Vé</th>
                     <th>Mã Ghế</th>
+                    <th>Ngày Tạo Hóa Đơn</th>
                 </tr>
             </thead>
             <tbody>
@@ -29,12 +27,28 @@
                     <tr>
                         <td>@bill.MaHoaDon</td>
                         <td>@bill.TenPhim</td>
-                        <td>@bill.MaPhim</td>
-                        <td>@bill.NgayDatPhim.ToString("dd/MM/yyyy")</td>
-                        <td>@bill.GioDatPhim.ToString("HH:mm")</td>
+                        <td>@bill.GioDatPhim.ToString("dd/MM/yyyy HH:mm")</td>
                         <td>@bill.TenUser</td>
-                        <td>@bill.MaVe</td>
-                        <td>@bill.MaGhe</td>
+                        <td>
+                            <div style="display:inline">
+                                @foreach (var notitem in bill.MaGhe)
+                                {
+                                    <div style="display: flex;
+                                                justify-content: center;
+                                                align-items: center;
+                                                border-radius: 5px;
+                                                border: 1px solid black;
+                                                width: 50px;
+                                                height: 40px;
+                                                font-weight: bold;
+                                                background-color: #f8f9fa;
+                                                box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);">
+                                        @notitem
+                                    </div>
+                                }
+                           </div>
+                        </td>
+                        <td>@bill.NgayTaoHoaDon.ToString("dd/MM/yyyy")</td>
                     </tr>
                 }
             </tbody>

@@ -176,8 +176,11 @@ namespace ProjectGSMAUI.Api.Container
         public async Task<List<string>> MuaVe(DatVeModel ve)
         {
             var LichChieu = await _context.LichChieus.Where(g=>(g.NgayChieu==ve.NgayChieu && g.GioChieu==ve.CaChieu && g.MaPhim==ve.MaPhim)).FirstOrDefaultAsync();
-            int? MaxMaVe = int.TryParse(_context.Ves.OrderByDescending(g => g.MaVe).Select(global => global.MaVe).FirstOrDefault(), out int result) ? result : (int?)null;
-            MaxMaVe = MaxMaVe.HasValue ? MaxMaVe.Value + 1 : 0;
+            var MaVe = await _context.Ves
+            .Select(v => int.Parse(v.MaVe)) 
+            .ToListAsync();
+            int MaxMaVe = MaVe.Max()+1;
+
             List<string> ListMaVe = new List<string>();
             foreach (var item in ve.Ghe)
             {
@@ -191,13 +194,13 @@ namespace ProjectGSMAUI.Api.Container
                 }
                 else if (cot >5)
                 {
-                    cot =-1;
+                    cot -=1;
                 }
                 string Temp = "ABCDEFGHIJKL";
                 char KiHieuCot = Temp[cot-1];
                 Ve newve = new Ve
                 {
-                    MaVe = MaxMaVe.ToString(),
+                    MaVe = (MaxMaVe).ToString(),
                     MaLichChieu = LichChieu.MaLichChieu,
                     MaPhong = LichChieu.MaPhong,
                     MaPhim = ve.MaPhim,

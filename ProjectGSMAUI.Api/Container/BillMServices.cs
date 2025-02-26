@@ -274,11 +274,18 @@ namespace ProjectGSMAUI.Api.Container
                             addto.TenPhim = Phim.TenPhim;
                            
                         }
-                        addto.NgayDatPhim = DateOnly.FromDateTime(VeList.ThoiGianTao??DateTime.Now);
-                        //var GioChieu = _context.KhungGios.Where(g => g.Id == MaLichChieu.GioChieu).Select(g => g.GioBatDau).FirstOrDefault();
-                        //addto.GioDatPhim = GioChieu??TimeOnly.FromDateTime(DateTime.Now);
+                        addto.NgayTaoHoaDon = DateOnly.FromDateTime(VeList.ThoiGianTao??DateTime.Now);
+                        //var LichChieu = _context.LichChieus.Wher
+                        
+                        var LichChieu = _context.LichChieus.Where(g => g.MaLichChieu == VeList.MaLichChieu).FirstOrDefault();
+                        var GioChieu = _context.KhungGios.Where(g => g.Id == LichChieu.GioChieu).Select(g => g.GioBatDau).FirstOrDefault() ?? TimeOnly.FromDateTime(DateTime.Now);
+                        DateOnly ngayChieuValue = LichChieu.NgayChieu ?? DateOnly.FromDateTime(DateTime.Now);
+                        DateTime ngayGioChieu = ngayChieuValue.ToDateTime(GioChieu);
+                        addto.GioDatPhim = ngayGioChieu;
+                         
                     }
-
+                   addto.MaGhe = ListGhe;
+                   model.Add(addto);
                 }    
                 return model;
             }
