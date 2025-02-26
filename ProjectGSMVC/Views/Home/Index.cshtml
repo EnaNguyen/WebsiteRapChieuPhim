@@ -88,8 +88,8 @@ else if (TempData["ErrorMessage"] != null)
                             <div class="row">
                                 <div class="col-sm-12 movie-slider-content">
                                     <div class="slider-content">
-                                        <ul class="subtitle" data-animation="animated bounceInRight">
-                                            <li>@phim.TheLoai</li>
+                                        <ul class="subtitle" data-animation="animated bounceInRight" >
+                                            <li style="font-family: 'Arial', 'Roboto', sans-serif;">@phim.TheLoai</li>
                                         </ul>
                                         <div class="title" data-animation="animated bounceInRight" style="font-family: 'Arial', 'Roboto', sans-serif;">
                                             @phim.TenPhim <i>(@(phim.NgayKhoiChieu?.Year ?? 2024))</i>
@@ -100,8 +100,9 @@ else if (TempData["ErrorMessage"] != null)
                                                data-video-url="@phim.Video">
                                                 Xem Trailer
                                             </a>
+                                            <a href="#order" class="btn-ticket">Mua Vé</a>
+                                            <a href="@Url.Action("Detail", "Home", new { id = phim.Id })" class="btn-trailer">Thông tin</a>
 
-                                            <a href="javascript:;" class="btn-ticket">Mua Vé</a>
                                         </div>
                                         
                                     </div>
@@ -110,6 +111,7 @@ else if (TempData["ErrorMessage"] != null)
                         </div>
                     </div>
                 </div>
+
             }
         </div>
 
@@ -148,6 +150,8 @@ else if (TempData["ErrorMessage"] != null)
                                             <div class="entry-actions">
                                                 <a href="javascript:void(0);" class="btn-trailer" data-video-url="@phim.Video">Xem Trailer</a>
                                                 <a href="#order" class="btn-ticket order_btn">Mua Vé</a>
+                                                <a href="@Url.Action("Detail", "Home", new { id = phim.Id })" class="btn-trailer">Thông tin</a>
+
                                             </div>
                                         </div>
                                         <div class="entry-desc">
@@ -170,6 +174,7 @@ else if (TempData["ErrorMessage"] != null)
     <script type="text/javascript" src="~/User/js/google-maps.js"></script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?callback=initMap"></script>
 </section>
+
 <div id="order">
     <div class="container">
         <div class="row order-content">

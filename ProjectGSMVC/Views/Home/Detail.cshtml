@@ -1,0 +1,90 @@
+﻿@model ProjectGSMAUI.Api.Modal.DetailMovie
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@Model.Movies.TenPhim</title>
+    <link rel="stylesheet" href="~/css/movie-details.css" />
+</head>
+<body>
+    <div class="movie-container">
+        <h2 class="movie-title">@Model.Movies.TenPhim</h2>
+
+        @if (Model.HinhAnhs[0] != null)
+        {
+            <div class="movie-image">
+                <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.HinhAnhs[0].ImageData)" alt="Hình ảnh phim" />
+            </div>
+        }
+
+        <div class="movie-info">
+            <p><strong>Thể loại:</strong> @Model.Movies.TheLoai</p>
+            <p><strong>Thời lượng:</strong> @Model.Movies.ThoiLuong phút</p>
+            <p><strong>Đạo diễn:</strong> @Model.Movies.DaoDien</p>
+            <p><strong>Giới hạn độ tuổi:</strong> @Model.Movies.GioiHanDoTuoi</p>
+            <p><strong>Ngày khởi chiếu:</strong> @Model.Movies.NgayKhoiChieu?.ToString("dd/MM/yyyy")</p>
+            <p class="movie-description"><strong>Mô tả:</strong> @Model.Movies.MoTa</p>
+        </div>
+    </div>
+</body>
+</html>
+<style>
+    body {
+        background-color: #000;
+        color: #ffa500;
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 20px;
+    }
+
+    .movie-container {
+        max-width: 800px;
+        margin: auto;
+        background: #1a1a1a;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 15px rgba(255, 165, 0, 0.6);
+        text-align: center;
+    }
+
+    .movie-title {
+        font-size: 28px;
+        font-weight: bold;
+        color: #ffa500;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+    }
+
+    .movie-image img {
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+        border: 3px solid #ffa500;
+    }
+
+    .movie-info {
+        text-align: left;
+        font-size: 18px;
+        margin-top: 20px;
+    }
+
+        .movie-info p {
+            margin: 8px 0;
+        }
+
+    .movie-description {
+        font-style: italic;
+        color: #ffcc80;
+    }
+
+    strong {
+        color: #ff4500;
+    }
+
+</style>
+

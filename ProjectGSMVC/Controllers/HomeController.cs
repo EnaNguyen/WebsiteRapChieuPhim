@@ -43,7 +43,7 @@ namespace ProjectGSMVC.Controllers
             List<PhimView> pl = new List<PhimView>();
             try
             {
-                HttpResponseMessage response = _client.GetAsync(_client.BaseAddress + "/Phim/GetAll").Result;
+                HttpResponseMessage response = _client.GetAsync(_client.BaseAddress + "/Phim/GetAll?id={id}").Result;
                 HttpResponseMessage response1 = _client.GetAsync(_client.BaseAddress + "/Phim/OnBoarding").Result;
                 if (response.IsSuccessStatusCode)
                 {
@@ -66,12 +66,38 @@ namespace ProjectGSMVC.Controllers
             ViewData["ListPhim"] = pl;
             return View(phimList);
         }
-
-
-        public IActionResult Privacy()
+        [HttpGet]
+        public async Task<IActionResult> Detail(int id)
         {
-            return View();
+            try
+            {
+                HttpResponseMessage response = await _client.GetAsync(_client.BaseAddress + $"/Phim/GetByID?id={id}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var phimData = await response.Content.ReadAsStringAsync();
+                    var phim = JsonConvert.DeserializeObject<DetailMovie>(phimData);
+
+                    if (phim == null)
+                    {
+                        return NotFound();
+                    }
+                    return View(phim);
+                }
+                else
+                {
+                    return NotFound(); 
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
+
+
+
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
