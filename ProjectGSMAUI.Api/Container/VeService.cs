@@ -175,12 +175,15 @@ namespace ProjectGSMAUI.Api.Container
         }
         public async Task<List<string>> MuaVe(DatVeModel ve)
         {
+            int MaxMaVe = 0;
             var LichChieu = await _context.LichChieus.Where(g=>(g.NgayChieu==ve.NgayChieu && g.GioChieu==ve.CaChieu && g.MaPhim==ve.MaPhim)).FirstOrDefaultAsync();
             var MaVe = await _context.Ves
             .Select(v => int.Parse(v.MaVe)) 
             .ToListAsync();
-            int MaxMaVe = MaVe.Max()+1;
-
+            if (MaVe != null && MaVe.Count > 0)
+            {
+                MaxMaVe = MaVe.Max() + 1;
+            }
             List<string> ListMaVe = new List<string>();
             foreach (var item in ve.Ghe)
             {

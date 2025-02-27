@@ -108,7 +108,38 @@ namespace ProjectGSMAUI.Api.Container
 			return response;
 		}
 
-		public async Task<APIResponse> Update(ActiveVoucher data, int id)
+        public async Task<APIResponse> StatusUpdate(string ma)
+        {
+            APIResponse response = new APIResponse();
+            using var transaction = await this.context.Database.BeginTransactionAsync();
+            try
+            {
+
+                var Voucher = context.Coupons.Where(g => g.MaNhap.Trim().ToLower() == ma.Trim().ToLower()).FirstOrDefault();
+                if (Voucher != null && Voucher.TrangThai == true)
+                {
+                    Voucher.TrangThai = false;
+                    this.context.Update(Voucher);
+                    await this.context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                    response.ResponseCode = 200;
+                }
+                else
+                {
+                    response.ResponseCode = 400;
+                    response.ErrorMessage = "Mã Đã Dùng";
+                }
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                response.ResponseCode = 400;
+                response.ErrorMessage = ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> Update(ActiveVoucher data, int id)
         {
             APIResponse response = new APIResponse();
             try
@@ -133,6 +164,39 @@ namespace ProjectGSMAUI.Api.Container
                 response.ErrorMessage = ex.Message;
             }
             return response;
+        }
+
+        public async Task<APIResponse> Used(string ma)
+        {
+            APIResponse response = new APIResponse();
+            using var transaction = await this.context.Database.BeginTransactionAsync();
+            try
+            {
+
+                var Voucher = context.Coupons.Where(g => g.MaNhap.Trim().ToLower() == ma.Trim().ToLower()).FirstOrDefault();
+                if(Voucher!=null && Voucher.TrangThai==true)
+                {
+                    int Percent = context.GiamGia.Where(g => g.MaGiamGia == Voucher.MaGiamGia).Select(g => g.GiaTri).FirstOrDefault() ?? 0;
+                    await this.context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                    response.ResponseCode = 200;
+                    response.Result = Percent.ToString();
+                    response.Data = Voucher.Id;
+                }    
+                else
+                {
+                    response.ResponseCode = 400;
+                    response.ErrorMessage = "Mã Đã Dùng";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                response.ResponseCode = 400;
+                response.ErrorMessage = ex.Message;
+            }
+            return response;       
         }
     }
 }

@@ -12,5 +12,7 @@ namespace ProjectGSMAUI.Api.Services
         Task<APIResponse> Remove(int id);
         Task<APIResponse> Update (ActiveVoucher data, int id);
         Task<List<Coupon>> GetByGiamGia(int id);
+        Task<APIResponse> Used(string ma);
+        Task<APIResponse> StatusUpdate(string ma);
     }
 }

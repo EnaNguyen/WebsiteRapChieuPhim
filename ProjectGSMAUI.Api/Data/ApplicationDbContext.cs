@@ -7,7 +7,8 @@ namespace ProjectGSMAUI.Api.Data
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
         public virtual DbSet<ChiTietHoaDon> ChiTietHoaDons { get; set; }
-
+        public virtual DbSet<ChiTietHoaDon1> ChiTietHoaDon1s { get; set; }
+        public virtual DbSet<ChiTietHoaDon2> ChiTietHoaDon2s { get; set; }
         public virtual DbSet<Coupon> Coupons { get; set; }
 
         public virtual DbSet<Ghe> Ghes { get; set; }
@@ -72,13 +73,44 @@ namespace ProjectGSMAUI.Api.Data
 
                 entity.HasOne(d => d.MaVeNavigation).WithMany(p => p.ChiTietHoaDons)
                     .HasForeignKey(d => d.MaVe)
-                    .HasConstraintName("FK__ChiTietHo__MaVe__59FA5E80");
+                    .HasConstraintName("FK123");
 
                 entity.HasOne(d => d.MaHoaDonNavigation).WithMany(p => p.ChiTietHoaDons)
                     .HasForeignKey(d => d.MaHoaDon)
-                    .HasConstraintName("FK__ChiTietHo__MaHoa__5AEE82B9");
+                    .HasConstraintName("FK321");
             });
+            modelBuilder.Entity<ChiTietHoaDon1>(entity =>
+            {
+                entity.HasKey(e => e.MaChiTietHoaDon).HasName("PK3333");
 
+                entity.ToTable("ChiTietHoaDon1");
+
+                entity.Property(e => e.MaChiTietHoaDon).ValueGeneratedOnAdd();
+
+                entity.HasOne(d => d.SanPhamNavigation).WithMany(p => p.ChiTietHoaDons)
+                    .HasForeignKey(d => d.MaSanPham)
+                    .HasConstraintName("FK222222222");
+
+                entity.HasOne(d => d.MaHoaDonNavigation).WithMany(p => p.ChiTietHoaDons1)
+                    .HasForeignKey(d => d.MaHoaDon)
+                    .HasConstraintName("FKAdWAF9");
+            });
+            modelBuilder.Entity<ChiTietHoaDon2>(entity =>
+            {
+                entity.HasKey(e => e.MaChiTietHoaDon).HasName("PK33333");
+
+                entity.ToTable("ChiTietHoaDon2");
+
+                entity.Property(e => e.MaChiTietHoaDon).ValueGeneratedOnAdd();
+
+                entity.HasOne(d => d.ComboNavigation).WithMany(p => p.ChiTietHoaDons)
+                    .HasForeignKey(d => d.MaCombo)
+                    .HasConstraintName("FK312321");
+
+                entity.HasOne(d => d.MaHoaDonNavigation).WithMany(p => p.ChiTietHoaDons2)
+                    .HasForeignKey(d => d.MaHoaDon)
+                    .HasConstraintName("FK1231241");
+            });
             modelBuilder.Entity<Coupon>(entity =>
             {
                 entity.HasKey(e => e.Id).HasName("PK__Coupon__3214EC27700E1307");
@@ -426,80 +458,6 @@ namespace ProjectGSMAUI.Api.Data
                 new TheLoaiPhim { Id = "TLP004", TenTheLoai = "Hoạt Hình" },
                 new TheLoaiPhim { Id = "TLP005", TenTheLoai = "Khoa Học Viễn Tưởng" }
             );
-            modelBuilder.Entity<Phim>().HasData(
-                new Phim
-                {
-                    Id = 1,
-                    DaoDien = "Director A",
-                    GioiHanDoTuoi = 13,
-                    MoTa = "Action-packed movie about...",
-                    NgayKetThuc = new DateOnly(2024, 2, 28),
-                    NgayKhoiChieu = new DateOnly(2024, 1, 15),
-                    SoSuatChieu = 50,
-                    TenPhim = "Action Movie 1",
-                    TheLoai = "TLP001", // Action
-                    ThoiLuong = 120,
-                    TrangThai = 1
-                },
-                new Phim
-                {
-                    Id = 2,
-                    DaoDien = "Director B",
-                    GioiHanDoTuoi = 16,
-                    MoTa = "A romantic story about...",
-                    NgayKetThuc = new DateOnly(2024, 3, 15),
-                    NgayKhoiChieu = new DateOnly(2024, 2, 1),
-                    SoSuatChieu = 40,
-                    TenPhim = "Romantic Movie 1",
-                    TheLoai = "TLP002", // Romantic
-                    ThoiLuong = 110,
-                    TrangThai = 1
-
-                },
-                new Phim
-                {
-                    Id = 3,
-                    DaoDien = "Director C",
-                    GioiHanDoTuoi = 18,
-                    MoTa = "A terrifying horror film...",
-                    NgayKetThuc = new DateOnly(2024, 3, 31),
-                    NgayKhoiChieu = new DateOnly(2024, 3, 1),
-                    SoSuatChieu = 35,
-                    TenPhim = "Horror Movie 1",
-                    TheLoai = "TLP003", // Horror
-                    ThoiLuong = 95,
-                    TrangThai = 1
-                },
-                new Phim
-                {
-                    Id = 4,
-                    DaoDien = "Director D",
-                    GioiHanDoTuoi = 0, // All ages
-                    MoTa = "An animated adventure for...",
-                    NgayKetThuc = new DateOnly(2024, 4, 15),
-                    NgayKhoiChieu = new DateOnly(2024, 3, 20),
-                    SoSuatChieu = 15,
-                    TenPhim = "Animated Movie 1",
-                    TheLoai = "TLP004", // Animated
-                    ThoiLuong = 90,
-                    TrangThai = 1
-                },
-                new Phim
-                {
-                    Id = 5,
-                    DaoDien = "Director E",
-                    GioiHanDoTuoi = 13,
-                    MoTa = "A sci-fi epic about...",
-                    NgayKetThuc = new DateOnly(2024, 4, 30),
-                    NgayKhoiChieu = new DateOnly(2024, 4, 10),
-                    SoSuatChieu = 22,
-                    TenPhim = "Sci-Fi Movie 1",
-                    TheLoai = "TLP005", // Sci-fi
-                    ThoiLuong = 135,
-                    TrangThai = 1
-                }
-
-            );
 
             modelBuilder.Entity<Phong>().HasData(
                 new Phong { Id = 1, TenPhong = "Phòng 1", SoLuongGhe = 192, TinhTrang = 1 },
@@ -519,19 +477,7 @@ namespace ProjectGSMAUI.Api.Data
                 new KhungGio { Id = 6, GioBatDau = new TimeOnly(0, 15), GioKetThuc = new TimeOnly(2, 40) }
             );
             var seats = GetSeats();
-            modelBuilder.Entity<Ghe>().HasData(seats);
-            modelBuilder.Entity<LichChieu>().HasData(
-                new LichChieu { MaLichChieu = 1, NgayChieu = new DateOnly(2025, 1, 8), GioChieu = 1, MaPhim = 1, MaPhong = 1, GiaVe = 100000, TinhTrang = true },
-                new LichChieu { MaLichChieu = 2, NgayChieu = new DateOnly(2025, 1, 9), GioChieu = 2, MaPhim = 2, MaPhong = 2, GiaVe = 100000, TinhTrang = true },
-                new LichChieu { MaLichChieu = 3, NgayChieu = new DateOnly(2025, 1, 10), GioChieu = 3, MaPhim = 3, MaPhong = 3, GiaVe = 100000, TinhTrang = true },
-                new LichChieu { MaLichChieu = 4, NgayChieu = new DateOnly(2025, 1, 11), GioChieu = 4, MaPhim = 4, MaPhong = 4, GiaVe = 100000, TinhTrang = true },
-                new LichChieu { MaLichChieu = 5, NgayChieu = new DateOnly(2025, 1, 12), GioChieu = 5, MaPhim = 5, MaPhong = 5, GiaVe = 100000, TinhTrang = true },
-                new LichChieu { MaLichChieu = 6, NgayChieu = new DateOnly(2025, 1, 13), GioChieu = 6, MaPhim = 1, MaPhong = 6, GiaVe = 100000, TinhTrang = true },
-                new LichChieu { MaLichChieu = 7, NgayChieu = new DateOnly(2025, 1, 14), GioChieu = 1, MaPhim = 2, MaPhong = 1, GiaVe = 100000, TinhTrang = true },
-                new LichChieu { MaLichChieu = 8, NgayChieu = new DateOnly(2025, 1, 15), GioChieu = 2, MaPhim = 3, MaPhong = 2, GiaVe = 100000, TinhTrang = true },
-                new LichChieu { MaLichChieu = 9, NgayChieu = new DateOnly(2025, 1, 16), GioChieu = 3, MaPhim = 4, MaPhong = 3, GiaVe = 100000, TinhTrang = true },
-                new LichChieu { MaLichChieu = 10, NgayChieu = new DateOnly(2025, 1, 17), GioChieu = 4, MaPhim = 5, MaPhong = 4, GiaVe = 100000, TinhTrang = true }
-            );
+            modelBuilder.Entity<Ghe>().HasData(seats);           
         }
     }
 }

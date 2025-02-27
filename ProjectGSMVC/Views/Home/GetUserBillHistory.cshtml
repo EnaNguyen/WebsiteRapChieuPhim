@@ -4,8 +4,11 @@
 @{
     ViewData["Title"] = "Lịch Sử Giao Dịch";
 }
-
-<div style="margin-top: 200px;">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<div style="margin-top: 350px;">
     <h2 class="text-center mt-4">Lịch Sử Giao Dịch</h2>
 
     @if (Model != null && Model.Any())
@@ -13,42 +16,24 @@
         <table class="table table-striped mt-3">
             <thead class="table-dark">
                 <tr>
-                    <th>Mã Hóa Đơn</th>
-                    <th>Tên Phim</th>
-                    <th>Giờ Chiếu Phim</th>
-                    <th>Tên Người Dùng</th>
-                    <th>Mã Ghế</th>
-                    <th>Ngày Tạo Hóa Đơn</th>
+                    <th><h5>Hóa Đơn</h5></th>
+                    <th><h5>Tên Phim</h5></th>
+                    <th><h5>Chiếu Phim</h5> </th>
+                    <th><h5>Dịch vụ sử dụng</h5></th>
+                    <th><h5>Tổng Tiền</h5></th>
+                    <th><h5>Ngày Tạo Hóa Đơn</h5></th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var bill in Model)
                 {
                     <tr>
-                        <td>@bill.MaHoaDon</td>
-                        <td>@bill.TenPhim</td>
-                        <td>@bill.GioDatPhim.ToString("dd/MM/yyyy HH:mm")</td>
-                        <td>@bill.TenUser</td>
-                        <td>
-                            <div style="display:inline">
-                                @foreach (var notitem in bill.MaGhe)
-                                {
-                                    <div style="display: flex;
-                                                justify-content: center;
-                                                align-items: center;
-                                                border-radius: 5px;
-                                                border: 1px solid black;
-                                                width: 50px;
-                                                height: 40px;
-                                                font-weight: bold;
-                                                background-color: #f8f9fa;
-                                                box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);">
-                                        @notitem
-                                    </div>
-                                }
-                           </div>
-                        </td>
-                        <td>@bill.NgayTaoHoaDon.ToString("dd/MM/yyyy")</td>
+                        <td><h5>@bill.MaHoaDon</h5></td>
+                        <td><h5>@bill.TenPhim</h5></td>
+                        <td><h5>@bill.GioDatPhim.ToString("dd/MM/yyyy HH:mm")</h5></td>
+                        <td><button data-id="@bill.MaHoaDon" data-bs-toggle="modal" data-bs-target="#myModal">Bấm để xem thêm <i class="fa-solid fa-magnifying-glass"></i></button> </td>
+                        <td><h5>@bill.TongTien VND</h5> </td>
+                        <td><h5>@bill.NgayTaoHoaDon.ToString("dd/MM/yyyy")</h5></td>
                     </tr>
                 }
             </tbody>
@@ -61,3 +46,109 @@
         </div>
     }
 </div>
+<div class="modal" id="myModal">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title" style="font-size: 50px; font-weight: bold">Chi tiết dịch vụ sử dụng</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-4 text-center d-flex flex-column justify-content-center align-items-center" style="border: 1px solid black; border-radius: 5px; width: 350px;height: 600px">
+                            <h5 class="modal-title">Ghế Đã đặt</h5>
+                            <div class="GheList"></div>
+                        </div>
+                        <div class="col-md-4 text-center d-flex flex-column justify-content-center align-items-center" style="margin-left: 30px;border: 1px solid black; border-radius: 5px; width: 350px;height: 600px">
+                            <h5 class="modal-title">Bắp nước đã mua</h5>
+                            <div class="ListSanPham"></div>
+                        </div>
+                        <div class="col-md-4" style="margin-left: 30px;width: 350px">
+                            <div class="row text-center d-flex flex-column justify-content-center align-items-center" style="border: 1px solid black; border-radius: 5px;height: 280px">
+                                <h5 class="modal-title">Combo kèm theo</h5>
+                                <div class="ListCombo"></div>
+                            </div>
+                            <br />
+                            <div class="row text-center d-flex flex-column justify-content-center align-items-center" style="border: 1px solid black; border-radius: 5px;height: 280px; margin-top: 40px">
+                                <h5 class="modal-title">Voucher Đã sử dụng</h5>
+                                <div class="KhuyenMai"></div>
+                            </div>
+                            <br />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+    let bills = @Html.Raw(Json.Serialize(Model));
+
+    document.querySelectorAll('[data-bs-target="#myModal"]').forEach(button => {
+        button.addEventListener('click', function () {
+            let id = parseInt(this.dataset.id);
+            let bill = bills.find(b => b.maHoaDon === id);
+            console.log(bill)
+            if (bill) {
+                // Ghế đã đặt
+                let GheHtml = bill.maGhe.map(g => `<span class="badge bg-primary me-1" style="width: 50px; height: 30px; margin-left: 10px; font-size: 20px">${g}</span>`).join("");
+                document.querySelector(".modal-body .GheList").innerHTML = GheHtml;
+
+                // Bắp nước
+                let SanPhamHtml = bill.sanPhamList.map(s => `<span>${s.tenSanPham} - Số Lượng: ${s.soLuong}</span><br>`).join("");
+                document.querySelector(".modal-body .ListSanPham").innerHTML = SanPhamHtml;
+
+                // Combo
+                let ComboHtml = bill.comboList.map(c => `<span>${c.tenComBo} - Số Lượng :${c.soLuong}</span><br>`).join("");
+                document.querySelector(".modal-body .ListCombo").innerHTML = ComboHtml;
+
+                // Voucher
+                let voucherHtml = bill.giamGia ? `<span>${bill.giamGia.maNhap} - Giá Trị: ${bill.giamGia.percent}%</span>` : `<span>Không sử dụng Voucher</span>`;
+                document.querySelector(".modal-body .KhuyenMai").innerHTML = voucherHtml;
+            }
+        });
+    });
+</script>
+<style>
+    button {
+        font-size: 20px;
+        width: 580px;
+        height: 40px;
+        border-radius: 5px;
+        color: black;
+    }
+
+    span {
+        font-size: 20px;
+    }
+
+    h5 {
+        font-size: 20px;
+        text-decoration: underline;
+        text-align: center;
+    }
+
+    h2 {
+        font-size: 50px;
+    }
+
+    .td {
+        font-size: 20px
+    }
+
+    .modal-title {
+        text-align: center;
+        width: 100%;
+    }
+</style>

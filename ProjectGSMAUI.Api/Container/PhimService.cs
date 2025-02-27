@@ -237,7 +237,7 @@ namespace ProjectGSMAUI.Api.Container
                 {
                     Id = item.Id,
                     TenPhim = item.TenPhim,
-                    TheLoai = item.TheLoai,
+                    TheLoai = _context.TheLoaiPhims.Where(g => g.Id.Trim() == item.TheLoai.Trim()).Select(h => h.TenTheLoai).FirstOrDefault() ?? null,
                     ThoiLuong = item.ThoiLuong,
                     DaoDien = item.DaoDien,
                     GioiHanDoTuoi = item.GioiHanDoTuoi,

@@ -6,6 +6,10 @@ namespace ProjectGSMAUI.Api.Services
 {
     public interface ICheckOutServices
     {
-        Task<APIResponse> CreateDatVe(List<DatVeCreator> data);
+        Task<int> CreateDatVe(HoaDonCreator data);
+        Task<APIResponse> OrderSanPham(List<SanPhamBuying> data);
+        Task<List<ComboView>> ListCombo();
+        Task<APIResponse> OrderCombo(List<ComboBuying> data);
+
     }
 }

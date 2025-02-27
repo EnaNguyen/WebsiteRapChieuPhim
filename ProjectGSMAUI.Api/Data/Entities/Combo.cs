@@ -11,5 +11,6 @@ namespace ProjectGSMAUI.Api.Data.Entities
         public string MoTa { get; set; } 
         public string HinhAnh { get; set; }
         public ICollection<ChiTietCombo> ChiTietCombos { get; set; } = new List<ChiTietCombo>();
+        public virtual ICollection<ChiTietHoaDon2> ChiTietHoaDons { get; set; } = new List<ChiTietHoaDon2>();
     }
 }

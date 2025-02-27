@@ -18,5 +18,7 @@ namespace ProjectGSMAUI.Api.Data.Entities
         public byte[]? HinhAnh { get; set; }
 
         public ICollection<ChiTietCombo> ChiTietCombos { get; set; } = new List<ChiTietCombo>();
+        public virtual ICollection<ChiTietHoaDon1> ChiTietHoaDons { get; set; } = new List<ChiTietHoaDon1>();
+
     }
 }

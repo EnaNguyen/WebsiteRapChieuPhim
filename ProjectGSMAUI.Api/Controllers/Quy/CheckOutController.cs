@@ -22,10 +22,27 @@ namespace ProjectGSMAUI.Api.Controllers.Quy
             this.mapper = mapper;
         }
         [HttpPost("CreateDatVe")]
-        public async Task<IActionResult> CreateDatVe(List<DatVeCreator> datVe)
+        public async Task<IActionResult> CreateDatVe(HoaDonCreator datVe)
         {
-            Console.WriteLine(datVe);
             var data = await this.service.CreateDatVe(datVe);
+            return Ok(data);
+        }
+        [HttpPost("OrderSanPham")]
+        public async Task<IActionResult> OrderSanPham(List<SanPhamBuying> datVe)
+        {
+            var data = await this.service.OrderSanPham(datVe);
+            return Ok(data);
+        }
+        [HttpGet("ListCombo")]
+        public async Task<IActionResult> ListCombo()
+        {
+            var data = await this.service.ListCombo();
+            return Ok(data);
+        }
+        [HttpPost("OrderCombo")]
+        public async Task<IActionResult> OrderCombo(List<ComboBuying> datVe)
+        {
+            var data = await this.service.OrderCombo(datVe);
             return Ok(data);
         }
     }

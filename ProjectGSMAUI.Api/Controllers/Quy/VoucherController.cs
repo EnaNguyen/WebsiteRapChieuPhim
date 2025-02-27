@@ -76,5 +76,17 @@ namespace ProjectGSMAUI.Api.Controllers.Quy
 
             return Ok(data);
         }
+        [HttpGet("Used")]
+        public async Task<IActionResult> Used(string ma)
+        {
+            var data = await this.service.Used(ma);
+            return Ok(data);
+        }
+        [HttpGet("StatusUpdate")]
+        public async Task<IActionResult> StatusUpdate(string ma)
+        {
+            var data = await this.service.StatusUpdate(ma);
+            return Ok(data);
+        }
     }
 }

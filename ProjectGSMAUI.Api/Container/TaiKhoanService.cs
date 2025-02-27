@@ -252,7 +252,7 @@ namespace ProjectGSMAUI.Api.Container
 
 
                 Tk.TenNguoiDung = data.TenNguoiDung;
-                Tk.MatKhau = PasswordHasher.HashPassword(data.MatKhau);
+                Tk.MatKhau = data.MatKhau;
                 Tk.TenTaiKhoan = data.TenTaiKhoan;
                 Tk.Email = data.Email;
                 Tk.Sdt = data.Sdt;
@@ -371,7 +371,7 @@ namespace ProjectGSMAUI.Api.Container
                 {
                     IdtaiKhoan = "TK" + maxMaAdmin.ToString("000"),
                     TenNguoiDung = data.TenNguoiDung,
-                    MatKhau = PasswordHasher.HashPassword(data.MatKhau),
+                    MatKhau = data.MatKhau,
                     TenTaiKhoan = data.TenTaiKhoan,
                     Email = data.Email,
                     Sdt = data.Sdt,

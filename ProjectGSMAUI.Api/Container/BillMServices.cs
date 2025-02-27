@@ -59,9 +59,6 @@ namespace ProjectGSMAUI.Api.Container
 
             return await Task.FromResult(_response);
         }
-
-
-
         // Phương thức lấy hóa đơn theo ID
         public async Task<Billmodal> GetByID(int id)
         {
@@ -260,7 +257,15 @@ namespace ProjectGSMAUI.Api.Container
                 {
                    BillHistoryModal addto = new BillHistoryModal();
                    addto.MaHoaDon = item.MaHoaDon;
-                   addto.TenUser = item.MaKhachHang;
+                   addto.TongTien = item.TongTien??0;
+                   addto.TenUser = _context.TaiKhoans.Where(g=>g.IdtaiKhoan.Trim()==item.MaKhachHang.Trim()).Select(g=> g.TenNguoiDung).FirstOrDefault();
+                   var Voucher = _context.Coupons.Where(g=>g.Id == item.MaGiamGia).FirstOrDefault();
+                   var Percent = _context.GiamGia.Where(g=>g.MaGiamGia==Voucher.MaGiamGia).FirstOrDefault();
+                   GiamGiaUsed discountInfo = new GiamGiaUsed();
+                    discountInfo.MaNhap = Voucher.MaNhap;
+                    discountInfo.Percent = Percent.GiaTri??0;
+                    addto.GiamGia = discountInfo;
+                   //var Percent = _context.GiamGia.Where(g=>g.MaGiamGia)
                     List<string> ListGhe = new List<string>();
                    var CTHD = _context.ChiTietHoaDons.Where(g => g.MaHoaDon==item.MaHoaDon).Select(h=>h.MaVe).ToList();
                    for(int i=0;i<CTHD.Count; i++)
@@ -284,8 +289,34 @@ namespace ProjectGSMAUI.Api.Container
                         addto.GioDatPhim = ngayGioChieu;
                          
                     }
-                   addto.MaGhe = ListGhe;
-                   model.Add(addto);
+                    var CTHD1 = _context.ChiTietHoaDon1s.Where(g => g.MaHoaDon == item.MaHoaDon).ToList();
+                    List<SanPhamDaMua> SanPhamDaMua = new List<SanPhamDaMua>(); 
+                    for(int i=0; i<CTHD1.Count; i++)
+                    {
+                        SanPhamDaMua spBuyed = new SanPhamDaMua();
+                        int soLuong = CTHD1[i].SoLuong ?? 0;
+                        var SanPham = _context.SanPhams.Where(h => h.Id == CTHD1[i].MaSanPham).FirstOrDefault();
+                        spBuyed.TenSanPham = SanPham.TenSanPham;
+                        spBuyed.SoLuong = soLuong;
+                        spBuyed.Gia = soLuong * (int)SanPham.Gia;
+                        SanPhamDaMua.Add(spBuyed);
+                    }
+                    var CTHD2 = _context.ChiTietHoaDon2s.Where(g => g.MaHoaDon == item.MaHoaDon).ToList();
+                    List<ComboDaMua> comboDaMuas = new List<ComboDaMua>();
+                    for(int i=0; i<CTHD2.Count; i++)
+                    {
+                        ComboDaMua cbBuyed = new ComboDaMua();
+                        int soLuong = CTHD2[i].SoLuong ?? 0;
+                        var Combo = _context.Combos.Where(h => h.Id == CTHD2[i].MaCombo).FirstOrDefault();
+                        cbBuyed.TenComBo = Combo.TenCombo;
+                        cbBuyed.SoLuong = soLuong;
+                        cbBuyed.Gia = soLuong * (int)Combo.Gia;
+                        comboDaMuas.Add(cbBuyed);
+                    }    
+                addto.MaGhe = ListGhe;
+                addto.SanPhamList = SanPhamDaMua;
+                addto.ComboList = comboDaMuas;
+                model.Add(addto);
                 }    
                 return model;
             }
@@ -295,6 +326,5 @@ namespace ProjectGSMAUI.Api.Container
                 throw;
             }
         }
-
     }
 }

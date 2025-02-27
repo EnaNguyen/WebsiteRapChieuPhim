@@ -3,7 +3,7 @@
 
     ViewData["Title"] = "Home Page";
     var ListPhim = ViewData["ListPhim"] as List<PhimView>;
-
+    var ListCombo = ViewData["ListCombo"] as List<ComboView>;
     Layout = "~/Views/Shared/_Layout.cshtml";
     var thangHienTai = DateTime.Now.Month;
     var namHienTai = DateTime.Now.Year;
@@ -71,7 +71,7 @@ else if (TempData["ErrorMessage"] != null)
     }
 
 </style>
-<div class="fullwidth-slider">
+<div class="fullwidth-slider" style="color: white">
     <div id="headerslider" class="carousel slide">
         <ol class="carousel-indicators">
             @for (int i = 0; i < Model.Count; i++)
@@ -181,13 +181,13 @@ else if (TempData["ErrorMessage"] != null)
     <div class="container">
         <div class="row order-content">
             <div class="col-sm-8 col-xs-12 seat_content ph0">
-                <h2>order a ticket</h2>
+                <h2 style="font-family: 'Arial', 'Roboto', sans-serif">Đặt Vé</h2>
                 <div class="entry-order-content">
                     <form id="msform" name="msform">
                         <!-- fieldsets -->
                         <fieldset id="Tab1">
                             <div class="wpc-content">                               
-                                <h3 class="mt3">Tên Phim</h3>
+                                <h3 class="mt3" style="font-family: 'Arial', 'Roboto', sans-serif">Tên Phim</h3>
                                 <select id="TenPhim">
                                     @if (ListPhim != null)
                                     {
@@ -201,9 +201,9 @@ else if (TempData["ErrorMessage"] != null)
                                         }
                                     }
                                 </select>
-                                <h3 class="mt3">Ngày chiếu phim</h3>
+                                <h3 class="mt3" style="font-family: 'Arial', 'Roboto', sans-serif">Ngày chiếu phim</h3>
                                 <input type="date" class="datetime" id="NgayDatVe" />
-                                <h3 class="mt3">Giờ chiếu</h3>                                
+                                <h3 class="mt3" style="font-family: 'Arial', 'Roboto', sans-serif">Giờ chiếu</h3>
                             </div>                         
                         </fieldset>
                         <fieldset class="seat-content" style="left: 25%">
@@ -217,15 +217,15 @@ else if (TempData["ErrorMessage"] != null)
                 </div>
             </div>
             <div class="col-sm-4 col-xs-12 order_sidebar ph0">
-                <h2>Thông tin đặt vé</h2>
+                <h2 style="font-family: 'Arial', 'Roboto', sans-serif">Thông tin đặt vé</h2>
                 <div class="order-details">
-                    <span>Tên Phim : </span><p class="ShowInfo" id="PhimDaChon"> </p>
-                    <span>Ngày Chiếu: </span>  <p class="ShowInfo"  id="NgayChieuPhim"></p>
-                    <span>Giờ Chiếu: </span> <p class="ShowInfo" id="KhungGioChieu"></p>
-                    <span>Ghế Ngồi: </span>
+                    <span style="font-family: 'Arial', 'Roboto', sans-serif">Tên Phim : </span><p class="ShowInfo" id="PhimDaChon" style="font-family: 'Arial', 'Roboto', sans-serif"> </p>
+                    <span style="font-family: 'Arial', 'Roboto', sans-serif">Ngày Chiếu: </span>  <p class="ShowInfo" id="NgayChieuPhim" style="font-family: 'Arial', 'Roboto', sans-serif"></p>
+                    <span style="font-family: 'Arial', 'Roboto', sans-serif">Giờ Chiếu: </span> <p class="ShowInfo" id="KhungGioChieu" style="font-family: 'Arial', 'Roboto', sans-serif"></p>
+                    <span style="font-family: 'Arial', 'Roboto', sans-serif">Ghế Ngồi: </span>
                     <ul id="selected-seats"></ul>
-                    <div><span>Số lượng vé:</span><b><p class="ShowInfo" id="counter">0</p></b></div>
-                    <div><span>Tổng Tiền: </span><b><p class="ShowInfo"  id="total">0</p>&nbsp; VND</b></div>
+                    <div><span style="font-family: 'Arial', 'Roboto', sans-serif">Số lượng vé:</span><b><p class="ShowInfo" id="counter">0</p></b></div>
+                    <div><span style="font-family: 'Arial', 'Roboto', sans-serif">Tổng Tiền: </span><b><p class="ShowInfo" id="total">0</p>&nbsp; VND</b></div>
                 </div>
                 <a href="javascript:;" class="close-window"><i class="fa fa-times"></i></a>
             </div>
@@ -233,39 +233,119 @@ else if (TempData["ErrorMessage"] != null)
     </div>
 </div>
 <div class="modal" id="myModal" style="font-size:2u">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
 
             <!-- Modal Header -->
             <div class="modal-header">
-                <h2 class="modal-title" style="font-size:40px; padding-left: 250px">Xác nhận đặt vé</h2>
+                <h2 class="modal-title" style="font-size:40px; padding-left: 350px">Xác nhận đặt vé</h2>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
             <!-- Modal body -->
             <div class="modal-body">
                 <div class="container">
-                    <div class="row">
+                    <div class="row">                       
                         <div class="col-md-6">
+                            <div class="row ThucAn">
+                                <h2>Thức Ăn Đi Kèm</h2>
+                                <h3 style="color:darkorange">Bắp</h3>
+                                <div style="border: 1px solid black; border-radius: 5px; color: black; padding: 10px;">
+                                    <label>
+                                        <input type="checkbox" name="bap" value="2" class="checkbox3"> Nhỏ
+                                    </label>
+                                    <input type="number" data-id="1" name="soluong_bap_nho" min="0" value="0" class="quantity" disabled>
+
+                                    <label>
+                                        <input type="checkbox" name="bap" value="3" class="checkbox3"> Vừa
+                                    </label>
+                                    <input type="number" data-id="2" name="soluong_bap_vua" min="0" value="0" class="quantity" disabled>
+
+                                    <label>
+                                        <input type="checkbox" name="bap" value="4" class="checkbox3"> Lớn
+                                    </label>
+                                    <input type="number" data-id="3" name="soluong_bap_lon" min="0" value="0" class="quantity" disabled>
+                                </div>
+                                <br/>
+                                <br/>
+                                <h3 style="color:darkorange">Nước</h3>
+                                <div style="border: 1px solid black; border-radius: 5px; color: black; padding: 10px;">
+                                    <label>
+                                        <input type="checkbox" name="nuoc" value="4" class="checkbox3"> Coca
+                                    </label>
+                                    <input type="number" data-id="4" name="soluong_nuoc_coca" min="0" value="0" class="quantity" disabled>
+
+                                    <label>
+                                        <input type="checkbox" name="nuoc" value="5" class="checkbox3"> Pepsi
+                                    </label>
+                                    <input type="number" data-id="5" name="soluong_nuoc_pepsi" min="0" value="0" class="quantity" disabled>
+                                </div>
+                            </div>            
+                            <br/>
+                            <br/>
+                            <div class="row">
+                                <h2>Combo Có sẵn</h2>
+                                <div class="container">
+                                    <div class="row">
+                                        @foreach (var item in ListCombo)
+                                        {
+                                            <div class="col-md-6 SummaryInfo">
+                                                <label>
+                                                    <input type="checkbox" class="checkbox4"> @item.Name
+                                                </label>                                              
+                                                <input type="number" data-id="@item.Id" data-Gia="@item.Gia" name="soluong_bap_nho" min="0" value="0" class="quantity1" style="width: 100px" disabled>
+                                                <br />
+                                                <div class="ImageWrapper">
+                                                    <img src="data:image/jpeg;base64,@item.Hinh" style="max-width:100px; max-height:50px;">
+                                                    <h5></h5>
+                                                    <h6>Giá: @item.Gia</h6>
+                                                    <div class="DetailInfo">
+                                                        @foreach (var item2 in item.sanPhams)
+                                                        {
+                                                            <div style="display: flex; justify-content: space-between; width: 350px; align-items: center;">
+                                                                <h5 style="margin: 0;"><strong>@item2.Name</strong></h5>
+                                                                <h5 style="margin: 0;"><strong>Số Lượng: @item2.SoLuong</strong></h5>
+                                                            </div>
+                                                            <br />
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                       
+                        <div class="col-md-6" style="border: 1px solid black; border-radius: 5px; padding-top: 20px;padding-left: 50px">
                             <div id="orderdetail2" style="padding-left: 100px">
-                                <span>1. Tên Phim : </span><p class="ShowInfo" id="PhimDaChon1"> </p>
-                                <span>2. Ngày Chiếu: </span>  <p class="ShowInfo" id="NgayChieuPhim1"></p>
-                                <span>3. Giờ Chiếu: </span> <p class="ShowInfo" id="KhungGioChieu1"></p>
-                                <span>4. Ghế Ngồi: </span>
+                                <span style="font-size:20px">1. Tên Phim : <p class="ShowInfo" id="PhimDaChon1"> </p> </span>
+                                <span style="font-size:20px">2. Ngày Chiếu:  <p class="ShowInfo" id="NgayChieuPhim1"></p></span>
+                                <span style="font-size:20px">3. Giờ Chiếu: <p class="ShowInfo" id="KhungGioChieu1"></p> </span>
+                                <span style="font-size:20px">4. Ghế Ngồi: </span>
                                 <ul id="selected-seats1" style="font-size: 20px"></ul>
                                 <div style="display:inline"><span style="display:inline">5. Số lượng vé:</span><b style="display:inline; font-size:20px"><p class="ShowInfo" id="counter1" style="display:inline;">0</p> Vé</b></div>
                                 <br />
                                 <div style="display:inline">
-                                    <span style="display:inline">6. Tổng Tiền: </span>
+                                    <span style="display:inline;font-size:20px">6. Tổng Tiền: </span>
                                     <b style="display:inline; font-size:20px">
-                                        <p class="ShowInfo" id="total1" style="display:inline;">0</p> VND
+                                        <p class="ShowInfo" id="total1" style="display:inline;font-size:20px">0</p> VND
                                     </b>
                                 </div>
-                            </div>                           
-                        </div>
-                        <div class="col-md-6" style="border: 1px solid black; border-radius: 5px; padding-top: 20px;padding-left: 50px">
-                            <h1 style="font-size: 20px; padding-left:10px">Chọn phương thức thanh toán</h1>
-                            <button class="btn btn-primary" style="height: 40px; width: 300px; font-size: 20px;" id="TTVNPay">Thanh Toán Bằng VNPay</button>
+                            </div>
+                            <div class="row" style="height:150px">
+                                <h5 style="font-size: 20px"><strong>Hãy nhập mã khuyến mại ( Nếu có )</strong></h5>
+                                <div style="display: flex; flex-direction: column; align-items: center; gap: 10px; height: 80px;margin-top: -40px">
+                                    <iframe id="discountFrame" srcdoc="<html><body style='margin:0; display:flex; justify-content:center; align-items:center; height:80px;'><input type='text' style='width:100%;height:40px;border-radius: 5px' id='MaGiamGia1'></body></html>"
+                                            width="200" height="30" frameborder="0"></iframe>
+                                    <br />
+                                    <button class="btn btn-success" style="height: 40px; width: 200px; border-radius: 5px;margin-top: -40px; display: flex; align-items: center; justify-content: center; padding: 0 15px;"  id="ApplyDiscount">Áp dụng</button>
+                                    <span style="color:lawngreen" id="DiscountResult"></span>
+                                </div>
+                            </div>
+                            <div class="row" style="padding-bottom: 50px">
+                                <h1 style="font-size: 20px; padding-left:10px">Chọn phương thức thanh toán</h1>
+                                <button class="btn btn-primary" style="height: 40px; width: 300px; font-size: 20px;margin-left: 30px" id="TTVNPay">Thanh Toán Bằng VNPay</button>
+                            </div>
                         </div>
                     </div>                   
                 </div>
@@ -317,17 +397,95 @@ else if (TempData["ErrorMessage"] != null)
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     $(document).ready(function () {
+        var baseTicketCost = parseInt($("#total").text()) || 0;
+        var foodTotal = 0;
+        var comboTotal = 0;
+        var DiscountPercent = 1;
+        var MaGiamGiaApDung = '';
+        console.log(baseTicketCost);
+        // Hàm tính lại tổng tiền bao gồm giá vé và giá thức ăn
+        document.querySelectorAll('.checkbox3').forEach(function (checkbox) {
+            checkbox.addEventListener('change', function () {
+                const quantityInput = this.closest('label').nextElementSibling;
+                if (this.checked) {
+                    quantityInput.disabled = false;
+                } else {
+                    quantityInput.disabled = true;
+                    quantityInput.value = 0;
+                    recalcTotal();
+                }
+            });
+        });
+        document.querySelectorAll('.checkbox4').forEach(function (checkbox) {
+            checkbox.addEventListener('change', function () {
+                const quantityInput = this.closest('label').nextElementSibling;
+                if (this.checked) {
+                    quantityInput.disabled = false;
+                } else {
+                    quantityInput.disabled = true;
+                    quantityInput.value = 0;
+                    recalcTotal1();
+                }
+            });
+        });
+        function recalcTotal() {
+            foodTotal = 0;
+            // Duyệt qua các checkbox được tick trong phần Thức Ăn
+            $(".ThucAn .checkbox3:checked").each(function () {
+                var id = parseInt($(this).val());
+                var quantity = parseInt($(this).closest("label").next("input.quantity").val()) || 1;
+                var donGia = 0;
+                switch (id) {
+                    case 2:
+                        donGia = 30000;
+                        break;
+                    case 3:
+                        donGia = 50000;
+                        break;
+                    case 4:
+                        donGia = 70000;
+                        break;
+                    case 5:
+                    case 6:
+                        donGia = 30000;
+                        break;
+                }
+                foodTotal += quantity * donGia;
+            });
+            // Tổng tiền = giá vé cơ bản + tổng tiền thức ăn
+            var newTotal = (baseTicketCost + foodTotal + comboTotal) / (DiscountPercent);
+            $("#total1").text(newTotal);
+            console.log(newTotal);
+        }
+        function recalcTotal1() {
+            comboTotal = 0;
+            $(".quantity1").each(function () {
+                var gia = parseInt($(this).attr("data-Gia")) || 0;
+                var soLuong = parseInt($(this).val()) || 0;
+                comboTotal += gia * soLuong;
+            });
+            var total = (baseTicketCost + comboTotal + foodTotal) / (DiscountPercent);
+            $("#total1").text(total);
+        }
+
+        // Gọi hàm tính lại khi giá trị input thay đổi
+        $(".quantity1").on("change", function () {
+            recalcTotal1();
+        });
+        $(".quantity").on("change", function () {
+            recalcTotal();
+        });
         var caChieuDaChon = '';
         function loadAvailableDates() {
             var selectedMovie = $("#TenPhim option:selected");
-            var movieName = selectedMovie.text(); 
+            var movieName = selectedMovie.text();
             var minDate = selectedMovie.data("ngaykhoichieu");
             var maxDate = selectedMovie.data("ngayketthuc");
             var today = new Date().toISOString().split('T')[0];
             if (minDate < today) {
                 minDate = today;
             }
-            $("#PhimDaChon").text(movieName); 
+            $("#PhimDaChon").text(movieName);
             $("#PhimDaChon1").text(movieName);
             $("#NgayDatVe").attr("min", minDate);
             $("#NgayDatVe").attr("max", maxDate);
@@ -359,8 +517,8 @@ else if (TempData["ErrorMessage"] != null)
                             $("#Tab1").append(`<input data-MaLichChieu="${item.maLichChieu}" data-id="${maGioChieu}" type="button" name="next" class="next action-button" value="${gioChieu}" style="height:40px;size: 1.5u"/>`);
                         });
                         $('.entry-order-content').each(function () {
-                            var current_fs, next_fs, previous_fs; 
-                            var left, opacity, scale; 
+                            var current_fs, next_fs, previous_fs;
+                            var left, opacity, scale;
                             var animating;
 
                             $(".next").on('click', function () {
@@ -368,7 +526,7 @@ else if (TempData["ErrorMessage"] != null)
                                 animating = true;
                                 caChieuDaChon = $(this).data("id");
                                 var LichChieu = $(this).data("malichchieu");
-                                var gioChieu = $(this).val();  
+                                var gioChieu = $(this).val();
                                 console.log(LichChieu);
                                 $("#KhungGioChieu").text(gioChieu);
                                 $("#KhungGioChieu1").text(gioChieu);
@@ -380,12 +538,7 @@ else if (TempData["ErrorMessage"] != null)
                                         response.forEach(function (id) {
                                             var element = document.getElementById(id);
                                             if (element) {
-                                                // Thay thế class 'available' thành 'selected'
                                                 element.classList.replace("available", "unavailable");
-                                                // Hoặc nếu muốn thêm một class khác, có thể dùng:
-                                                // element.classList.add("selected");
-                                                // Và nếu cần loại bỏ class 'available' thì dùng:
-                                                // element.classList.remove("available");
                                             }
                                         });
                                     }
@@ -394,8 +547,8 @@ else if (TempData["ErrorMessage"] != null)
                                     seat.classList.replace("selected", "available");
                                 });
                                 document.getElementById("counter").innerHTML = "0";
-                                $cart=null;
-                                $total=0;
+                                $cart = null;
+                                $total = 0;
                                 $counter = 0;
                                 document.getElementById("total").innerHTML = "0";
                                 document.getElementById("selected-seats").innerHTML = "";
@@ -418,9 +571,9 @@ else if (TempData["ErrorMessage"] != null)
                                     },
                                     easing: 'easeInOutBack'
                                 });
-                            });                       
+                            });
                             $(".submit").on('click', function () {
-                                
+
                             });
 
                         });
@@ -436,7 +589,7 @@ else if (TempData["ErrorMessage"] != null)
         }
 
         $("#TenPhim").change(function () {
-            loadAvailableDates();
+            loadAvailableVees();
         });
 
         $("#NgayDatVe").change(function () {
@@ -448,53 +601,121 @@ else if (TempData["ErrorMessage"] != null)
             var ShowGheNgoi = document.getElementById("selected-seats")
             var ShowGheNgoi1 = document.getElementById("selected-seats1")
             ShowGheNgoi1.innerHTML = ShowGheNgoi.innerHTML;
-        
-            // // Thu thập dữ liệu từ form
-            // var maPhim = $("#TenPhim").val();
-            // var ngayChieu = $("#NgayDatVe").val();
-            // var caChieu = caChieuDaChon;
-            // var ghe = seatIds;
-
-            // // Kiểm tra dữ liệu hợp lệ
-            // if (!maPhim || !ngayChieu || !caChieu || ghe.length === 0) {
-            //     Swal.fire({
-            //         icon: 'error',
-            //         title: `Bạn chưa chọn ghế!`,
-            //         text: 'Vui lòng chọn ít nhất 1 ghế trong số các ghế còn trống bên trái',
-            //         timer: 3000,
-            //         timerProgressBar: true,
-            //         showConfirmButton: false
-            //     });
-            //     return;
-            // }
-
-
-            // var datVeModel = {
-            //     MaPhim: maPhim,
-            //     NgayChieu: ngayChieu,
-            //     CaChieu: caChieu,
-            //     Ghe: ghe
-            // };
-            // // console.log(datVeModel)
-            // // Gửi yêu cầu AJAX đến controller MuaVe
-            // $.ajax({
-            //     url: '/MuaVe', Địa chỉ API
-            //     type: 'POST',
-            //     contentType: 'application/json',
-            //     data: JSON.stringify(datVeModel), //Chuyển đổi đối tượng thành chuỗi JSON
-            //     success: function (response) {
-            //         if (response) {
-            //             window.location.href = response;
-            //         } else {
-            //             alert("Có lỗi xảy ra khi đặt vé.");
-            //         }
-            //     },
-            //     error: function () {
-            //         alert("Đã xảy ra lỗi khi gửi yêu cầu.");
-            //     }
-            // });
+            baseTicketCost = parseInt($("#total").text()) || 0
+        });
+        $("#ApplyDiscount").on('click', function () {
+            var iframe = document.getElementById('discountFrame');
+            var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+            var discountCodeValue = innerDoc.getElementById('MaGiamGia1').value.trim();
+            console.log("Mã giảm giá: " + discountCodeValue);
+            MaGiamGiaApDung = discountCodeValue;
+            $.ajax({
+                url: "/Discount",
+                type: "GET",
+                data: { Ma: discountCodeValue },
+                success: function (data) {  
+                    if ($.isNumeric(data)) {
+                        $("#DiscountResult")
+                            .css("color", "green")
+                            .text("Đã áp dụng thành công: " + data + "% giảm giá");
+                            DiscountPercent = 1 + parseInt(data) / 100;
+                            recalcTotal1();
+                    } else {
+                        $("#DiscountResult")
+                            .css("color", "red")
+                            .text(data);
+                    }
+                },
+                error: function () {
+                    alert("Không thể tải thông tin phim.");
+                }
+            });
         });
         $("#TTVNPay").on('click', function () {
+            var sanPhamList = [];
+            var comboList = [];
+            $(".checkbox3:checked").each(function () {
+                var id = parseInt($(this).val());
+                var quantity = parseInt($(this).closest("label").next("input.quantity").val());
+                var donGia = 0;
+
+                switch (id) {
+                    case 2: 
+                        donGia = 30000;
+                        break;
+                    case 3: 
+                        donGia = 50000;
+                        break;
+                    case 4: 
+                        donGia = 70000;
+                        break;
+                    case 5: 
+                    case 6: 
+                        donGia = 30000;
+                        break;
+                }
+
+                if (!isNaN(quantity) && quantity > 0) {
+                    sanPhamList.push({ Id: id, quantity: quantity, DonGia: donGia });
+                }
+            });
+            $(".checkbox4:checked").each(function () {
+                var comboId = parseInt($(this).closest(".SummaryInfo").find("input.quantity1").data("id"));
+                var quantity = parseInt($(this).closest(".SummaryInfo").find("input.quantity1").val());
+                var donGia = parseInt($(this).closest(".SummaryInfo").find("input.quantity1").data("gia"));
+
+                if (!isNaN(quantity) && quantity > 0) {
+                    comboList.push({ Id: comboId, quantity: quantity, DonGia: donGia });
+                }
+            });
+            var maPhim = $("#TenPhim").val();
+            var ngayChieu = $("#NgayDatVe").val();
+            var caChieu = caChieuDaChon;
+            var ghe = seatIds;
+
+            // Kiểm tra dữ liệu hợp lệ
+            if (!maPhim || !ngayChieu || !caChieu || ghe.length === 0) {
+                Swal.fire({
+                    icon: 'error',
+                    title: `Bạn chưa chọn ghế!`,
+                    text: 'Vui lòng chọn ít nhất 1 ghế trong số các ghế còn trống bên trái',
+                    timer: 3000,
+                    timerProgressBar: true,
+                    showConfirmButton: false
+                });
+                return;
+            }
+            var TongTienSend = parseInt($("#total1").text().trim());
+            var datVeModel = {
+                MaPhim: maPhim,
+                NgayChieu: ngayChieu,
+                CaChieu: caChieu,
+                Ghe: ghe,
+                SanPham: sanPhamList,
+                Combo : comboList,
+                TongTien: TongTienSend,
+                Ma: MaGiamGiaApDung
+            };
+            console.log(datVeModel);
+            // Gửi yêu cầu AJAX đến controller MuaVe
+            $.ajax({
+                url: '/MuaVe', 
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(datVeModel), //Chuyển đổi đối tượng thành chuỗi JSON
+                success: function (response) {
+                    if (response) {
+                        window.location.href = response;
+                    } else {
+                        alert("Có lỗi xảy ra khi đặt vé.");
+                    }
+                },
+                error: function () {
+                    alert("Đã xảy ra lỗi khi gửi yêu cầu.");
+                }
+            });
+        });
+        $("#TempCode").on('click', function () {
             // Thu thập dữ liệu từ form
             var maPhim = $("#TenPhim").val();
             var ngayChieu = $("#NgayDatVe").val();
@@ -524,7 +745,7 @@ else if (TempData["ErrorMessage"] != null)
             // console.log(datVeModel)
             // Gửi yêu cầu AJAX đến controller MuaVe
             $.ajax({
-                url: '/MuaVe', 
+                url: '/MuaVe2',
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify(datVeModel), //Chuyển đổi đối tượng thành chuỗi JSON
@@ -543,7 +764,34 @@ else if (TempData["ErrorMessage"] != null)
         loadAvailableDates(); // Call on initial load
     });
 </script>
-
+<script>
+    document.querySelectorAll('.checkbox3').forEach(function (checkbox) {
+        checkbox.addEventListener('change', function () {
+            const quantityInput = this.closest('label').nextElementSibling;
+            if (this.checked) {
+                quantityInput.disabled = false;
+            } else {
+                quantityInput.disabled = true;
+                quantityInput.value = 0;
+                recalcTotal();
+            }
+        });
+    });
+</script>
+<script>
+    document.querySelectorAll('.checkbox4').forEach(function (checkbox) {
+        checkbox.addEventListener('change', function () {
+            const quantityInput = this.closest('label').nextElementSibling;
+            if (this.checked) {
+                quantityInput.disabled = false;
+            } else {
+                quantityInput.disabled = true;
+                quantityInput.value = 0;
+                recalcTotal1();
+            }
+        });
+    });
+</script>
 <script>
     var seatIds = [];
     const observer = new MutationObserver(function (mutations) {
@@ -627,7 +875,6 @@ else if (TempData["ErrorMessage"] != null)
     });
 </script>
 
-
 <!-- JavaScript để hiển thị trailer -->
 <script>
     document.querySelectorAll('.btn-trailer').forEach(function(btn) {
@@ -681,26 +928,23 @@ else if (TempData["ErrorMessage"] != null)
         dots[slideIndex - 1].className += " w3-white";
     }
 </script>
-
 <style>
     .seatCharts-seat
     {
         width: 40px;
     }
     .ShowInfo
-    {
-        margin-left: 50px;
-        font-size: 30px;
+    {     
+        font-size: 15px;
     }
     #orderdetail2 span
     {
         font-size: 20px;
         font-style: italic;
-        text-decoration: underline;
     }
 </style>
 <style>
-    body {
+    #myModal2 body {
         background-color: #000;
         color: #ffa500;
         font-family: 'Arial', sans-serif;
@@ -708,7 +952,7 @@ else if (TempData["ErrorMessage"] != null)
         padding: 20px;
     }
 
-    .movie-container {
+    #myModal2 .movie-container {
         max-width: 800px;
         margin: auto;
         background: #1a1a1a;
@@ -718,7 +962,7 @@ else if (TempData["ErrorMessage"] != null)
         text-align: center;
     }
 
-    .movie-title {
+    #myModal2 .movie-title {
         font-size: 28px;
         font-weight: bold;
         color: #ffa500;
@@ -726,30 +970,71 @@ else if (TempData["ErrorMessage"] != null)
         text-transform: uppercase;
     }
 
-    .movie-image img {
+    #myModal2 .movie-image img {
         width: 100%;
         height: auto;
         border-radius: 8px;
         border: 3px solid #ffa500;
     }
 
-    .movie-info {
+    #myModal2 .movie-info {
         text-align: left;
         font-size: 18px;
         margin-top: 20px;
     }
 
-        .movie-info p {
+    #myModal2 .movie-info p {
             margin: 8px 0;
         }
 
-    .movie-description {
+    #myModal2 .movie-description {
         font-style: italic;
         color: #ffcc80;
     }
 
-    strong {
+    #myModal2 strong {
         color: #ff4500;
     }
+    .ThucAn input{
+        width: 50px;
+    }
+    .ThucAn label{
+        color:black;
+        font-size: 15px;
+        font-weight: normal;
+    }
+    .quantity {
+        font-weight: normal;
+        font-size: 15px;
+    }
 
+    .entry-desc p{
+        color: white
+    }
+    .movie-info p{
+        color: white
+    }
+</style>
+<style>
+    .DetailInfo {
+        display: none;
+        position: absolute;
+        background: white;
+        padding: 10px;
+        border: 1px solid #ccc;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        z-index: 999;
+        width: 400px;
+    }
+
+    .ImageWrapper {
+        position: relative;
+        display: inline-block;
+    }
+
+        .ImageWrapper:hover .DetailInfo {
+            display: block;
+            top: 0;
+            left: 110%; 
+        }
 </style>
