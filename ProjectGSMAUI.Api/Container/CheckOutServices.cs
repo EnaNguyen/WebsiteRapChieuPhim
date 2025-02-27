@@ -28,17 +28,21 @@ namespace ProjectGSMAUI.Api.Container
             int MaxHoaDon = MaxHoaDonNullable + 1 ?? 0;
             try 
             {
-                
+                HoaDon newHD = new HoaDon();
+
+
+                newHD.MaHoaDon = MaxHoaDon;
+                newHD.MaKhachHang = data.ListCT[0].MaKhachHang;
+                newHD.TongTien = data.TongTien;
+                newHD.NgayXuat = DateOnly.FromDateTime(DateTime.Now);
+                newHD.TinhTrang = 1;
                 int TongTienHoaDon = 0;
-                HoaDon newHD = new HoaDon()
+                if (data.MaGiamGia != null && data.MaGiamGia!=0)
                 {
-                    MaHoaDon = MaxHoaDon,
-                    MaKhachHang = data.ListCT[0].MaKhachHang,
-                    TongTien = data.TongTien,
-                    NgayXuat = DateOnly.FromDateTime(DateTime.Now),
-                    TinhTrang = 1,
-                    MaGiamGia = data.MaGiamGia
-                };
+                    newHD.MaGiamGia = data.MaGiamGia;                  
+                }
+                else
+                    newHD.MaGiamGia = null;
                 _context.HoaDons.Add(newHD);
                 await _context.SaveChangesAsync();
                 foreach (var item in data.ListCT)

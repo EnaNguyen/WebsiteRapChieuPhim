@@ -260,11 +260,14 @@ namespace ProjectGSMAUI.Api.Container
                    addto.TongTien = item.TongTien??0;
                    addto.TenUser = _context.TaiKhoans.Where(g=>g.IdtaiKhoan.Trim()==item.MaKhachHang.Trim()).Select(g=> g.TenNguoiDung).FirstOrDefault();
                    var Voucher = _context.Coupons.Where(g=>g.Id == item.MaGiamGia).FirstOrDefault();
-                   var Percent = _context.GiamGia.Where(g=>g.MaGiamGia==Voucher.MaGiamGia).FirstOrDefault();
-                   GiamGiaUsed discountInfo = new GiamGiaUsed();
-                    discountInfo.MaNhap = Voucher.MaNhap;
-                    discountInfo.Percent = Percent.GiaTri??0;
-                    addto.GiamGia = discountInfo;
+                    if (Voucher != null)
+                    {
+                        var Percent = _context.GiamGia.Where(g => g.MaGiamGia == Voucher.MaGiamGia).FirstOrDefault();
+                        GiamGiaUsed discountInfo = new GiamGiaUsed();
+                        discountInfo.MaNhap = Voucher.MaNhap;
+                        discountInfo.Percent = Percent.GiaTri ?? 0;
+                        addto.GiamGia = discountInfo;
+                    }
                    //var Percent = _context.GiamGia.Where(g=>g.MaGiamGia)
                     List<string> ListGhe = new List<string>();
                    var CTHD = _context.ChiTietHoaDons.Where(g => g.MaHoaDon==item.MaHoaDon).Select(h=>h.MaVe).ToList();
