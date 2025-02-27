@@ -7,9 +7,11 @@ namespace ProjectGSMAUI.Api.Data.Entities
         [Key]
         public int Id { get; set; }
         public int ComboId { get; set; }
-        public Combo Combo { get; set; } = null!;
         public int SanPhamId { get; set; }
-        public SanPham SanPham { get; set; } = null!;
-        public int SoLuong { get; set; } 
+        public int SoLuong { get; set; }
+
+        // Thêm navigation properties
+        public Combo Combo { get; set; }
+        public SanPham SanPham { get; set; }
     }
 }

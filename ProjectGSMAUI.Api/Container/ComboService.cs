@@ -22,7 +22,7 @@ namespace ProjectGSMAUI.Api.Container
             _logger = logger;
         }
 
-        // ✅ Lấy tất cả Combo (Gồm luôn danh sách sản phẩm)
+        // ✅ Lấy tất cả Combo (Gồm luôn danh sách sản phẩm + tên sản phẩm)
         public async Task<List<ComboModal>> GetAll()
         {
             var combos = await _context.Combos
@@ -30,10 +30,12 @@ namespace ProjectGSMAUI.Api.Container
                 .ThenInclude(ct => ct.SanPham)
                 .ToListAsync();
 
-            return _mapper.Map<List<ComboModal>>(combos);
+            var comboList = _mapper.Map<List<ComboModal>>(combos);
+
+            return comboList;
         }
 
-        // ✅ Lấy Combo theo ID (Gồm luôn danh sách sản phẩm)
+        // ✅ Lấy Combo theo ID (Gồm luôn danh sách sản phẩm + tên sản phẩm)
         public async Task<ComboModal> GetById(int id)
         {
             var combo = await _context.Combos
@@ -41,25 +43,64 @@ namespace ProjectGSMAUI.Api.Container
                 .ThenInclude(ct => ct.SanPham)
                 .FirstOrDefaultAsync(c => c.Id == id);
 
-            return combo != null ? _mapper.Map<ComboModal>(combo) : null;
+            if (combo == null)
+                return null;
+
+            var comboModal = _mapper.Map<ComboModal>(combo);
+
+            // ✅ Gán tên sản phẩm vào từng ChiTietCombo
+            foreach (var ct in comboModal.ChiTietCombos)
+            {
+                var sanPham = await _context.SanPhams.FindAsync(ct.SanPhamId);
+                ct.TenSanPham = sanPham?.TenSanPham ?? "Không xác định";
+            }
+
+            return comboModal;
         }
 
         // ✅ Tạo mới Combo
-        public async Task<APIResponse> Create(ComboModal comboModal)
+        public async Task<APIResponse> Create(ComboCreate comboModal)
         {
+            using var transaction = await _context.Database.BeginTransactionAsync();
             var response = new APIResponse();
             try
             {
-                var combo = _mapper.Map<Combo>(comboModal);
-                await _context.Combos.AddAsync(combo);
+                Combo newCombo = new Combo()
+                {
+                    TenCombo = comboModal.TenCombo,
+                    Gia = comboModal.Gia,
+                    MoTa = comboModal.MoTa,
+                    HinhAnh = comboModal.HinhAnh,
+                };
+                
+                await _context.Combos.AddAsync(newCombo);
                 await _context.SaveChangesAsync();
 
+                foreach (var item in comboModal.ChiTietCombos)
+                {
+                    var sanPham = await _context.SanPhams.FindAsync(item.SanPhamId);
+                    if (sanPham != null)  // Kiểm tra sản phẩm có tồn tại không
+                    {
+                        ChiTietCombo newCT = new ChiTietCombo()
+                        {
+                            ComboId = newCombo.Id,   // Gán ID của Combo mới
+                            SanPhamId = item.SanPhamId,
+                            SoLuong = item.SoLuong
+                        };
+
+                        await _context.ChiTietCombos.AddAsync(newCT);
+                    }
+                }
+                await _context.SaveChangesAsync(); // Lưu thay đổi vào database
+                await transaction.CommitAsync();
+               
                 response.ResponseCode = 201;
                 response.Result = "Tạo combo thành công!";
-                _logger.LogInformation("Created new combo with ID: {ComboId}", combo.Id);
+                _logger.LogInformation("Created new combo with ID: {ComboId}", newCombo.Id);
             }
             catch (Exception ex)
             {
+                await transaction.RollbackAsync();
                 response.ResponseCode = 500;
                 response.ErrorMessage = ex.Message;
                 _logger.LogError(ex, "Error creating combo");
@@ -69,9 +110,11 @@ namespace ProjectGSMAUI.Api.Container
         }
 
         // ✅ Cập nhật Combo
-        public async Task<APIResponse> Update(int id, ComboModal comboModal)
+        public async Task<APIResponse> Update(int id, ComboCreate comboModal)
         {
+            using var transaction = await _context.Database.BeginTransactionAsync();
             var response = new APIResponse();
+
             try
             {
                 var existingCombo = await _context.Combos
@@ -85,36 +128,42 @@ namespace ProjectGSMAUI.Api.Container
                     return response;
                 }
 
-                // Cập nhật thông tin combo
+                // Cập nhật thông tin Combo
                 existingCombo.TenCombo = comboModal.TenCombo;
                 existingCombo.Gia = comboModal.Gia;
                 existingCombo.MoTa = comboModal.MoTa;
                 existingCombo.HinhAnh = comboModal.HinhAnh;
 
-                // Xóa các ChiTietCombo cũ (Cách 2)
-                if (existingCombo.ChiTietCombos != null && existingCombo.ChiTietCombos.Any())
+                // Xóa ChiTietCombo cũ
+                _context.ChiTietCombos.RemoveRange(existingCombo.ChiTietCombos);
+                await _context.SaveChangesAsync(); // Cập nhật vào database để tránh lỗi khóa ngoại
+
+                // Thêm ChiTietCombo mới
+                foreach (var item in comboModal.ChiTietCombos)
                 {
-                    foreach (var chiTiet in existingCombo.ChiTietCombos)
+                    var sanPham = await _context.SanPhams.FindAsync(item.SanPhamId);
+                    if (sanPham != null)
                     {
-                        _context.Entry(chiTiet).State = EntityState.Deleted;
+                        ChiTietCombo newCT = new ChiTietCombo()
+                        {
+                            ComboId = existingCombo.Id,
+                            SanPhamId = item.SanPhamId,
+                            SoLuong = item.SoLuong
+                        };
+                        await _context.ChiTietCombos.AddAsync(newCT);
                     }
                 }
 
-                // Thêm danh sách ChiTietCombo mới
-                existingCombo.ChiTietCombos = comboModal.ChiTietCombos
-                    .Select(ct => new ChiTietCombo
-                    {
-                        SanPhamId = ct.SanPhamId,
-                        SoLuong = ct.SoLuong
-                    }).ToList();
-
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync(); // Lưu thay đổi
+                await transaction.CommitAsync();  // Commit transaction nếu mọi thứ thành công
 
                 response.ResponseCode = 200;
                 response.Result = "Cập nhật combo thành công!";
+                _logger.LogInformation("Updated combo with ID: {ComboId}", existingCombo.Id);
             }
             catch (Exception ex)
             {
+                await transaction.RollbackAsync(); // Rollback nếu có lỗi
                 response.ResponseCode = 500;
                 response.ErrorMessage = ex.Message;
                 _logger.LogError(ex, "Error updating combo");

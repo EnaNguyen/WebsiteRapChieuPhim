@@ -9,8 +9,8 @@ namespace ProjectGSMAUI.Api.Services
     {
         Task<List<ComboModal>> GetAll();
         Task<ComboModal> GetById(int id);
-        Task<APIResponse> Create(ComboModal comboModal);
-        Task<APIResponse> Update(int id, ComboModal comboModal);
+        Task<APIResponse> Create(ComboCreate comboModal);
+        Task<APIResponse> Update(int id, ComboCreate comboModal);
         Task<APIResponse> Delete(int id);
     }
 }

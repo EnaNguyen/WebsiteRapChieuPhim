@@ -36,8 +36,8 @@ namespace ProjectGSMAUI.Api.Controllers.VHun
         }
 
         // Tạo Combo mới
-        [HttpPost]
-        public async Task<IActionResult> Create([FromBody] ComboModal comboModal)
+        [HttpPost("Create")]
+        public async Task<IActionResult> Create(ComboCreate comboModal)
         {
             if (comboModal == null)
                 return BadRequest("Dữ liệu combo không hợp lệ!");
@@ -49,7 +49,7 @@ namespace ProjectGSMAUI.Api.Controllers.VHun
 
         // Cập nhật Combo
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] ComboModal comboModal)
+        public async Task<IActionResult> Update(int id, [FromBody] ComboCreate comboModal)
         {
             if (comboModal == null)
                 return BadRequest("Dữ liệu combo không hợp lệ!");

@@ -1,0 +1,137 @@
+﻿@model ProjectGSMVC.Areas.Admin.Models.ComboViewModel
+
+@{
+    ViewData["Title"] = "Thêm Combo";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2>Thêm Combo</h2>
+<p class="text-muted">Nhập thông tin chi tiết về Combo mới.</p>
+
+<div asp-action="Create" method="post" enctype="multipart/form-data">
+    <!-- Tên Combo -->
+    <div class="form-group">
+        <label asp-for="TenCombo" class="control-label">Tên Combo <span class="text-danger">*</span></label>
+        <input id="TenCombo" class="form-control" placeholder="Nhập tên combo" required />
+        <span asp-validation-for="TenCombo" class="text-danger"></span>
+    </div>
+
+    <!-- Giá Combo -->
+    <div class="form-group">
+        <label asp-for="Gia" class="control-label">Giá Combo <span class="text-danger">*</span></label>
+        <input id="GiaCombo" type="number" class="form-control" placeholder="Nhập giá combo" min="1000" required />
+        <span asp-validation-for="Gia" class="text-danger"></span>
+    </div>
+
+    <!-- Mô tả Combo -->
+    <div class="form-group">
+        <label asp-for="MoTa" class="control-label">Mô tả Combo</label>
+        <textarea id="MoTa" class="form-control" placeholder="Nhập mô tả combo"></textarea>
+        <span asp-validation-for="MoTa" class="text-danger"></span>
+    </div>
+
+    <!-- Hình ảnh Combo -->
+    <div class="form-group">
+        <label class="control-label">Chọn ảnh Combo <span class="text-danger">*</span></label>
+        <input type="file" id="HinhAnh" class="form-control" accept="image/*" required />
+        <span asp-validation-for="ImageFile" class="text-danger"></span>
+    </div>
+
+    <!-- Danh sách sản phẩm -->
+    <h4>Danh sách sản phẩm <span class="text-danger">*</span></h4>
+    <div id="sanPhamList">
+        @if (ViewBag.SanPhams != null)
+        {
+            foreach (var sanPham in ViewBag.SanPhams)
+            {
+                <div class="form-group">
+                    <input type="checkbox" class="sanPhamCheckbox" data-id="@sanPham.Id" />
+                    <label>@sanPham.TenSanPham</label>
+                    <input type="number" class="form-control soLuongSanPham" data-id="@sanPham.Id"
+                           placeholder="Số lượng" min="1" disabled />
+                </div>
+            }
+        }
+        else
+        {
+            <p class="text-danger">Không có sản phẩm nào để chọn.</p>
+        }
+    </div>
+
+    <div class="form-group mt-3">
+        <button type="button" class="btn btn-primary" id="ThemCombo">
+            <i class="fas fa-plus"></i> Thêm Combo
+        </button>
+        <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Kích hoạt nhập số lượng khi checkbox được chọn
+        $(".sanPhamCheckbox").change(function () {
+            var isChecked = $(this).is(":checked");
+            var sanPhamId = $(this).data("id");
+            $(".soLuongSanPham[data-id='" + sanPhamId + "']").prop("disabled", !isChecked);
+        });
+
+        $("#ThemCombo").click(function () {
+            var comboData = {
+                TenCombo: $("#TenCombo").val(),
+                Gia: $("#GiaCombo").val(),
+                MoTa: $("#MoTa").val(),
+                ImageBase64: null,
+                ChiTietCombos: []
+            };
+
+            // Đọc danh sách sản phẩm đã chọn
+            $(".sanPhamCheckbox:checked").each(function () {
+                var sanPhamId = $(this).data("id");
+                var soLuong = $(".soLuongSanPham[data-id='" + sanPhamId + "']").val();
+
+                if (soLuong && soLuong > 0) {
+                    comboData.ChiTietCombos.push({
+                        SanPhamId: sanPhamId,
+                        SoLuong: soLuong
+                    });
+                }
+            });
+
+            // Kiểm tra hình ảnh và chuyển thành base64
+            var imageFile = $("#HinhAnh")[0].files[0];
+            if (imageFile) {
+                var reader = new FileReader();
+                reader.readAsDataURL(imageFile);
+                reader.onload = function () {
+                    comboData.HinhAnh = reader.result.split(",")[1];
+
+                    sendData(comboData);
+                };
+            } else {
+                sendData(comboData);
+            }
+        });
+
+        function sendData(data) {
+            $.ajax({
+                url: "/Admin/Combo/Create",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(data),
+                success: function (response) {
+                    alert("Thêm combo thành công!");
+                    location.reload();
+                },
+                error: function (error) {
+                    console.log(error);
+                    alert("Có lỗi xảy ra!");
+                }
+            });
+        }
+    });
+</script>
+
+
+
+

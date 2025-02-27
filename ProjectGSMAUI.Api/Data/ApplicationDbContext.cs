@@ -307,9 +307,10 @@ namespace ProjectGSMAUI.Api.Data
                     .HasConstraintName("FK__Video__Phim__7C4F7684");
             });
             modelBuilder.Entity<ChiTietCombo>()
-            .HasOne(ct => ct.Combo)
-            .WithMany(c => c.ChiTietCombos)
-            .HasForeignKey(ct => ct.ComboId);
+    .HasOne(ct => ct.Combo)
+    .WithMany(c => c.ChiTietCombos)
+    .HasForeignKey(ct => ct.ComboId);
+
 
             modelBuilder.Entity<ChiTietCombo>()
                 .HasOne(ct => ct.SanPham)
