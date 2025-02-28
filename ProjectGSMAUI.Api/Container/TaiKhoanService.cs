@@ -68,7 +68,7 @@ namespace ProjectGSMAUI.Api.Container
 
         public async Task CreateTaiKhoanAsync(TaiKhoan taiKhoan)
         {
-            taiKhoan.MatKhau = PasswordHasher.HashPassword(taiKhoan.MatKhau);
+            taiKhoan.MatKhau = taiKhoan.MatKhau;
             _context.TaiKhoans.Add(taiKhoan);
             await _context.SaveChangesAsync();
         }
@@ -168,7 +168,7 @@ namespace ProjectGSMAUI.Api.Container
                 {
                     IdtaiKhoan = "AD"+maxMaAdmin.ToString("000"),
                     TenNguoiDung = data.TenNguoiDung,
-                    MatKhau = PasswordHasher.HashPassword(data.MatKhau),
+                    MatKhau = data.MatKhau,
                     TenTaiKhoan =data.TenTaiKhoan,
                     Email= data.Email,
                     Sdt= data.Sdt,

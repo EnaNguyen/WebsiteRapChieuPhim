@@ -44,7 +44,7 @@
     <div class="wrapper" style="font-family: 'Arial', 'Roboto', sans-serif;">
 
 
-        <header id="header" class="menu-top-left">
+        <header id="header" class="menu-top-left" style="background-color: black">
             <div class="container">
                 <div class="row">
                     <div class="col-md-6 col-sm-6 col-xs-4">
@@ -53,7 +53,7 @@
                         </a>
                     </div>
                     <div class="col-md-4 col-md-offset-2 col-sm-6 col-xs-8 phl0">
-                        <div class="header_author">
+                        <div class="header_author" color: white>
 
                             @if (HttpContextAccessor.HttpContext.Session.GetString("UserId") != null)
                             {
@@ -178,3 +178,8 @@
     <!-- jQuery easing plugin -->
 </body>
 </html> 
+<style>
+    .header_author span{
+        color: white;
+    }
+</style>

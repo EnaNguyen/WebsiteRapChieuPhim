@@ -1,18 +1,19 @@
 ﻿@{
     ViewData["Title"] = "Login";
-    Layout = "~/Views/Shared/_Layout.cshtml"; // Keep your layout
+    Layout = null;
 }
 
 <link href="~/css/auth-style.css" rel="stylesheet" /> @* Link to the new CSS file *@
 
 <div class="auth-container">
     <div class="auth-left-panel">
-        <div class="logo-area">
-            <img src="~/User/images/logo.png" alt="Starlight Entertainment Center Logo" class="auth-logo" />
-        </div>
         <div class="welcome-text">
-            Đăng nhập với tài khoản của bạn!
+            <h1>WELCOME ! XIN CHÀO !</h1>
         </div>
+        <div class="logo-area">
+            <img src="~/User/images/page_1601_1712215670_1713753865.jpg" alt="Starlight Entertainment Center Logo" class="auth-logo" style="height: 400px; max-width: 800px;" />
+        </div>
+        
     </div>
     <div class="auth-right-panel">
         <div class="auth-form-box login-box">
@@ -41,14 +42,7 @@
                     <a asp-action="Register" class="register-link">Đăng ký</a> / <a href="#" class="forgot-password-link">Quên mật khẩu?</a>
                 </div>
                 <button type="submit" class="btn auth-button">Đăng nhập</button>
-            </form>
-            <div class="social-login-separator">
-                <span>Hoặc đăng nhập với</span>
-            </div>
-            <div class="social-login-buttons">
-                <a href="#" class="social-button facebook-button"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" class="social-button google-button"><i class="fab fa-google"></i></a>
-            </div>
+            </form>          
         </div>
     </div>
 </div>
